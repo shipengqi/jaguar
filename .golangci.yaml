@@ -961,19 +961,19 @@ issues:
   # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
   max-same-issues: 0
 
-  # Show only new issues: if there are unstaged changes or untracked files,
+  # Show only create issues: if there are unstaged changes or untracked files,
   # only those changes are analyzed, else only changes in HEAD~ are analyzed.
   # It's a super-useful option for integration of golangci-lint into existing
   # large codebase. It's not practical to fix all existing issues at the moment
-  # of integration: much better don't allow issues in new code.
+  # of integration: much better don't allow issues in create code.
   # Default is false.
   new: false
 
-  # Show only new issues created after git revision `REV`
-  #new-from-rev: REV
+  # Show only create issues created after git revision `REV`
+  #create-from-rev: REV
 
-  # Show only new issues created in git patch with set file path.
-  #new-from-patch: path/to/patch/file
+  # Show only create issues created in git patch with set file path.
+  #create-from-patch: path/to/patch/file
 
   # Fix found issues (if it's supported by the linter)
   fix: true
