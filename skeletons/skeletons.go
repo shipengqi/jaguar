@@ -2,14 +2,14 @@ package skeletons
 
 import "embed"
 
-//go:embed api
+//go:embed v1/api
 var API embed.FS
 
-//go:embed cli
+//go:embed v1/cli
 var CLI embed.FS
 
-//go:embed grpc
+//go:embed v1/grpc
 var GRPC embed.FS
 
-//go:embed .gitignore
+//go:embed v1/.gitignore
 var GitIgnore embed.FS

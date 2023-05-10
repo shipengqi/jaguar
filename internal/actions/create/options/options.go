@@ -6,8 +6,9 @@ import (
 )
 
 type Options struct {
-	Force bool
-	Type  string
+	Force  bool
+	Type   string
+	Module string
 }
 
 func New() *Options {
@@ -19,9 +20,10 @@ func New() *Options {
 }
 
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
-	s := fss.FlagSet("New Project")
+	s := fss.FlagSet("new")
 	s.BoolVarP(&o.Force, "force", "f", o.Force, "Force overwriting of existing files.")
-	s.StringVar(&o.Type, "type", o.Type, "")
+	s.StringVar(&o.Type, "type", o.Type, "Project type")
+	s.StringVar(&o.Module, "module", o.Module, "Go module name")
 
 	return
 }

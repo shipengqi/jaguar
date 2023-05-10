@@ -2,13 +2,11 @@ package create
 
 import (
 	"embed"
-	"github.com/manifoldco/promptui"
-	"github.com/shipengqi/action"
-	"github.com/shipengqi/log"
-	"io/fs"
+	"fmt"
 	"os"
 	"path"
 
+	"github.com/shipengqi/action"
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
 	"github.com/shipengqi/jaguar/skeletons"
@@ -25,8 +23,17 @@ const (
 	ProjectTypeGRPC = "grpc"
 )
 
-func NewAction(opts *options.Options) *action.Action {
-	cfg, _ := config.CreateConfigFromOptions(opts)
+const (
+	DefaultSkeletonVersion = "v1"
+)
+
+const (
+	FilenameGitIgnore = ".gitignore"
+)
+
+func NewAction(opts *options.Options, args []string) *action.Action {
+	cfg, _ := config.CreateConfigFromOptions(opts, args)
+
 	act := &action.Action{
 		Name:   ActionName,
 		PreRun: func(act *action.Action) error { return prerun(cfg) },
@@ -36,136 +43,69 @@ func NewAction(opts *options.Options) *action.Action {
 	return act
 }
 
-func prerun(cfg *config.Config) error {
-	promp := func(label string, items []string) string {
-		prompt := promptui.Select{
-			Label: label,
-			Items: items,
-		}
-		prompt.HideSelected = true
-		_, result, err := prompt.Run()
-		if err != nil {
-			return ""
-		}
-		return result
-	}
-
-	if cfg.Type == "" {
-		var selected string
-		switch promp("Select project type", []string{"CLI", "API", "gRPC"}) {
-		case "CLI":
-			selected = ProjectTypeCLI
-			break
-		case "API":
-			selected = ProjectTypeAPI
-			break
-		case "gRPC":
-			selected = ProjectTypeGRPC
-			break
-		default:
-			return nil
-		}
-		cfg.Type = selected
-	}
-
-	return nil
-}
-
 func create(cfg *config.Config) error {
+	var fs embed.FS
+	var skeleton string
 	switch cfg.Type {
 	case ProjectTypeCLI:
-		err := Copy(skeletons.CLI, "cli", "newcli")
-		if err != nil {
-			log.Warnf("copy: %s", err.Error())
-			return err
-		}
-		CopyFile(skeletons.GitIgnore, ".gitignore", "newcli/.gitignore")
-		break
+		fs = skeletons.CLI
+		skeleton = ProjectTypeCLI
 	case ProjectTypeAPI:
-		err := Copy(skeletons.API, "api", "newapi")
-		if err != nil {
-			log.Warnf("copy: %s", err.Error())
-			return err
-		}
-		break
+		fs = skeletons.API
+		skeleton = ProjectTypeAPI
 	case ProjectTypeGRPC:
-		err := Copy(skeletons.GRPC, "grpc", "newgrpc")
+		fs = skeletons.GRPC
+		skeleton = ProjectTypeGRPC
+	}
+
+	if cfg.Force {
+		err := cleanProject(cfg.ProjectName)
 		if err != nil {
-			log.Warnf("copy: %s", err.Error())
 			return err
 		}
-		break
+	}
+
+	return createProject(fs, DefaultSkeletonVersion, skeleton, cfg.ProjectName)
+}
+
+func cleanProject(project string) error {
+	return os.RemoveAll(project)
+}
+
+func createProject(embedfs embed.FS, version, skeleton, project string) error {
+	err := createProjectFiles(embedfs, version, skeleton, project)
+	if err != nil {
+		return err
+	}
+	return createGitIgnore(version, project)
+}
+
+func createProjectFiles(embedfs embed.FS, version, skeleton, project string) error {
+	from := fmt.Sprintf("%s/%s", version, skeleton)
+	var count int
+	err := CalculateFilesFromEmbedFS(embedfs, from, &count)
+	if err != nil {
+		return err
+	}
+	bar := newBar(count, "1/2", "Creating project files")
+
+	err = CopyWithBar(bar, embedfs, from, project)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
-// CopyFile copies a file from src to dst.
-func CopyFile(embedfs embed.FS, src, dst string) (err error) {
-	log.Infof("read file %s", src)
-	sdata, err := embedfs.ReadFile(src)
-	if err != nil {
-		log.Errorf("read file %s: %s", src, err.Error())
-		return
-	}
-	info, err := embedfs.Open(src)
-	if err != nil {
-		return err
-	}
-	sinfo, err := info.Stat()
-	if err != nil {
-		log.Errorf("stat embed/%s: %s", src, err.Error())
-		return err
-	}
-	return os.WriteFile(dst, sdata, sinfo.Mode())
+func createGitIgnore(version, project string) error {
+	bar := newBar(1, "2/2", "Creating .gitignore")
+	return CopyFileWithBar(bar, skeletons.GitIgnore,
+		fmt.Sprintf("%s/%s", version, FilenameGitIgnore),
+		path.Join(project, FilenameGitIgnore))
 }
 
-// Copy copies a file or directory from src to dst.
-func Copy(embedfs embed.FS, src, dst string) error {
-	var (
-		err   error
-		fds   []os.DirEntry
-		sinfo fs.FileInfo
-	)
-
-	sfd, err := embedfs.Open(src)
-	if err != nil {
-		log.Errorf("open embed/%s: %s", src, err.Error())
-		return err
-	}
-	sinfo, err = sfd.Stat()
-	if err != nil {
-		log.Errorf("stat embed/%s: %s", src, err.Error())
-		return err
-	}
-	log.Infof("copy embed/%s", src)
-	// copies a file
-	if !sinfo.IsDir() {
-		log.Infof("embed/%s is file", src)
-		return CopyFile(embedfs, src, dst)
-	}
-	log.Infof("embed/%s is dir", src)
-	// tries to create dst directory
-	if err = os.MkdirAll(dst, sinfo.Mode()); err != nil {
-		return err
-	}
-	log.Infof("read dir embed/%s", src)
-	if fds, err = embedfs.ReadDir(src); err != nil {
-		return err
-	}
-	for _, fd := range fds {
-		log.Infof("%s under dir embed/%s", fd.Name(), src)
-		//sfp := path.Join(src, fd.Name())
-		dfp := path.Join(dst, fd.Name())
-
-		if fd.IsDir() {
-			if err = Copy(embedfs, src+"/"+fd.Name(), dfp); err != nil {
-				return err
-			}
-		} else {
-			if err = CopyFile(embedfs, src+"/"+fd.Name(), dfp); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+func createLintConfig(version, project string) error {
+	bar := newBar(1, "2/2", "Creating .gitignore")
+	return CopyFileWithBar(bar, skeletons.GitIgnore,
+		fmt.Sprintf("%s/%s", version, FilenameGitIgnore),
+		path.Join(project, FilenameGitIgnore))
 }

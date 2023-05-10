@@ -12,10 +12,11 @@ func newCmd() *jcli.Command {
 	c := jcli.NewCommand(
 		create.ActionName,
 		"Creates a new Go project.",
+		jcli.WithCommandDesc(subdesc()),
 		jcli.WithCommandAliases(create.ActionNameAlias),
 		jcli.WithCommandCliOptions(o),
 		jcli.WithCommandRunFunc(func(args []string) error {
-			a := create.NewAction(o)
+			a := create.NewAction(o, args)
 			return a.Execute()
 		}),
 	)
