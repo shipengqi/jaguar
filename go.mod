@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/AlekSi/pointer v1.2.0
+	github.com/fatih/color v1.15.0
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.9.0
@@ -13,12 +14,11 @@ require (
 	github.com/mattn/go-isatty v0.0.17
 	github.com/novalagung/gubrak v1.0.0
 	github.com/penglongli/gin-metrics v0.1.10
-	github.com/schollz/progressbar/v3 v3.13.1
 	github.com/shipengqi/action v0.1.1
 	github.com/shipengqi/component-base v0.1.5
 	github.com/shipengqi/errors v0.1.5
 	github.com/shipengqi/idm v0.0.0-20221028082329-1784152c3c20
-	github.com/shipengqi/jcli v0.1.4
+	github.com/shipengqi/jcli v0.1.7
 	github.com/shipengqi/log v0.1.10
 	github.com/spf13/pflag v1.0.5
 	github.com/tpkeeper/gin-dump v1.0.1
@@ -36,7 +36,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
-	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -57,7 +56,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/term v0.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -84,7 +82,6 @@ require (
 	golang.org/x/crypto v0.5.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/term v0.6.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

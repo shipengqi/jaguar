@@ -1,25 +1,14 @@
-package create
+package helpers
 
 import (
 	"embed"
 	"io/fs"
 	"os"
 	"path"
-
-	pb "github.com/schollz/progressbar/v3"
 )
 
 // CopyFile copies a file from src to dst.
 func CopyFile(embedfs embed.FS, src, dst string) (err error) {
-	return CopyFileWithBar(nil, embedfs, src, dst)
-}
-
-func CopyFileWithBar(bar *pb.ProgressBar, embedfs embed.FS, src, dst string) (err error) {
-	defer func(b *pb.ProgressBar) {
-		if b != nil {
-			_ = b.Add(1)
-		}
-	}(bar)
 	sdata, err := embedfs.ReadFile(src)
 	if err != nil {
 		return
@@ -37,11 +26,6 @@ func CopyFileWithBar(bar *pb.ProgressBar, embedfs embed.FS, src, dst string) (er
 
 // Copy copies a file or directory from src to dst.
 func Copy(embedfs embed.FS, src, dst string) error {
-	return CopyWithBar(nil, embedfs, src, dst)
-}
-
-// CopyWithBar copies a file or directory from src to dst.
-func CopyWithBar(bar *pb.ProgressBar, embedfs embed.FS, src, dst string) error {
 	var (
 		err   error
 		fds   []os.DirEntry
@@ -58,7 +42,7 @@ func CopyWithBar(bar *pb.ProgressBar, embedfs embed.FS, src, dst string) error {
 	}
 	// copies a file
 	if !sinfo.IsDir() {
-		return CopyFileWithBar(bar, embedfs, src, dst)
+		return CopyFile(embedfs, src, dst)
 	}
 	// tries to create dst directory
 	if err = os.MkdirAll(dst, sinfo.Mode()); err != nil {
@@ -72,11 +56,11 @@ func CopyWithBar(bar *pb.ProgressBar, embedfs embed.FS, src, dst string) error {
 		dfp := path.Join(dst, fd.Name())
 
 		if fd.IsDir() {
-			if err = CopyWithBar(bar, embedfs, sfp, dfp); err != nil {
+			if err = Copy(embedfs, sfp, dfp); err != nil {
 				return err
 			}
 		} else {
-			if err = CopyFileWithBar(bar, embedfs, sfp, dfp); err != nil {
+			if err = CopyFile(embedfs, sfp, dfp); err != nil {
 				return err
 			}
 		}

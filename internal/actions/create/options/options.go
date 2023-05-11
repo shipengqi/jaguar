@@ -5,26 +5,34 @@ import (
 	"github.com/shipengqi/component-base/json"
 )
 
+const (
+	DefaultSkeletonVersion = "v1"
+)
+
 type Options struct {
-	Force  bool
-	Type   string
-	Module string
+	Force           bool
+	Type            string
+	Module          string
+	SkeletonVersion string
 }
 
 func New() *Options {
 	o := Options{
-		Force: false,
+		Force:           false,
+		SkeletonVersion: DefaultSkeletonVersion,
 	}
 
 	return &o
 }
 
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
-	s := fss.FlagSet("new")
+	s := fss.FlagSet("new/create")
 	s.BoolVarP(&o.Force, "force", "f", o.Force, "Force overwriting of existing files.")
 	s.StringVar(&o.Type, "type", o.Type, "Project type")
 	s.StringVar(&o.Module, "module", o.Module, "Go module name")
+	s.StringVar(&o.SkeletonVersion, "skeleton-version", o.SkeletonVersion, "Skeleton version")
 
+	_ = s.MarkHidden("skeleton-version")
 	return
 }
 

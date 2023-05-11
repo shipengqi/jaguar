@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
+	"github.com/shipengqi/jaguar/internal/actions/create/types"
 	"github.com/shipengqi/jaguar/internal/pkg/survey"
 )
 
@@ -19,11 +20,11 @@ func prerun(cfg *config.Config) error {
 		var selected string
 		switch survey.Select("Select project type", []string{"CLI", "API", "gRPC"}) {
 		case "CLI":
-			selected = ProjectTypeCLI
+			selected = types.ProjectTypeCLI
 		case "API":
-			selected = ProjectTypeAPI
+			selected = types.ProjectTypeAPI
 		case "gRPC":
-			selected = ProjectTypeGRPC
+			selected = types.ProjectTypeGRPC
 		default:
 			return errors.New("unsupported type")
 		}
