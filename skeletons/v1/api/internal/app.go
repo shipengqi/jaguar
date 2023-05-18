@@ -3,18 +3,21 @@ package internal
 import (
 	"github.com/shipengqi/jcli"
 	"github.com/shipengqi/log"
+
+	"github.com/jaguar/apiskeleton/internal/config"
+	"github.com/jaguar/apiskeleton/internal/options"
 )
 
-const desc = `The <<example>> API server validates and configures data
+const desc = `The {{example}} API server validates and configures data
 for the api objects. The API Server services REST operations to do 
 the api objects management.
 
-Find more <example>-apiserver information at:
-    <example documentation link>`
+Find more {{example}}-apiserver information at:
+    {{example.document.link}}`
 
 func NewApp() *jcli.App {
 	opts := options.New()
-	application := jcli.New("IDM API Server",
+	application := jcli.New("{{example}} API Server",
 		jcli.WithCliOptions(opts),
 		jcli.WithDesc(desc),
 		jcli.WithRunFunc(run(opts)),

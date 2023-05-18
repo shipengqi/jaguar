@@ -3,8 +3,8 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/shipengqi/idm/internal/pkg/middleware"
-	"github.com/shipengqi/idm/pkg/identity"
+	"github.com/jaguar/apiskeleton/pkg/identity"
+	"github.com/jaguar/apiskeleton/pkg/middlewares"
 )
 
 // JWTStrategy defines jwt bearer authentication strategy.
@@ -12,7 +12,7 @@ type JWTStrategy struct {
 	*identity.Middleware
 }
 
-var _ middleware.AuthStrategy = &JWTStrategy{}
+var _ middlewares.AuthStrategy = &JWTStrategy{}
 
 // NewJWTStrategy create jwt bearer strategy with GinJWTMiddleware.
 func NewJWTStrategy(im *identity.Middleware) JWTStrategy {

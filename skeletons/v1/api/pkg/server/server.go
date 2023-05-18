@@ -10,13 +10,13 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/penglongli/gin-metrics/ginmetrics"
+	"github.com/shipengqi/component-base/version"
 	"github.com/shipengqi/errors"
-	"github.com/shipengqi/idm/pkg/response"
-	"github.com/shipengqi/idm/pkg/version"
 	"github.com/shipengqi/log"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/shipengqi/idm/internal/pkg/middleware"
+	"github.com/jaguar/apiskeleton/pkg/middlewares"
+	"github.com/jaguar/apiskeleton/pkg/response"
 )
 
 // GenericAPIServer contains state for an idm api server.
@@ -42,7 +42,7 @@ type GenericAPIServer struct {
 	insecureServer, secureServer *http.Server
 }
 
-// New returns a create instance of GenericAPIServer from the given config.
+// New returns an instance of GenericAPIServer from the given config.
 func New(c *Config) (*GenericAPIServer, error) {
 	gin.SetMode(c.Mode)
 
@@ -73,7 +73,7 @@ func initGenericAPIServer(s *GenericAPIServer) {
 // Setup do some setup work for gin engine.
 func (s *GenericAPIServer) Setup() {
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
-		log.Infof("%-6s %-s --> %s (%d handlers)", httpMethod, absolutePath, handlerName, nuHandlers)
+		log.Infof("%-6s %-s ==> %s (%d handlers)", httpMethod, absolutePath, handlerName, nuHandlers)
 	}
 }
 
@@ -115,12 +115,12 @@ func (s *GenericAPIServer) InstallAPIs() {
 // InstallMiddlewares install generic middlewares.
 func (s *GenericAPIServer) InstallMiddlewares() {
 	// necessary middlewares
-	s.Use(middleware.RequestID())
-	s.Use(middleware.Context())
+	s.Use(middlewares.RequestID())
+	s.Use(middlewares.Context())
 
 	// install custom middlewares
 	for _, m := range s.middlewares {
-		mw, ok := middleware.Middlewares[m]
+		mw, ok := middlewares.Middlewares[m]
 		if !ok {
 			log.Warnf("can not find middleware: %s", m)
 			continue

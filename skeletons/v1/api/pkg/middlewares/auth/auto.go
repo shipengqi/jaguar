@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shipengqi/errors"
-	"github.com/shipengqi/idm/pkg/response"
 
-	"github.com/shipengqi/idm/internal/pkg/middleware"
+	"github.com/jaguar/apiskeleton/pkg/middlewares"
+	"github.com/jaguar/apiskeleton/pkg/response"
 )
 
 const authHeaderCount = 2
@@ -15,8 +15,8 @@ const authHeaderCount = 2
 // AutoStrategy defines authentication strategy which can automatically choose between Basic and Bearer
 // according `Authorization` header.
 type AutoStrategy struct {
-	basic middleware.AuthStrategy
-	jwt   middleware.AuthStrategy
+	basic middlewares.AuthStrategy
+	jwt   middlewares.AuthStrategy
 }
 
 var _ middleware.AuthStrategy = &AutoStrategy{}

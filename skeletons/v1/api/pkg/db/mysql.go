@@ -18,9 +18,10 @@ type Options struct {
 	MaxIdleConnections    int              `json:"max-idle-connections,omitempty"     mapstructure:"max-idle-connections"`
 	MaxOpenConnections    int              `json:"max-open-connections,omitempty"     mapstructure:"max-open-connections"`
 	LogLevel              int              `json:"log-level"                          mapstructure:"log-level"`
+	AutoMigrate           bool             `json:"auto-migrate"                       mapstructure:"auto-migrate"`
+	Debug                 bool             `json:"debug"                              mapstructure:"debug"`
 	MaxConnectionLifeTime time.Duration    `json:"max-connection-life-time,omitempty" mapstructure:"max-connection-life-time"`
 	Logger                logger.Interface `json:"-"`
-	// DSN                   string // data source name
 }
 
 func NewOptions() *Options {
@@ -64,11 +65,17 @@ func (o *Options) AddFlags(fs *pflag.FlagSet) {
 	fs.DurationVar(&o.MaxConnectionLifeTime, "mysql.max-connection-life-time", o.MaxConnectionLifeTime,
 		"Maximum connection life time allowed to connect to mysql.")
 
+	fs.BoolVar(&o.AutoMigrate, "mysql.auto-migrate", o.AutoMigrate,
+		"Enables the auto migration for database models.")
+
+	fs.BoolVar(&o.Debug, "mysql.debug", o.Debug,
+		"Gorm debug mode.")
+
 	fs.IntVar(&o.LogLevel, "mysql.log-level", o.LogLevel,
 		"Specify gorm log level.")
 }
 
-// New creates a create MySQL or PostGre db and retry connection when has error.
+// New creates a MySQL or PostGre db and retry connection when has error.
 func New(opts *Options) (*gorm.DB, error) {
 	dsn := fmt.Sprintf(`%s:%s@tcp(%s)/%s?charset=utf8&parseTime=%t&loc=%s`,
 		opts.Username,
@@ -79,7 +86,8 @@ func New(opts *Options) (*gorm.DB, error) {
 		"Local")
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: opts.Logger,
+		Logger:                                   opts.Logger,
+		DisableForeignKeyConstraintWhenMigrating: true, // Whether to disable foreign key constraints
 	})
 
 	if err != nil {

@@ -1,0 +1,50 @@
+package user
+
+import (
+	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/shipengqi/golib/strutil"
+	"github.com/shipengqi/log"
+
+	metav1 "github.com/jaguar/apiskeleton/pkg/api/meta/v1"
+	"github.com/jaguar/apiskeleton/pkg/response"
+)
+
+// Delete deletes a user by the user identifier.
+func (c *Controller) Delete(ctx *gin.Context) {
+	log.Info("delete user function called.")
+
+	if err := c.svc.Users().Delete(ctx, ctx.Param("name"), metav1.DeleteOptions{Unscoped: true}); err != nil {
+		response.Fail(ctx, err)
+		return
+	}
+
+	response.OK(ctx)
+}
+
+// DeleteList batch delete users by multiple usernames.
+func (c *Controller) DeleteList(ctx *gin.Context) {
+	log.Info("batch delete user function called.")
+
+	names := ctx.Query("names")
+
+	split := strings.Split(names, ",")
+	var usernames []string
+	for i := 0; i < len(split); i++ {
+		if !strutil.IsEmpty(split[i]) {
+			usernames = append(usernames, strings.TrimSpace(split[i]))
+		}
+	}
+	if len(usernames) == 0 {
+		response.OK(ctx)
+		return
+	}
+
+	if err := c.svc.Users().DeleteList(ctx, usernames, metav1.DeleteOptions{}); err != nil {
+		response.Fail(ctx, err)
+		return
+	}
+
+	response.OK(ctx)
+}

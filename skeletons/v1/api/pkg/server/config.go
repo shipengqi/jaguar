@@ -10,10 +10,10 @@ import (
 
 const (
 	// RecommendedHomeDir defines the default directory used to place all idm service configurations.
-	RecommendedHomeDir = ".idm"
+	RecommendedHomeDir = ".{{example}}"
 
 	// RecommendedEnvPrefix defines the ENV prefix used by all idm service.
-	RecommendedEnvPrefix = "IDM"
+	RecommendedEnvPrefix = "{{example}}"
 
 	// RecommendedTokenTimeout defines the duration that a jwt token is valid.
 	RecommendedTokenTimeout = 30 * time.Minute
@@ -43,7 +43,7 @@ func NewConfig() *Config {
 		EnableProfiling: true,
 		EnableMetrics:   false,
 		Jwt: &JwtInfo{
-			Realm:      "idm jwt",
+			Realm:      "{{example}} jwt",
 			Timeout:    RecommendedTokenTimeout,
 			MaxRefresh: RecommendedMaxRefresh,
 		},

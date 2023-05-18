@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	ActionName       = "new"
-	ActionNameAlias  = "create"
-	ActionNameAlias2 = "n"
+	ActionName           = "new"
+	ActionNameAlias      = "create"
+	ActionNameAliasShort = "n"
 )
 
 func NewAction(opts *options.Options, args []string) *action.Action {

@@ -27,7 +27,11 @@ func main() {
 		}),
 	)
 
-	app.AddCommands(newCmd())
+	app.AddCommands(
+		newCreateCmd(),
+		newCodeGenCmd(),
+		newAddLicenseCmd(),
+	)
 
 	app.Run()
 }

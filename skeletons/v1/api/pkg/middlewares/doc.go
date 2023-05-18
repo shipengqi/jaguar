@@ -1,2 +1,2 @@
-// Package middleware defines multiple gin middlewares
-package middleware
+// Package middlewares defines multiple gin middlewares
+package middlewares

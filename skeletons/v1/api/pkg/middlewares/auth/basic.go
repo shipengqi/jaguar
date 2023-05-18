@@ -5,12 +5,12 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jaguar/apiskeleton/pkg/middlewares"
+	"github.com/jaguar/apiskeleton/pkg/response"
 	"github.com/shipengqi/errors"
-	"github.com/shipengqi/idm/internal/pkg/middleware"
-	"github.com/shipengqi/idm/pkg/response"
 )
 
-var _ middleware.AuthStrategy = &BasicStrategy{}
+var _ middlewares.AuthStrategy = &BasicStrategy{}
 
 // BasicStrategy defines Basic authentication strategy.
 type BasicStrategy struct {

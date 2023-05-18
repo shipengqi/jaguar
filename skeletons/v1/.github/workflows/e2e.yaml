@@ -1,0 +1,78 @@
+name: "E2E Test"
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    # Do not run when the change only includes these directories.
+    paths-ignore:
+      - "example/**"
+      - "docs/**"
+      - "README.md"
+      - "CHANGELOG/**"
+jobs:
+  # Build the crtctl once for all Kubernetes versions, and cache it so the workers can get it.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+        id: go
+      # Look for a CLI that's made for this PR
+      - name: Fetch built CLI
+        id: cli-cache
+        uses: actions/cache@v2
+        with:
+          path: ./_output/linux/amd64/bin/crtctl
+          # The cache key a combination of the current PR number and the commit SHA
+          key: crtctl-${{ github.event.pull_request.number }}-${{ github.sha }}
+      - name: Fetch cached go modules
+        uses: actions/cache@v2
+        if: steps.cli-cache.outputs.cache-hit != 'true'
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Check out the code
+        uses: actions/checkout@v3
+        if: steps.cli-cache.outputs.cache-hit != 'true'
+      # If no binaries were built for this PR, build it now.
+      - name: Build CLI
+        if: steps.cli-cache.outputs.cache-hit != 'true'
+        run: |
+          make build
+  # Run E2E test against all kubernetes versions on kind
+  run-e2e-test:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        k8s:
+          - 1.17.17
+          - 1.18.20
+          - 1.19.16
+          - 1.20.15
+          - 1.21.12
+          - 1.22.9
+          - 1.23.6
+          - 1.24.0
+      fail-fast: false
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+      - uses: engineerd/setup-kind@v0.5.0
+        with:
+          version: "v0.14.0"
+          image: "kindest/node:v${{ matrix.k8s }}"
+      - name: Fetch built CLI
+        id: cli-cache
+        uses: actions/cache@v2
+        with:
+          path: ./_output/linux/amd64/bin/crtctl
+          key: crtctl-${{ github.event.pull_request.number }}-${{ github.sha }}
+      - name: Run E2E test
+        run: |
+          GOPATH=~/go make test-e2e
