@@ -3,12 +3,12 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/shipengqi/errors"
+	"github.com/shipengqi/golib/cryptoutil/secret"
 	"github.com/shipengqi/log"
 
 	metav1 "github.com/jaguar/apiskeleton/pkg/api/meta/v1"
 	"github.com/jaguar/apiskeleton/pkg/code"
 	"github.com/jaguar/apiskeleton/pkg/response"
-	"github.com/jaguar/apiskeleton/pkg/secret"
 )
 
 // ChangePasswordRequest defines the ChangePasswordRequest data format.

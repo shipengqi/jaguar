@@ -17,13 +17,13 @@ require (
 	github.com/redis/go-redis/v9 v9.0.4
 	github.com/shipengqi/component-base v0.1.5
 	github.com/shipengqi/errors v0.1.5
-	github.com/shipengqi/golib v0.1.29
+	github.com/shipengqi/golib v0.1.31
 	github.com/shipengqi/jcli v0.1.7
 	github.com/shipengqi/log v0.1.13
 	github.com/spf13/pflag v1.0.5
 	github.com/tpkeeper/gin-dump v1.0.1
 	go.uber.org/zap v1.24.0
-	golang.org/x/crypto v0.5.0
+	golang.org/x/crypto v0.9.0
 	golang.org/x/sync v0.2.0
 	gorm.io/driver/mysql v1.5.0
 	gorm.io/gorm v1.25.1
@@ -79,9 +79,9 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect

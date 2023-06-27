@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shipengqi/golib/cryptoutil/secret"
 	"github.com/shipengqi/log"
 
 	v1 "github.com/jaguar/apiskeleton/pkg/api/apiserver/v1"
 	metav1 "github.com/jaguar/apiskeleton/pkg/api/meta/v1"
 	"github.com/jaguar/apiskeleton/pkg/response"
-	"github.com/jaguar/apiskeleton/pkg/secret"
 )
 
 // Create add new user to the storage.
