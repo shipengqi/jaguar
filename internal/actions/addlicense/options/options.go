@@ -24,13 +24,14 @@ func New() *Options {
 }
 
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
-	s := fss.FlagSet("checklicense")
+	s := fss.FlagSet("addlicense")
 	s.BoolVar(&o.Check, "check", o.Check, "Check only mode: verify if the license header is missing.")
 	s.StringVar(&o.Holder, "holder", o.Holder, "Copyright holder")
 	s.StringVar(&o.Year, "year", o.Year, "Copyright year(s)")
 	s.StringVarP(&o.License, "license", "l", o.License, "Supported license type: apache, bsd, mit, mpl")
 	s.StringSliceVar(&o.SkipDirs, "skip-dirs", o.SkipDirs, "Regexps of directories to skip")
 	s.StringSliceVar(&o.SkipFiles, "skip-files", o.SkipFiles, "Regexps of files to skip")
+
 	return
 }
 

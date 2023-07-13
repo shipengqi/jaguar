@@ -9,9 +9,15 @@ import (
 	"github.com/shipengqi/log"
 )
 
+const (
+	defaultTermWidth = 64
+	middleTermWidth  = 89
+	maxTermWidth     = 178
+)
+
 var (
-	defaultReporter      = spinner.New()
-	defaultTermWidth int = 64
+	defaultReporter = spinner.New()
+	termWidth       = defaultTermWidth
 )
 
 func Start(msg string) *spinner.Spinner {
@@ -32,5 +38,19 @@ func End(status string) {
 }
 
 func Init(w io.Writer) {
-	defaultTermWidth, _, _ = term.TerminalSize(w)
+	width, _, _ := term.TerminalSize(w)
+	if width <= defaultTermWidth {
+		termWidth = width
+	} else if width > defaultTermWidth && width <= middleTermWidth {
+		termWidth = defaultTermWidth
+	} else if width > middleTermWidth && width < maxTermWidth {
+		half := width / 2
+		if half > defaultTermWidth {
+			termWidth = half
+		} else {
+			termWidth = defaultTermWidth
+		}
+	} else if width >= maxTermWidth {
+		termWidth = middleTermWidth
+	}
 }

@@ -10,15 +10,21 @@ import (
 
 const (
 	DefaultModuleMinLength  = 2
-	DefaultModuleMaxLength  = -1
+	DefaultModuleMaxLength  = 128
 	DefaultProjectMinLength = 2
 	DefaultProjectMaxLength = 20
 )
 
 func prerun(cfg *config.Config) error {
+	var answer string
+	var err error
 	if cfg.Type == "" {
 		var selected string
-		switch survey.Select("Select project type", []string{"CLI", "API", "gRPC"}) {
+		answer, err = survey.Select("Select project type:", []string{"CLI", "API", "gRPC"})
+		if err != nil {
+			return err
+		}
+		switch answer {
 		case "CLI":
 			selected = types.ProjectTypeCLI
 		case "API":
@@ -32,13 +38,21 @@ func prerun(cfg *config.Config) error {
 	}
 
 	if cfg.ProjectName == "" {
-		cfg.ProjectName = survey.InputString("Please input your project name",
+		answer, err = survey.InputString("Please input your project name:",
 			DefaultProjectMinLength, DefaultProjectMaxLength)
+		if err != nil {
+			return err
+		}
+		cfg.ProjectName = answer
 	}
 
 	if cfg.Module == "" {
-		cfg.Module = survey.InputString("Please input your Go module name",
+		answer, err = survey.InputString("Please input your Go module name:",
 			DefaultModuleMinLength, DefaultModuleMaxLength)
+		if err != nil {
+			return err
+		}
+		cfg.Module = answer
 	}
 
 	return nil

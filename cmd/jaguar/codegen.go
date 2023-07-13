@@ -7,13 +7,14 @@ import (
 	"github.com/shipengqi/jaguar/internal/actions/codegen/options"
 )
 
+const codeGenCmdDesc = "Automatically generate error codes."
+
 func newCodeGenCmd() *jcli.Command {
 	o := options.New()
-
 	c := jcli.NewCommand(
 		codegen.ActionName,
-		"Automatically generate error codes.",
-		jcli.WithCommandDesc(subdesc()),
+		codeGenCmdDesc,
+		jcli.WithCommandDesc(subdesc(codeGenCmdDesc)),
 		jcli.WithCommandAliases(codegen.ActionNameAlias),
 		jcli.WithCommandCliOptions(o),
 		jcli.WithCommandRunFunc(func(args []string) error {

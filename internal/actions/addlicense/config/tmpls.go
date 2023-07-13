@@ -46,7 +46,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.`
 
 var licenseTemplates = make(map[string]*template.Template)
 
-// nolint: gochecknoinits
+//nolint:gochecknoinits
 func init() {
 	licenseTemplates["apache"] = template.Must(template.New("").Parse(tmplApache))
 	licenseTemplates["mit"] = template.Must(template.New("").Parse(tmplMIT))

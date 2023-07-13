@@ -2,9 +2,14 @@ package codegen
 
 import (
 	"bytes"
+	"fmt"
 	"go/ast"
 	"go/types"
 	"regexp"
+	"strings"
+
+	"github.com/shipengqi/log"
+	"golang.org/x/tools/go/packages"
 )
 
 // Value represents a declared constant.
@@ -30,7 +35,7 @@ func (v *Value) String() string {
 func (v *Value) ParseComment() (string, string) {
 	reg := regexp.MustCompile(`\w\s*-\s*(\d{3})\s*:\s*([A-Z].*)\s*\.\n*`)
 	if !reg.MatchString(v.comment) {
-		log.Printf("constant '%s' have wrong comment format, register with 500 as default", v.originalName)
+		log.Infof("constant '%s' have wrong comment format, register with 500 as default", v.originalName)
 
 		return "500", "Internal server error"
 	}
@@ -68,4 +73,30 @@ type Generator struct {
 	pkg *Package     // Package we are scanning.
 
 	trimPrefix string
+}
+
+// Printf like fmt.Printf, but add the string to g.buf.
+func (g *Generator) Printf(format string, args ...interface{}) {
+	_, _ = fmt.Fprintf(&g.buf, format, args...)
+}
+
+// parsePackage analyzes the single package constructed from the patterns and tags.
+// parsePackage exits if there is an error.
+func (g *Generator) parsePackage(patterns []string, tags []string) {
+	cfg := &packages.Config{
+		//nolint:staticcheck
+		Mode: packages.LoadSyntax,
+		// TODO: Need to think about constants in test files. Maybe write type_string_test.go
+		// in a separate pass? For later.
+		Tests:      false,
+		BuildFlags: []string{fmt.Sprintf("-tags=%s", strings.Join(tags, " "))},
+	}
+	pkgs, err := packages.Load(cfg, patterns...)
+	if err != nil {
+		// log.Fatal(err)
+	}
+	if len(pkgs) != 1 {
+		log.Fatalf("error: %d packages found", len(pkgs))
+	}
+	// g.addPackage(pkgs[0])
 }

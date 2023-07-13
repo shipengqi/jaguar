@@ -3,15 +3,14 @@ package survey
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 )
 
-func NumberValidator(min, max int) func(input string) error {
-	return func(input string) error {
-		v, err := strconv.Atoi(input)
-		if err != nil {
-			return errors.New("value must be a valid integer")
+func NumberValidator(min, max int) func(input interface{}) error {
+	return func(input interface{}) error {
+		v, ok := input.(int)
+		if !ok {
+			return errors.New("value must be a valid string")
 		}
 		if min != NumberEmpty && v < min {
 			return fmt.Errorf("value must be at least %d", min)
@@ -23,14 +22,18 @@ func NumberValidator(min, max int) func(input string) error {
 	}
 }
 
-func StringValidator(min, max int) func(input string) error {
-	return func(input string) error {
-		input = strings.TrimSpace(input)
-		if min != NumberEmpty && len(input) < min {
-			return fmt.Errorf("length must be at least %d", min)
+func StringValidator(minLength, maxLength int) func(input interface{}) error {
+	return func(input interface{}) error {
+		str, ok := input.(string)
+		if !ok {
+			return errors.New("value must be a valid string")
 		}
-		if max != NumberEmpty && len(input) > max {
-			return fmt.Errorf("length cannot exceed %d", max)
+		input = strings.TrimSpace(str)
+		if minLength != NumberEmpty && len(str) < minLength {
+			return fmt.Errorf("length must be at least %d", minLength)
+		}
+		if maxLength != NumberEmpty && len(str) > maxLength {
+			return fmt.Errorf("length cannot exceed %d", maxLength)
 		}
 		return nil
 	}
