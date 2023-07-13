@@ -21,7 +21,7 @@ func prettyPrefix(msg string) *strings.Builder {
 	var b strings.Builder
 	var padding string
 	ml := len(msg)
-	pl := defaultTermWidth - ml - 18
+	pl := termWidth - ml - 18
 	if pl > 0 {
 		padding = strings.Repeat(".", pl)
 	}

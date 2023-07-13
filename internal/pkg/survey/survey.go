@@ -1,64 +1,61 @@
 package survey
 
 import (
-	"strconv"
-
-	"github.com/manifoldco/promptui"
+	"github.com/AlecAivazis/survey/v2"
 )
 
 const (
 	NumberEmpty = -1
 )
 
-func Select(label string, items []string) string {
-	prompt := promptui.Select{
-		Label: label,
-		Items: items,
+func Select(label string, options []string) (string, error) {
+	prompt := &survey.Select{
+		Message: label,
+		Options: options,
 	}
-	_, result, err := prompt.Run()
+	result := ""
+	err := survey.AskOne(prompt, &result, survey.WithValidator(survey.Required))
 	if err != nil {
-		return ""
+		return "", err
 	}
-	return result
+	return result, nil
 }
 
-func InputString(label string, min, max int) string {
-	prompt := promptui.Prompt{
-		Label:    label,
-		Validate: StringValidator(min, max),
+func InputString(label string, minLength, maxLength int) (string, error) {
+	prompt := &survey.Input{
+		Message: label,
 	}
-	result, err := prompt.Run()
+	result := ""
+	err := survey.AskOne(prompt, &result,
+		survey.WithValidator(survey.MinLength(minLength)),
+		survey.WithValidator(survey.MaxLength(maxLength)))
 	if err != nil {
-		return ""
+		return "", err
 	}
-	return result
+	return result, nil
 }
 
-func InputNumber(label string, min, max int) int {
-	prompt := promptui.Prompt{
-		Label:    label,
-		Validate: NumberValidator(min, max),
+func InputNumber(label string, min, max int) (int, error) {
+	prompt := &survey.Input{
+		Message: label,
 	}
-	result, err := prompt.Run()
+	var result int
+	err := survey.AskOne(prompt, &result,
+		survey.WithValidator(NumberValidator(min, max)))
 	if err != nil {
-		return NumberEmpty
+		return NumberEmpty, err
 	}
-	v, _ := strconv.Atoi(result)
-	return v
+	return result, nil
 }
 
-func Confirm(label string) bool {
-	prompt := promptui.Prompt{
-		Label:     label,
-		IsConfirm: true,
+func Confirm(label string) (bool, error) {
+	prompt := &survey.Confirm{
+		Message: label,
 	}
-	result, err := prompt.Run()
+	var result bool
+	err := survey.AskOne(prompt, &result)
 	if err != nil {
-		return false
+		return false, err
 	}
-	v, err := strconv.ParseBool(result)
-	if err != nil {
-		return false
-	}
-	return v
+	return result, nil
 }

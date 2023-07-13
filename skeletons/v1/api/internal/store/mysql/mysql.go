@@ -77,7 +77,7 @@ func GetMySQLFactoryOr(opts *db.Options) (store.Factory, error) {
 }
 
 // CleanDatabase tear downs the database tables.
-// nolint:unused
+//nolint:unused
 func CleanDatabase(db *gorm.DB) error {
 	tables := []interface{}{
 		v1.User{},
@@ -93,7 +93,7 @@ func CleanDatabase(db *gorm.DB) error {
 
 // MigrateDatabase run auto migration for given models, will only add missing fields,
 // won't delete/change current data.
-// nolint:unused
+//nolint:unused
 func MigrateDatabase(db *gorm.DB) error {
 	tables := []interface{}{
 		v1.User{},
@@ -109,7 +109,7 @@ func MigrateDatabase(db *gorm.DB) error {
 }
 
 // ResetDatabase resets the database tables.
-// nolint:unused,deadcode
+//nolint:unused,deadcode
 func ResetDatabase(db *gorm.DB) error {
 	if err := CleanDatabase(db); err != nil {
 		return err

@@ -7,17 +7,21 @@ import (
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
 )
 
+const createCmdDesc = "Creates a new Go project."
+
 func newCreateCmd() *jcli.Command {
 	o := options.New()
-
 	c := jcli.NewCommand(
 		create.ActionName,
-		"Creates a new Go project.",
-		jcli.WithCommandDesc(subdesc()),
+		createCmdDesc,
+		jcli.WithCommandDesc(subdesc(createCmdDesc)),
 		jcli.WithCommandAliases(create.ActionNameAlias, create.ActionNameAliasShort),
 		jcli.WithCommandCliOptions(o),
 		jcli.WithCommandRunFunc(func(args []string) error {
-			a := create.NewAction(o, args)
+			a, err := create.NewAction(o, args)
+			if err != nil {
+				return err
+			}
 			return a.Execute()
 		}),
 	)

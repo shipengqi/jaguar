@@ -1,11 +1,10 @@
 package create
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/shipengqi/action"
-	"github.com/shipengqi/component-base/term"
+
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
 	"github.com/shipengqi/jaguar/internal/actions/create/reporter"
@@ -17,19 +16,13 @@ const (
 	ActionNameAliasShort = "n"
 )
 
-func NewAction(opts *options.Options, args []string) *action.Action {
-	width, _, err := term.TerminalSize(os.Stdout)
-	if err != nil {
-		panic(err)
-	}
+func NewAction(opts *options.Options, args []string) (*action.Action, error) {
 	reporter.Init(os.Stdout)
-	fmt.Println(width)
 
 	cfg, _ := config.CreateConfigFromOptions(opts, args)
-	// Todo move prerun to options.Complete
-	err = prerun(cfg)
+	err := prerun(cfg)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	act := &action.Action{
 		Name: ActionName,
@@ -41,5 +34,5 @@ func NewAction(opts *options.Options, args []string) *action.Action {
 		newCreateGRPCAction(cfg),
 	)
 
-	return act
+	return act, nil
 }

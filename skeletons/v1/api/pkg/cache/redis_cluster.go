@@ -126,6 +126,7 @@ func (c *Client) Expire(key string, dur time.Duration) error {
 // Lock tries to obtain a new lock using a key with the given TTL.
 // Don't forget to release.
 // See https://github.com/bsm/redislock
+// Another implementation: https://github.com/go-redsync/redsync
 func (c *Client) Lock(key string, ttl int64, options *redislock.Options) (*redislock.Lock, error) {
 	if c.locker == nil {
 		c.locker = redislock.New(c.cli)
