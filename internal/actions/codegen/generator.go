@@ -98,5 +98,22 @@ func (g *Generator) parsePackage(patterns []string, tags []string) {
 	if len(pkgs) != 1 {
 		log.Fatalf("error: %d packages found", len(pkgs))
 	}
-	// g.addPackage(pkgs[0])
+	g.addPackage(pkgs[0])
+}
+
+// addPackage adds a type checked Package and its syntax files to the generator.
+func (g *Generator) addPackage(pkg *packages.Package) {
+	g.pkg = &Package{
+		name:  pkg.Name,
+		defs:  pkg.TypesInfo.Defs,
+		files: make([]*File, len(pkg.Syntax)),
+	}
+
+	for i, file := range pkg.Syntax {
+		g.pkg.files[i] = &File{
+			file:       file,
+			pkg:        g.pkg,
+			trimPrefix: g.trimPrefix,
+		}
+	}
 }
