@@ -4,13 +4,41 @@ import (
 	"bytes"
 	"fmt"
 	"go/ast"
+	"go/constant"
+	"go/token"
 	"go/types"
 	"regexp"
 	"strings"
+	"text/template"
 
 	"github.com/shipengqi/log"
 	"golang.org/x/tools/go/packages"
 )
+
+var errCodeDocPrefix = `# 错误码
+
+！！IAM 系统错误码列表，由 {{.}}codegen -type=int -doc{{.}} 命令生成，不要对此文件做任何更改。
+
+## 功能说明
+
+如果返回结果中存在 {{.}}code{{.}} 字段，则表示调用 API 接口失败。例如：
+
+{{.}}{{.}}{{.}}json
+{
+  "code": 100101,
+  "message": "Database error"
+}
+{{.}}{{.}}{{.}}
+
+上述返回中 {{.}}code{{.}} 表示错误码，{{.}}message{{.}} 表示该错误的具体信息。每个错误同时也对应一个 HTTP 状态码，比如上述错误码对应了 HTTP 状态码 500(Internal Server Error)。
+
+## 错误码列表
+
+IAM 系统支持的错误码列表如下：
+
+| Identifier | Code | HTTP Code | Description |
+| ---------- | ---- | --------- | ----------- |
+`
 
 // Value represents a declared constant.
 type Value struct {
@@ -59,6 +87,104 @@ type File struct {
 	trimPrefix string
 }
 
+// genDecl processes one declaration clause.
+func (f *File) genDecl(node ast.Node) bool {
+	decl, ok := node.(*ast.GenDecl)
+	if !ok || decl.Tok != token.CONST {
+		// We only care about const declarations.
+		return true
+	}
+	// The name of the type of the constants we are declaring.
+	// Can change if this is a multi-element declaration.
+	typ := ""
+	// Loop over the elements of the declaration. Each element is a ValueSpec:
+	// a list of names possibly followed by a type, possibly followed by values.
+	// If the type and value are both missing, we carry down the type (and value,
+	// but the "go/types" package takes care of that).
+	for _, spec := range decl.Specs {
+		vspec, _ := spec.(*ast.ValueSpec) // Guaranteed to succeed as this is CONST.
+		if vspec.Type == nil && len(vspec.Values) > 0 {
+			// "X = 1". With no type but a value. If the constant is untyped,
+			// skip this vspec and reset the remembered type.
+			typ = ""
+
+			// If this is a simple type conversion, remember the type.
+			// We don't mind if this is actually a call; a qualified call won't
+			// be matched (that will be SelectorExpr, not Ident), and only unusual
+			// situations will result in a function call that appears to be
+			// a type conversion.
+			ce, ok := vspec.Values[0].(*ast.CallExpr)
+			if !ok {
+				continue
+			}
+			id, ok := ce.Fun.(*ast.Ident)
+			if !ok {
+				continue
+			}
+			typ = id.Name
+		}
+		if vspec.Type != nil {
+			// "X T". We have a type. Remember it.
+			ident, ok := vspec.Type.(*ast.Ident)
+			if !ok {
+				continue
+			}
+			typ = ident.Name
+		}
+		if typ != f.typeName {
+			// This is not the type we're looking for.
+			continue
+		}
+		// We now have a list of names (from one line of source code) all being
+		// declared with the desired type.
+		// Grab their names and actual values and store them in f.values.
+		for _, name := range vspec.Names {
+			if name.Name == "_" {
+				continue
+			}
+			// This dance lets the type checker find the values for us. It's a
+			// bit tricky: look up the object declared by the name, find its
+			// types.Const, and extract its value.
+			obj, ok := f.pkg.defs[name]
+			if !ok {
+				log.Fatalf("no value for constant %s", name)
+			}
+			info := obj.Type().Underlying().(*types.Basic).Info()
+			if info&types.IsInteger == 0 {
+				log.Fatalf("can't handle non-integer constant type %s", typ)
+			}
+			value := obj.(*types.Const).Val() // Guaranteed to succeed as this is CONST.
+			if value.Kind() != constant.Int {
+				log.Fatalf("can't happen: constant is not an integer %s", name)
+			}
+			i64, isInt := constant.Int64Val(value)
+			u64, isUint := constant.Uint64Val(value)
+			if !isInt && !isUint {
+				log.Fatalf("internal error: value of %s is not an integer: %s", name, value.String())
+			}
+			if !isInt {
+				u64 = uint64(i64)
+			}
+			v := Value{
+				originalName: name.Name,
+				value:        u64,
+				signed:       info&types.IsUnsigned == 0,
+				str:          value.String(),
+			}
+			if vspec.Doc != nil && vspec.Doc.Text() != "" {
+				v.comment = vspec.Doc.Text()
+			} else if c := vspec.Comment; c != nil && len(c.List) == 1 {
+				v.comment = c.Text()
+			}
+
+			v.name = strings.TrimPrefix(v.originalName, f.trimPrefix)
+			f.values = append(f.values, v)
+		}
+	}
+
+	return false
+}
+
 // Package defines options for package.
 type Package struct {
 	name  string
@@ -98,5 +224,79 @@ func (g *Generator) parsePackage(patterns []string, tags []string) {
 	if len(pkgs) != 1 {
 		log.Fatalf("error: %d packages found", len(pkgs))
 	}
-	// g.addPackage(pkgs[0])
+	g.addPackage(pkgs[0])
+}
+
+// addPackage adds a type checked Package and its syntax files to the generator.
+func (g *Generator) addPackage(pkg *packages.Package) {
+	g.pkg = &Package{
+		name:  pkg.Name,
+		defs:  pkg.TypesInfo.Defs,
+		files: make([]*File, len(pkg.Syntax)),
+	}
+
+	for i, file := range pkg.Syntax {
+		g.pkg.files[i] = &File{
+			file:       file,
+			pkg:        g.pkg,
+			trimPrefix: g.trimPrefix,
+		}
+	}
+}
+
+// generate produces the register calls for the named type.
+func (g *Generator) generate(typeName string) {
+	values := make([]Value, 0, 100)
+	for _, file := range g.pkg.files {
+		// Set the state for this run of the walker.
+		file.typeName = typeName
+		file.values = nil
+		if file.file != nil {
+			ast.Inspect(file.file, file.genDecl)
+			values = append(values, file.values...)
+		}
+	}
+
+	if len(values) == 0 {
+		log.Fatalf("no values defined for type %s", typeName)
+	}
+	// Generate code that will fail if the constants change value.
+	g.Printf("\t// init register error codes defines in this source code to `github.com/marmotedu/errors`\n")
+	g.Printf("func init() {\n")
+	for _, v := range values {
+		code, description := v.ParseComment()
+		g.Printf("\tregister(%s, %s, \"%s\")\n", v.originalName, code, description)
+	}
+	g.Printf("}\n")
+}
+
+// generateDocs produces error code Markdown document for the named type.
+func (g *Generator) generateDocs(typeName string) {
+	values := make([]Value, 0, 100)
+	for _, file := range g.pkg.files {
+		// Set the state for this run of the walker.
+		file.typeName = typeName
+		file.values = nil
+		if file.file != nil {
+			ast.Inspect(file.file, file.genDecl)
+			values = append(values, file.values...)
+		}
+	}
+
+	if len(values) == 0 {
+		log.Fatalf("no values defined for type %s", typeName)
+	}
+
+	tmpl, _ := template.New("doc").Parse(errCodeDocPrefix)
+	var buf bytes.Buffer
+	_ = tmpl.Execute(&buf, "`")
+
+	// Generate code that will fail if the constants change value.
+	g.Printf(buf.String())
+	for _, v := range values {
+		code, description := v.ParseComment()
+		// g.Printf("\tregister(%s, %s, \"%s\")\n", v.originalName, code, description)
+		g.Printf("| %s | %d | %s | %s |\n", v.originalName, v.value, code, description)
+	}
+	g.Printf("\n")
 }
