@@ -3,7 +3,7 @@ package code
 import (
 	"net/http"
 
-	"github.com/novalagung/gubrak"
+	"github.com/samber/lo"
 	"github.com/shipengqi/errors"
 )
 
@@ -52,7 +52,7 @@ func (coder ErrCode) HTTPStatus() int {
 
 //nolint:unparam
 func register(code int, httpStatus int, message string, refs ...string) {
-	found, _ := gubrak.Includes([]int{200, 400, 401, 403, 404, 500}, httpStatus)
+	found := lo.Contains([]int{200, 400, 401, 403, 404, 500}, httpStatus)
 	if !found {
 		panic("http code not in `200, 400, 401, 403, 404, 500`")
 	}

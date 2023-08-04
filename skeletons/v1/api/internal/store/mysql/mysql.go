@@ -11,7 +11,7 @@ import (
 	"github.com/jaguar/apiskeleton/internal/store"
 	v1 "github.com/jaguar/apiskeleton/pkg/api/apiserver/v1"
 	"github.com/jaguar/apiskeleton/pkg/db"
-	"github.com/jaguar/apiskeleton/pkg/logger"
+	dblogger "github.com/jaguar/apiskeleton/pkg/db/logger"
 )
 
 var (
@@ -47,7 +47,7 @@ func GetMySQLFactoryOr(opts *db.Options) (store.Factory, error) {
 		instance *gorm.DB
 	)
 	once.Do(func() {
-		opts.Logger = logger.New(logger.Silent)
+		opts.Logger = dblogger.New(dblogger.Silent)
 		instance, err = db.New(opts)
 		if err != nil {
 			log.Fatal(err.Error())
@@ -77,6 +77,7 @@ func GetMySQLFactoryOr(opts *db.Options) (store.Factory, error) {
 }
 
 // CleanDatabase tear downs the database tables.
+//
 //nolint:unused
 func CleanDatabase(db *gorm.DB) error {
 	tables := []interface{}{
@@ -93,6 +94,7 @@ func CleanDatabase(db *gorm.DB) error {
 
 // MigrateDatabase run auto migration for given models, will only add missing fields,
 // won't delete/change current data.
+//
 //nolint:unused
 func MigrateDatabase(db *gorm.DB) error {
 	tables := []interface{}{
@@ -109,6 +111,7 @@ func MigrateDatabase(db *gorm.DB) error {
 }
 
 // ResetDatabase resets the database tables.
+//
 //nolint:unused,deadcode
 func ResetDatabase(db *gorm.DB) error {
 	if err := CleanDatabase(db); err != nil {

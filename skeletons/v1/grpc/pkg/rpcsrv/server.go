@@ -24,19 +24,22 @@ func New(opts *Options) *Server {
 	return &Server{cfg: cfg, srv: srv}
 }
 
+func (s *Server) GRPCServer() *grpc.Server {
+	return s.srv
+}
+
 func (s *Server) Run() error {
 	listen, err := net.Listen("tcp", s.cfg.addr)
 	if err != nil {
-		log.Fatalf("failed to listen: %s", err.Error())
+		log.Debugf("failed to listen: %s", err.Error())
+		return err
 	}
 
-	go func() {
-		if err := s.srv.Serve(listen); err != nil {
-			log.Fatalf("failed to start gRPC server: %s", err.Error())
-		}
-	}()
-
 	log.Infof("start gRPC server at %s", s.cfg.addr)
+	if err := s.srv.Serve(listen); err != nil {
+		log.Debugf("failed to start gRPC server: %s", err.Error())
+		return err
+	}
 
 	return nil
 }

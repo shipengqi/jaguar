@@ -2,9 +2,20 @@ package rpcsrv
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/spf13/pflag"
+)
+
+const (
+	infinity                           = time.Duration(math.MaxInt64)
+	defaultMaxMsgSize                  = 4 << 20 // 4 * 1024 * 1024
+	defaultMaxConcurrentStreams        = 100000
+	defaultKeepAliveTime               = 30 * time.Second
+	defaultConnectionIdleTime          = 10 * time.Second
+	defaultMaxServerConnectionAgeGrace = 10 * time.Second
+	defaultMiniKeepAliveTimeRate       = 2
 )
 
 // TLSInfo contains configuration items related to certificate.
@@ -18,20 +29,27 @@ type TLSInfo struct {
 type Options struct {
 	BindAddress           string        `json:"bind-address"          mapstructure:"bind-address"`
 	BindPort              int           `json:"bind-port"             mapstructure:"bind-port"`
-	ServerCert            TLSInfo       `json:"tls"                   mapstructure:"tls"`
+	MaxMsgSize            int           `json:"max-msg-size"          mapstructure:"max-msg-size"`
+	MaxConcurrentStreams  int           `json:"max-con-streams"       mapstructure:"max-con-streams"`
 	Keepalive             time.Duration `json:"keepalive"             mapstructure:"keepalive"`
 	Timeout               time.Duration `json:"timeout"               mapstructure:"timeout"`
 	MaxConnectionAge      time.Duration `json:"max-conn-age"          mapstructure:"max-conn-age"`
 	MaxConnectionAgeGrace time.Duration `json:"max-conn-age-grace"    mapstructure:"max-conn-age-grace"`
-	MaxMsgSize            int           `json:"max-msg-size"          mapstructure:"max-msg-size"`
-	MaxConcurrentStreams  int           `json:"max-con-streams"       mapstructure:"max-con-streams"`
+	ServerCert            TLSInfo       `json:"tls"                   mapstructure:"tls"`
+	Interceptors          []string      `json:"interceptors"          mapstructure:"interceptors"`
 }
 
+// NewOptions creates an Options object with default parameters.
 func NewOptions() *Options {
 	return &Options{
-		BindAddress: "0.0.0.0",
-		BindPort:    8081,
-		MaxMsgSize:  4 * 1024 * 1024,
+		BindAddress:           "0.0.0.0",
+		BindPort:              8081,
+		Keepalive:             defaultKeepAliveTime,
+		Timeout:               infinity,
+		MaxConnectionAge:      defaultMaxServerConnectionAgeGrace,
+		MaxConnectionAgeGrace: defaultMaxServerConnectionAgeGrace,
+		MaxMsgSize:            defaultMaxMsgSize,
+		MaxConcurrentStreams:  defaultMaxConcurrentStreams,
 	}
 }
 
@@ -74,4 +92,11 @@ func (s *Options) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.ServerCert.KeyFile, "grpc.tls.private-key-file",
 		s.ServerCert.KeyFile, ""+
 			"File containing the default x509 private key matching --grpc.tls.cert-file.")
+
+	// TODO
+	// See:
+	//    https://github.com/grpc-ecosystem/go-grpc-middleware
+	//    https://github.com/open-telemetry/opentelemetry-go
+	// fs.StringSliceVar(&s.Interceptors, "grpc.interceptors", s.Interceptors,
+	// 	"List of allowed interceptors for gRPC server, comma separated. If this list is empty default interceptors will be used.")
 }

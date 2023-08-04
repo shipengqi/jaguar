@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/shipengqi/log"
-
 	gormlogger "gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"
 )
@@ -31,7 +30,7 @@ const (
 )
 
 const (
-	Silent  gormlogger.LogLevel = iota + 1
+	Silent gormlogger.LogLevel = iota + 1
 	Error
 	Warn
 	Info

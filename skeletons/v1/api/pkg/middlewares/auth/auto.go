@@ -19,10 +19,10 @@ type AutoStrategy struct {
 	jwt   middlewares.AuthStrategy
 }
 
-var _ middleware.AuthStrategy = &AutoStrategy{}
+var _ middlewares.AuthStrategy = &AutoStrategy{}
 
 // NewAutoStrategy create auto strategy with basic strategy and jwt strategy.
-func NewAutoStrategy(basic, jwt middleware.AuthStrategy) AutoStrategy {
+func NewAutoStrategy(basic, jwt middlewares.AuthStrategy) AutoStrategy {
 	return AutoStrategy{
 		basic: basic,
 		jwt:   jwt,
@@ -32,13 +32,12 @@ func NewAutoStrategy(basic, jwt middleware.AuthStrategy) AutoStrategy {
 // AuthFunc defines auto strategy as the gin authentication middleware.
 func (a AutoStrategy) AuthFunc() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		operator := middleware.AuthOperator{}
+		operator := middlewares.AuthOperator{}
 		authHeader := strings.SplitN(c.Request.Header.Get("Authorization"), " ", 2)
 
 		if len(authHeader) != authHeaderCount {
 			response.Fail(c, errors.New("Authorization header format is wrong."))
 			c.Abort()
-
 			return
 		}
 
@@ -47,7 +46,6 @@ func (a AutoStrategy) AuthFunc() gin.HandlerFunc {
 			operator.SetStrategy(a.basic)
 		case "Bearer":
 			operator.SetStrategy(a.jwt)
-			// a.JWT.MiddlewareFunc()(c)
 		default:
 			response.Fail(c, errors.New("unrecognized Authorization header."))
 			c.Abort()
