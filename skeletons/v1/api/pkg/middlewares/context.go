@@ -4,7 +4,7 @@ import "github.com/gin-gonic/gin"
 
 const (
 	// XRequestIDKey defines X-Request-ID key string.
-	XRequestIDKey = "X-Request-ID"
+	XRequestIDKey = "x-request-id"
 	// UsernameKey defines the key in gin context which represents the owner of the secret.
 	UsernameKey = "username"
 	// KeyRequestID defines the key in gin context which represents the owner of the secret.

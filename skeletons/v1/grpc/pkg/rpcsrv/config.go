@@ -2,25 +2,12 @@ package rpcsrv
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
-	"math"
-	"time"
 
 	"github.com/shipengqi/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
-)
-
-const (
-	infinity                           = time.Duration(math.MaxInt64)
-	defaultMaxMsgSize                  = 4 << 20
-	defaultMaxConcurrentStreams        = 100000
-	defaultKeepAliveTime               = 30 * time.Second
-	defaultConnectionIdleTime          = 10 * time.Second
-	defaultMaxServerConnectionAgeGrace = 10 * time.Second
-	defaultMiniKeepAliveTimeRate       = 2
 )
 
 type Config struct {
@@ -29,7 +16,6 @@ type Config struct {
 	id                       string
 	domain                   string
 	addr                     string
-	tls                      *tls.Config
 	grpcopts                 []grpc.ServerOption
 	unaryServerInterceptors  []grpc.UnaryServerInterceptor
 	streamServerInterceptors []grpc.StreamServerInterceptor

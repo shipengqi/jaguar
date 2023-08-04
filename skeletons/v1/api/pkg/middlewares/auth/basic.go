@@ -45,7 +45,7 @@ func (b BasicStrategy) AuthFunc() gin.HandlerFunc {
 			return
 		}
 
-		c.Set(middleware.UsernameKey, pair[0])
+		c.Set(middlewares.UsernameKey, pair[0])
 
 		c.Next()
 	}

@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mattn/go-isatty"
 	"github.com/shipengqi/log"
-	"go.uber.org/zap"
 )
 
 // Logger instances a Logger middleware that will write the logs to gin.DefaultWriter.
@@ -20,7 +19,7 @@ func Logger() gin.HandlerFunc {
 }
 
 // GetLoggerConfig return gin.LoggerConfig which will write the logs to specified io.Writer with given gin.LogFormatter.
-// By default gin.DefaultWriter = os.Stdout
+// By default, gin.DefaultWriter = os.Stdout
 // reference: https://github.com/gin-gonic/gin#custom-log-format
 func GetLoggerConfig(formatter gin.LogFormatter, output io.Writer, skipPaths []string) gin.LoggerConfig {
 	if formatter == nil {
@@ -65,10 +64,10 @@ func GetLoggerWithCtx(ctx context.Context) *log.Logger {
 	lg := log.L()
 
 	if requestID := ctx.Value(KeyRequestID); requestID != nil {
-		lg = lg.WithValues(zap.Any(KeyRequestID, requestID))
+		lg = lg.WithValues(log.Any(KeyRequestID, requestID))
 	}
 	if username := ctx.Value(UsernameKey); username != nil {
-		lg = lg.WithValues(zap.Any(UsernameKey, username))
+		lg = lg.WithValues(log.Any(UsernameKey, username))
 	}
 
 	return lg
