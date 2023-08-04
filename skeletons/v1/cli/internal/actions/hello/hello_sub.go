@@ -1,0 +1,27 @@
+package hello
+
+import (
+	"github.com/shipengqi/action"
+	"github.com/shipengqi/log"
+
+	"github.com/jaguar/cliskeleton/internal/actions/hello/config"
+)
+
+const (
+	ActionNameSub = "sub"
+)
+
+func newSubAction(cfg *config.Config) *action.Action {
+	act := &action.Action{
+		Name: ActionNameSub,
+		Executable: func(act *action.Action) bool {
+			return cfg.Sub
+		},
+		Run: func(act *action.Action) error {
+			log.Infof("[Sub Action] Hello, %s.", cfg.Name)
+			return nil
+		},
+	}
+
+	return act
+}

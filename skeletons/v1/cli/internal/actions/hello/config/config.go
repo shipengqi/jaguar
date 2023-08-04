@@ -1,0 +1,24 @@
+package config
+
+import (
+	"github.com/shipengqi/component-base/json"
+
+	"github.com/jaguar/cliskeleton/internal/actions/hello/options"
+)
+
+type Config struct {
+	*options.Options
+}
+
+func (o *Config) String() string {
+	data, _ := json.Marshal(o)
+
+	return string(data)
+}
+
+// CreateConfigFromOptions creates a running configuration instance based
+// on a given command line.
+func CreateConfigFromOptions(opts *options.Options, args []string) (*Config, error) {
+	cfg := &Config{Options: opts}
+	return cfg, nil
+}
