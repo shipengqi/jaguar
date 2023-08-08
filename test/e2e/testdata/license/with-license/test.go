@@ -1,10 +1,10 @@
-// Copyright (c) 2022 PengQi Shi
+// Copyright 2023 PengQi Shi
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+// http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,27 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v1
+package main
 
-import "embed"
+import "fmt"
 
-//go:embed api
-var API embed.FS
-
-//go:embed cli
-var CLI embed.FS
-
-//go:embed grpc
-var GRPC embed.FS
-
-//go:embed .gitignore
-var GitIgnore embed.FS
-
-//go:embed .golangci.yaml
-var GoCI embed.FS
-
-//go:embed .goreleaser.yaml
-var Releaser embed.FS
-
-//go:embed .gsemver.yaml
-var Semver embed.FS
+func main() {
+	fmt.Println("hello, jaguar")
+}

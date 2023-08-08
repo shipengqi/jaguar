@@ -19,7 +19,7 @@ require (
 	github.com/shipengqi/component-base v0.1.7
 	github.com/shipengqi/errors v0.1.5
 	github.com/shipengqi/golib v0.1.36
-	github.com/shipengqi/jcli v0.1.13
+	github.com/shipengqi/jcli v0.1.19
 	github.com/shipengqi/log v0.1.14
 	github.com/spf13/pflag v1.0.5
 	github.com/tpkeeper/gin-dump v1.0.1

@@ -28,18 +28,13 @@ func main() {
 	defer finally()
 	cobra.OnInitialize(logInitializer)
 
-	app := jcli.New(
+	app := jcli.NewCommand(
 		"examplecli",
-		jcli.WithDesc(jcli.IconBlue(fmt.Sprintf(iconFmt, rootDesc))),
-		jcli.DisableConfig(),
-		jcli.DisableCommandSorting(),
-		jcli.WithOnSignalReceived(func(_ os.Signal) {
-			finally()
-			os.Exit(0)
-		}),
+		rootDesc,
+		jcli.WithCommandDesc(jcli.IconBlue(fmt.Sprintf(iconFmt, rootDesc))),
 	)
 
-	app.Command().PersistentPreRun = func(cmd *cobra.Command, args []string) {
+	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
 		log.Info(subdesc(""))
 	}
 

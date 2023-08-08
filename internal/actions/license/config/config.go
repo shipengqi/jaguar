@@ -7,8 +7,9 @@ import (
 	"text/template"
 
 	"github.com/shipengqi/component-base/json"
+	"github.com/shipengqi/log"
 
-	"github.com/shipengqi/jaguar/internal/actions/addlicense/options"
+	"github.com/shipengqi/jaguar/internal/actions/license/options"
 )
 
 type Config struct {
@@ -30,15 +31,15 @@ func (o *Config) String() string {
 func CreateConfigFromOptions(opts *options.Options) (*Config, error) {
 	cfg := &Config{Options: opts}
 
-	if len(opts.SkipDirs) > 0 {
-		ps, err := getPatterns(opts.SkipDirs)
+	if len(opts.SkipOptions.SkipDirs) > 0 {
+		ps, err := getPatterns(opts.SkipOptions.SkipDirs)
 		if err != nil {
 			return nil, err
 		}
 		cfg.SkipDirRegs = ps
 	}
-	if len(opts.SkipFiles) > 0 {
-		ps, err := getPatterns(opts.SkipFiles)
+	if len(opts.SkipOptions.SkipFiles) > 0 {
+		ps, err := getPatterns(opts.SkipOptions.SkipFiles)
 		if err != nil {
 			return nil, err
 		}
@@ -46,19 +47,19 @@ func CreateConfigFromOptions(opts *options.Options) (*Config, error) {
 	}
 
 	var t *template.Template
-	if opts.LicenseFile != "" {
-		d, err := os.ReadFile(opts.LicenseFile)
+	if opts.HeaderOptions.LicenseFile != "" {
+		d, err := os.ReadFile(opts.HeaderOptions.LicenseFile)
 		if err != nil {
-			fmt.Printf("license file: %v\n", err)
+			log.Errorf("license file: %v\n", err)
 			return nil, err
 		}
 		t, err = template.New("").Parse(string(d))
 		if err != nil {
-			fmt.Printf("license file: %v\n", err)
+			log.Errorf("license file: %v\n", err)
 			return nil, err
 		}
 	} else {
-		t = licenseTemplates[opts.License]
+		t = licenseTemplates[opts.HeaderOptions.License]
 	}
 	cfg.LicenseTmpl = t
 

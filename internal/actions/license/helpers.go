@@ -1,4 +1,4 @@
-package addlicense
+package license
 
 import (
 	"bufio"
@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"text/template"
 	"unicode"
 
 	"github.com/shipengqi/golib/convutil"
+	"github.com/shipengqi/log"
 )
 
 type copyrightInfo struct {
@@ -32,24 +34,22 @@ var heads = []string{
 	"<?php",                    // PHP opening tag
 }
 
-func walk(ch chan<- *file, start string) {
+func walk(ch chan<- *file, start string, dirRegs, fileRegs []*regexp.Regexp) {
 	_ = filepath.Walk(start, func(path string, fi os.FileInfo, err error) error {
 		if err != nil {
-			fmt.Printf("%s error: %v\n", path, err)
-
+			log.Debugf("%s error: %v", path, err)
 			return nil
 		}
 		if fi.IsDir() {
-			for _, pattern := range patterns.dirs {
+			for _, pattern := range dirRegs {
 				if pattern.MatchString(fi.Name()) {
 					return filepath.SkipDir
 				}
 			}
-
 			return nil
 		}
 
-		for _, pattern := range patterns.files {
+		for _, pattern := range fileRegs {
 			if pattern.MatchString(fi.Name()) {
 				return nil
 			}
@@ -129,48 +129,61 @@ func hasLicense(b []byte) bool {
 func licenseHeader(path string, tmpl *template.Template, data *copyrightInfo) ([]byte, error) {
 	var lic []byte
 	var err error
+	top, mid, bot, unknown := licenseCharsForExt(path)
+	if unknown {
+		return nil, nil
+	}
+	lic, err = prefix(tmpl, data, top, mid, bot)
+	return lic, err
+}
+
+func licenseCharsForExt(path string) (top, mid, bot string, unknown bool) {
 	switch fileExtension(path) {
 	default:
-		return nil, nil
+		return "", "", "", true
 	case ".c", ".h":
-		lic, err = prefix(tmpl, data, "/*", " * ", " */")
+		top = "/*"
+		mid = " * "
+		bot = " */"
 	case ".js", ".mjs", ".cjs", ".jsx", ".tsx", ".css", ".tf", ".ts":
-		lic, err = prefix(tmpl, data, "/**", " * ", " */")
-	case ".cc",
-		".cpp",
-		".cs",
-		".go",
-		".hh",
-		".hpp",
-		".java",
-		".m",
-		".mm",
-		".proto",
-		".rs",
-		".scala",
-		".swift",
-		".dart",
-		".groovy",
-		".kt",
-		".kts":
-		lic, err = prefix(tmpl, data, "", "// ", "")
+		top = "/**"
+		mid = " * "
+		bot = " */"
+	case ".cc", ".cpp", ".cs", ".go", ".hh", ".hpp", ".java", ".m", ".mm",
+		".proto", ".rs", ".scala", ".swift", ".dart", ".groovy", ".kt", ".kts":
+		top = ""
+		mid = "// "
+		bot = ""
 	case ".py", ".sh", ".yaml", ".yml", ".dockerfile", "dockerfile", ".rb", "gemfile":
-		lic, err = prefix(tmpl, data, "", "# ", "")
+		top = ""
+		mid = "# "
+		bot = ""
 	case ".el", ".lisp":
-		lic, err = prefix(tmpl, data, "", ";; ", "")
+		top = ""
+		mid = ";; "
+		bot = ""
 	case ".erl":
-		lic, err = prefix(tmpl, data, "", "% ", "")
+		top = ""
+		mid = "% "
+		bot = ""
 	case ".hs", ".sql":
-		lic, err = prefix(tmpl, data, "", "-- ", "")
+		top = ""
+		mid = "-- "
+		bot = ""
 	case ".html", ".xml", ".vue":
-		lic, err = prefix(tmpl, data, "<!--", " ", "-->")
+		top = "<!--"
+		mid = " "
+		bot = "-->"
 	case ".php":
-		lic, err = prefix(tmpl, data, "", "// ", "")
+		top = ""
+		mid = "// "
+		bot = ""
 	case ".ml", ".mli", ".mll", ".mly":
-		lic, err = prefix(tmpl, data, "(**", "   ", "*)")
+		top = "(**"
+		mid = "   "
+		bot = "*)"
 	}
-
-	return lic, err
+	return
 }
 
 // prefix will execute a license template t with data d

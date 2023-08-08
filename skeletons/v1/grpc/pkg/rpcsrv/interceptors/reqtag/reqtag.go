@@ -4,9 +4,10 @@ import (
 	"context"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2"
-	"github.com/jaguar/grpcskeleton/pkg/rpcsrv/headerutils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+
+	"github.com/jaguar/grpcskeleton/pkg/rpcsrv/headerutils"
 )
 
 // UnaryClientInterceptor returns a new unary client interceptors that sets the values for request tags.
