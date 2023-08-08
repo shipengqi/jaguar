@@ -2,9 +2,7 @@ package stages
 
 import (
 	"embed"
-
-	"github.com/shipengqi/jaguar/internal/actions/create/types"
-	skeletonsv1 "github.com/shipengqi/jaguar/skeletons/v1"
+	// skeletonsv1 "github.com/shipengqi/jaguar/skeletons/v1"
 )
 
 const (
@@ -30,22 +28,22 @@ type Interface interface {
 }
 
 func Init(version string) {
-	switch version {
-	case "v1":
-		fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore
-		fsmap[FilenameGoCI] = skeletonsv1.GoCI
-		fsmap[FilenameReleaser] = skeletonsv1.Releaser
-		fsmap[FilenameSemver] = skeletonsv1.Semver
-		fsmap[types.ProjectTypeAPI] = skeletonsv1.API
-		fsmap[types.ProjectTypeCLI] = skeletonsv1.CLI
-		fsmap[types.ProjectTypeGRPC] = skeletonsv1.GRPC
-	default:
-		fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore
-		fsmap[FilenameGoCI] = skeletonsv1.GoCI
-		fsmap[FilenameReleaser] = skeletonsv1.Releaser
-		fsmap[FilenameSemver] = skeletonsv1.Semver
-		fsmap[types.ProjectTypeAPI] = skeletonsv1.API
-		fsmap[types.ProjectTypeCLI] = skeletonsv1.CLI
-		fsmap[types.ProjectTypeGRPC] = skeletonsv1.GRPC
-	}
+	// switch version {
+	// case "v1":
+	// 	fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore
+	// 	fsmap[FilenameGoCI] = skeletonsv1.GoCI
+	// 	fsmap[FilenameReleaser] = skeletonsv1.Releaser
+	// 	fsmap[FilenameSemver] = skeletonsv1.Semver
+	// 	fsmap[types.ProjectTypeAPI] = skeletonsv1.API
+	// 	fsmap[types.ProjectTypeCLI] = skeletonsv1.CLI
+	// 	fsmap[types.ProjectTypeGRPC] = skeletonsv1.GRPC
+	// default:
+	// 	fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore
+	// 	fsmap[FilenameGoCI] = skeletonsv1.GoCI
+	// 	fsmap[FilenameReleaser] = skeletonsv1.Releaser
+	// 	fsmap[FilenameSemver] = skeletonsv1.Semver
+	// 	fsmap[types.ProjectTypeAPI] = skeletonsv1.API
+	// 	fsmap[types.ProjectTypeCLI] = skeletonsv1.CLI
+	// 	fsmap[types.ProjectTypeGRPC] = skeletonsv1.GRPC
+	// }
 }

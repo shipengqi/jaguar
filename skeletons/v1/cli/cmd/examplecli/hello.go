@@ -17,7 +17,7 @@ func newHelloCmd() *jcli.Command {
 		jcli.WithCommandDesc(subdesc(helloCmdDesc)),
 		jcli.WithCommandAliases(hello.ActionNameAlias),
 		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(args []string) error {
+		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
 			a, err := hello.NewAction(o, args)
 			if err != nil {
 				return err

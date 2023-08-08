@@ -6,11 +6,11 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.0-rc.5
 	github.com/shipengqi/component-base v0.1.7
-	github.com/shipengqi/jcli v0.1.13
+	github.com/shipengqi/jcli v0.1.19
 	github.com/shipengqi/log v0.1.14
 	github.com/spf13/pflag v1.0.5
 	google.golang.org/grpc v1.57.0
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.31.0
 )
 
 require (
@@ -37,7 +37,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/shipengqi/errors v0.1.5 // indirect
-	github.com/shipengqi/golib v0.1.34 // indirect
+	github.com/shipengqi/golib v0.1.36 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
@@ -50,7 +50,7 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/net v0.10.0 // indirect
-	golang.org/x/sys v0.9.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230525234030-28d5490b6b19 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect

@@ -1,11 +1,10 @@
 package internal
 
 import (
-	"github.com/shipengqi/jcli"
-	"github.com/shipengqi/log"
-
 	"github.com/jaguar/apiskeleton/internal/config"
 	"github.com/jaguar/apiskeleton/internal/options"
+	"github.com/shipengqi/jcli"
+	"github.com/shipengqi/log"
 )
 
 const desc = `The {{example}} API server validates and configures data

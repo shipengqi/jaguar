@@ -5,6 +5,7 @@ import (
 
 	"github.com/shipengqi/jaguar/internal/actions/create"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
+	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
 const createCmdDesc = "Creates a new Go project."
@@ -14,10 +15,10 @@ func newCreateCmd() *jcli.Command {
 	c := jcli.NewCommand(
 		create.ActionName,
 		createCmdDesc,
-		jcli.WithCommandDesc(subdesc(createCmdDesc)),
+		jcli.WithCommandDesc(cmdutils.SubCmdDesc(createCmdDesc)),
 		jcli.WithCommandAliases(create.ActionNameAlias, create.ActionNameAliasShort),
 		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(args []string) error {
+		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
 			a, err := create.NewAction(o, args)
 			if err != nil {
 				return err

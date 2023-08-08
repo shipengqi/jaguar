@@ -7,20 +7,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shipengqi/golib/cliutil"
 	"github.com/shipengqi/golib/fsutil"
 	"github.com/shipengqi/jcli"
 	"github.com/shipengqi/log"
 	"github.com/spf13/cobra"
-)
 
-const iconFmt = `     __                                   
-    |__|____     ____  __ _______ _______ 
-    |  \__  \   / ___\|  |  \__  \\_  __ \
-    |  |/ __ \_/ /_/  >  |  // __ \|  | \/
-/\__|  (____  /\___  /|____/(____  /__|   
-\______|    \//_____/            \/    
-%s`
+	"github.com/shipengqi/jaguar/cmd/jaguar/license"
+	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
+)
 
 const rootDesc = "A scaffold to quickly create a Go project."
 
@@ -28,43 +22,28 @@ func main() {
 	defer finally()
 	cobra.OnInitialize(logInitializer)
 
-	app := jcli.New(
+	app := jcli.NewCommand(
 		"jaguar",
-		jcli.WithDesc(jcli.IconBlue(fmt.Sprintf(iconFmt, rootDesc))),
-		jcli.DisableConfig(),
-		jcli.DisableCommandSorting(),
-		jcli.WithOnSignalReceived(func(_ os.Signal) {
-			finally()
-			os.Exit(0)
-		}),
+		rootDesc,
+		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
 	)
 
-	app.Command().PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		log.Info(subdesc(""))
+	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
+		log.Info(cmdutils.SubCmdDesc(""))
 	}
 
 	app.AddCommands(
 		newCreateCmd(),
 		newCodeGenCmd(),
-		newAddLicenseCmd(),
+		license.NewCmd(),
 	)
+	cobra.EnableCommandSorting = false
 
 	app.Run()
 }
 
-func subdesc(cmdDesc string) string {
-	if log.EncodedFilename() != "" {
-		desc := fmt.Sprintf("A Log: %s\n", log.EncodedFilename())
-		return jcli.IconBlue(fmt.Sprintf(iconFmt, desc))
-	}
-	if cmdDesc != "" {
-		return jcli.IconBlue(fmt.Sprintf(iconFmt, cmdDesc))
-	}
-	return ""
-}
-
 func logInitializer() {
-	if isHelpCmd(os.Args) {
+	if cmdutils.IsHelpCmd(os.Args) {
 		return
 	}
 
@@ -89,23 +68,6 @@ func logInitializer() {
 	)
 
 	log.Debugf("track: %s", strings.Join(os.Args, " "))
-}
-
-func isHelpCmd(args []string) bool {
-	if len(args) == 1 {
-		return true
-	}
-	if len(args) > 1 && args[1] == "help" {
-		return true
-	}
-
-	if _, ok := cliutil.RetrieveFlagFromCLI("--help", "-h"); ok {
-		return true
-	}
-	if _, ok := cliutil.RetrieveFlagFromCLI("--version", "-v"); ok {
-		return true
-	}
-	return false
 }
 
 func filenameEncoder() string {

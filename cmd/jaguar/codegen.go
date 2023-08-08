@@ -5,6 +5,7 @@ import (
 
 	"github.com/shipengqi/jaguar/internal/actions/codegen"
 	"github.com/shipengqi/jaguar/internal/actions/codegen/options"
+	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
 const codeGenCmdDesc = "Automatically generate error codes."
@@ -14,10 +15,10 @@ func newCodeGenCmd() *jcli.Command {
 	c := jcli.NewCommand(
 		codegen.ActionName,
 		codeGenCmdDesc,
-		jcli.WithCommandDesc(subdesc(codeGenCmdDesc)),
+		jcli.WithCommandDesc(cmdutils.SubCmdDesc(codeGenCmdDesc)),
 		jcli.WithCommandAliases(codegen.ActionNameAlias),
 		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(args []string) error {
+		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
 			a := codegen.NewAction(o)
 			return a.Execute()
 		}),
