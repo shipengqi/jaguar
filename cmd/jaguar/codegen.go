@@ -4,11 +4,12 @@ import (
 	"github.com/shipengqi/jcli"
 
 	"github.com/shipengqi/jaguar/internal/actions/codegen"
+	"github.com/shipengqi/jaguar/internal/actions/codegen/config"
 	"github.com/shipengqi/jaguar/internal/actions/codegen/options"
 	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
-const codeGenCmdDesc = "Automatically generate error codes."
+const codeGenCmdDesc = "Automatically generate error codes for API skeleton."
 
 func newCodeGenCmd() *jcli.Command {
 	o := options.New()
@@ -19,7 +20,11 @@ func newCodeGenCmd() *jcli.Command {
 		jcli.WithCommandAliases(codegen.ActionNameAlias),
 		jcli.WithCommandCliOptions(o),
 		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
-			a := codegen.NewAction(o)
+			cfg, err := config.CreateConfigFromOptions(o, args)
+			if err != nil {
+				return err
+			}
+			a := codegen.NewAction(cfg)
 			return a.Execute()
 		}),
 	)

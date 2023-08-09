@@ -2,6 +2,7 @@ package e2e_test
 
 import (
 	"flag"
+	"github.com/shipengqi/golib/fsutil"
 	"os/exec"
 	"testing"
 
@@ -18,6 +19,7 @@ func init() {
 
 var _ = Describe("Sorted Tests", func() {
 	Describe("License Command", LicenseTest)
+	Describe("CodeGen Command", CodeGenTest)
 	Describe("New API project", NewAPITest)
 	Describe("New CLI project", NewCLITest)
 	Describe("New gRPC project", NewGRPCTest)
@@ -60,10 +62,24 @@ func NoError(err error) {
 	Expect(err).To(BeNil())
 }
 
+func ExitCode(session *gexec.Session, expected int) {
+	Ω(session.ExitCode()).Should(Equal(expected))
+}
+
 func ShouldContains(session *gexec.Session, expected string) {
 	Ω(session.Out.Contents()).Should(ContainSubstring(expected))
 }
 
 func ShouldNotContains(session *gexec.Session, expected string) {
 	Ω(session.Out.Contents()).ShouldNot(ContainSubstring(expected))
+}
+
+func ShouldExists(fpath string) {
+	exists := fsutil.IsExists(fpath)
+	Expect(exists).To(Equal(true))
+}
+
+func ShouldNotExists(fpath string) {
+	exists := fsutil.IsExists(fpath)
+	Expect(exists).To(Equal(false))
 }

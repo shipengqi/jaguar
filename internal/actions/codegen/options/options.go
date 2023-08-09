@@ -22,9 +22,9 @@ func New() *Options {
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 	s := fss.FlagSet("codegen")
 	s.StringVar(&o.Types, "types", o.Types, "Comma-separated list of type names.")
-	s.StringVar(&o.Output, "output", o.Output, "Output filename.")
-	s.StringVar(&o.BuildTags, "tags", o.BuildTags, "Comma-separated list of build tags to apply.")
-	s.StringVar(&o.TrimPrefix, "trimprefix", o.TrimPrefix, "Trim the `prefix` from the generated constant names.")
+	s.StringVar(&o.Output, "output", o.Output, "Output filename, format: <src dir>/<type>_string.go.")
+	s.StringVar(&o.BuildTags, "build-tags", o.BuildTags, "Comma-separated list of build tags to apply.")
+	s.StringVar(&o.TrimPrefix, "trim-prefix", o.TrimPrefix, "Trim the `prefix` from the generated constant names.")
 	s.BoolVar(&o.Doc, "doc", o.Doc, "Generate error code documentation in markdown format.")
 	return
 }
