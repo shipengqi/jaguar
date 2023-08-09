@@ -11,3 +11,5 @@ A scaffold to quickly create a Go project.
 version flag error
 
 https://github.com/gofiber/fiber apiserver
+
+add more log for license/codegen command
