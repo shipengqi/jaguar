@@ -24,7 +24,6 @@ func (o *HeaderOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&o.Year, "year", o.Year, "Copyright year(s)")
 	fs.StringVarP(&o.License, "license", "l", o.License, "License type: apache, bsd, mit, mpl")
 	fs.StringVarP(&o.LicenseFile, "license-file", "f", o.LicenseFile, "License file")
-	return
 }
 
 // Validate is used to parse and validate the parameters entered by the user at

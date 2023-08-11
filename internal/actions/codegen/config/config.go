@@ -2,11 +2,11 @@ package config
 
 import (
 	"errors"
-	"github.com/shipengqi/golib/fsutil"
 	"path/filepath"
 	"strings"
 
 	"github.com/shipengqi/component-base/json"
+	"github.com/shipengqi/golib/fsutil"
 
 	"github.com/shipengqi/jaguar/internal/actions/codegen/options"
 )
