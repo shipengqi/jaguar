@@ -27,10 +27,13 @@ if [[ -z "${GIT_TREE_STATE}" ]]; then
     exit 1
 fi
 
-if [[ -z "${RELEASE_FILE}" ]]; then
-    echo "RELEASE_FILE must be set"
+if [[ -z "${GO_LDFLAGS}" ]]; then
+    echo "GO_LDFLAGS must be set"
     exit 1
 fi
+
+# set .Env.GO_LDFLAGS for goreleaser.yaml
+export GO_LDFLAGS=${GO_LDFLAGS}
 
 RELEASER=$(go env GOPATH)/bin/goreleaser
 
@@ -39,13 +42,10 @@ RELEASER=$(go env GOPATH)/bin/goreleaser
 if [[ "${PUBLISH:-}" != "1" ]]; then
     echo "Not set to publish"
     GIT_TREE_STATE=${GIT_TREE_STATE} ${RELEASER} release \
-        --rm-dist \
         --snapshot \
-        --release-notes ${RELEASE_FILE} \
         --skip-publish
 else
     echo "Getting ready to publish"
     GIT_TREE_STATE=${GIT_TREE_STATE} ${RELEASER} release \
-    --release-notes ${RELEASE_FILE} \
-    --rm-dist
+    --clean
 fi

@@ -15,28 +15,27 @@ builds:
       - amd64
       - arm
       - arm64
-      - ppc64le
+      - ppc64
     ignore:
       # don't build arm for darwin and arm/arm64 for windows
       - goos: darwin
         goarch: arm
       - goos: darwin
-        goarch: ppc64le
+        goarch: ppc64
       - goos: windows
         goarch: arm
       - goos: windows
         goarch: arm64
       - goos: windows
-        goarch: ppc64le
+        goarch: ppc64
     ldflags:
-      - -X "github.com/shipengqi/crtctl/pkg/buildinfo.Version={{ .Tag }}" -X "github.com/shipengqi/crtctl/pkg/buildinfo.GitCommit={{ .ShortCommit }}" -X "github.com/shipengqi/crtctl/pkg/buildinfo.BuildTime={{ .Date }}" -X "github.com/shipengqi/crtctl/pkg/buildinfo.GitTreeState={{ .Env.GIT_TREE_STATE }}"
+      - "{{ .Env.GO_LDFLAGS }}"
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
 #    wrap_in_directory: true
     files:
       - LICENSE
       - README.md
-      - CHANGELOG/**
     # Can be used to change the archive formats for specific GOOSs.
     # Most common use case is to archive as zip on Windows.
     # Default is empty.
@@ -44,28 +43,41 @@ archives:
       - goos: windows
         format: zip
 checksum:
-  name_template: 'CHECKSUM'
+  name_template: 'checksums.txt'
 changelog:
   sort: asc
   use: github
   filters:
     exclude:
-      - '^Merge'
+      - "^test:"
+      - "^chore"
+      - "merge conflict"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
   groups:
-    - title: 'New Features'
-      regexp: "^.*feat.*:+.*$"
+    - title: "New Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
       order: 100
-    - title: 'Bug Fixes'
-      regexp: "^.*fix.*:+.*$"
+    - title: "Security updates"
+      regexp: '^.*?sec(\([[:word:]]+\))??!?:.+$'
+      order: 150
+    - title: "Bug fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
       order: 200
-    - title: 'Dependency Updates'
-      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
+    - title: "Dependency updates"
+      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
       order: 300
-    - title: 'Documentation Updates'
-      regexp: "^.*docs.*:+.*$"
+    - title: "Documentation updates"
+      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
+      order: 400
+    - title: "Build process updates"
+      regexp: '^.*?build(\([[:word:]]+\))??!?:.+$'
       order: 400
     - title: Other work
       order: 9999
+
 release:
 #  github:
 #    owner: shipengqi

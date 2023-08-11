@@ -10,7 +10,7 @@ require (
 	github.com/shipengqi/action v0.1.1
 	github.com/shipengqi/component-base v0.1.7
 	github.com/shipengqi/golib v0.1.36
-	github.com/shipengqi/jcli v0.1.19
+	github.com/shipengqi/jcli v0.1.20
 	github.com/shipengqi/log v0.1.14
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/cobra v1.7.0

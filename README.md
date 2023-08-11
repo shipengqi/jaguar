@@ -7,9 +7,10 @@ A scaffold to quickly create a Go project.
 - https://github.com/pinkhello/go-starter
 - https://github.com/wannanbigpig/gin-layout
 - https://github.com/gogf/gf
+- https://github.com/songquanpeng/gin-template
 
-version flag error
-
-https://github.com/gofiber/fiber apiserver
-
-add more log for license/codegen command
+## Todo
+- version flag error
+- https://github.com/gofiber/fiber apiserver
+- add more log for license/codegen command
+- add web static server for api, refer to the https://github.com/songquanpeng/gin-template

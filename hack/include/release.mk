@@ -13,7 +13,7 @@
 # limitations under the License.
 
 .PHONY: release.verify
-release.verify: tools.verify.git-chglog tools.verify.releaser
+release.verify: tools.verify.releaser
 
 .PHONY: release.tag
 release.tag: tools.verify.gsemver release.ensure-tag
@@ -21,14 +21,7 @@ release.tag: tools.verify.gsemver release.ensure-tag
 
 .PHONY: release.ensure-tag
 release.ensure-tag: tools.verify.gsemver
-	@VERSION=$(VERSION) bash ./hack/ensure_tag.sh
-
-## changelog: (Deprecated) generate changelogs.
-.PHONY: release.changelog
-release.changelog: tools.verify.git-chglog
-	@gitversion=$(git describe --tags --abbrev=0)
-	@VERSION=${VERSION:-gitversion}
-	@REPO_ROOT=$(REPO_ROOT) bash ./hack/changelog.sh
+	@VERSION=$(VERSION) bash $(REPO_ROOT)/hack/ensure_tag.sh
 
 .PHONY: release.run
 release.run: release.verify
@@ -36,7 +29,6 @@ release.run: release.verify
 	@gitversion=$(git describe --tags --abbrev=0)
 	@VERSION=${VERSION:-gitversion}
 	@GITHUB_TOKEN=$(GITHUB_TOKEN) \
-	    RELEASE_FILE=$(REPO_ROOT)/CHANGELOG/CHANGELOG-$(VERSION).md \
 		PUBLISH=$(PUBLISH) \
 		GIT_TREE_STATE=$(GIT_TREE_STATE) \
-		bash ./hack/release.sh
+		bash $(REPO_ROOT)/hack/release.sh

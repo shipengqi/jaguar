@@ -31,14 +31,17 @@ go.build: go.build.verify go.build.dirs
 		PKG=$(PKG) BIN=$(BIN) \
 		GIT_COMMIT=$(GIT_COMMIT) GIT_TREE_STATE=$(GIT_TREE_STATE) \
 		OUTPUT_DIR=$(OUTPUT_DIR) \
+		GO_LDFLAGS=$(GO_LDFLAGS) \
 		BUILD_TIME="" \
-		bash ./hack/build.sh
+		bash $(REPO_ROOT)/hack/build.sh
 
 .PHONY: go.lint
 go.lint: tools.verify.golangci-lint
 	@echo "===========> Run golangci-lint to lint source codes"
 	@golangci-lint run -c $(REPO_ROOT)/.golangci.yaml $(REPO_ROOT)/...
 
+# `-` indicates that ignore the command error
+# `-rm -vrf $(OUTPUT_DIR)` ignore if rm command execute error.
 .PHONY: go.clean
 go.clean:
 	@echo "===========> Cleaning all build output"
