@@ -26,13 +26,11 @@ go.build.dirs:
 
 .PHONY: go.build
 go.build: go.build.verify go.build.dirs
-	@echo "===========> Building binary: $(OUTPUT_DIR)/$(BIN)"
-	@GOOS=$(GOOS) GOARCH=$(GOARCH) VERSION=$(VERSION) \
+	@echo "===========> Building: $(OUTPUT_DIR)/$(BIN)"
+	@GOOS=$(GOOS) \
 		PKG=$(PKG) BIN=$(BIN) \
-		GIT_COMMIT=$(GIT_COMMIT) GIT_TREE_STATE=$(GIT_TREE_STATE) \
 		OUTPUT_DIR=$(OUTPUT_DIR) \
-		GO_LDFLAGS=$(GO_LDFLAGS) \
-		BUILD_TIME="" \
+		GO_LDFLAGS="$(GO_LDFLAGS)" \
 		bash $(REPO_ROOT)/hack/build.sh
 
 .PHONY: go.lint

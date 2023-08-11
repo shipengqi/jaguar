@@ -29,28 +29,10 @@ if [[ -z "${GOOS}" ]]; then
     echo "GOOS must be set"
     exit 1
 fi
-if [[ -z "${GOARCH}" ]]; then
-    echo "GOARCH must be set"
-    exit 1
-fi
+
 
 if [[ -z "${GO_LDFLAGS}" ]]; then
     echo "GO_LDFLAGS must be set"
-    exit 1
-fi
-
-if [[ -z "${VERSION}" ]]; then
-    echo "VERSION must be set"
-    exit 1
-fi
-
-if [[ -z "${GIT_COMMIT}" ]]; then
-    echo "GIT_COMMIT must be set"
-    exit 1
-fi
-
-if [[ -z "${GIT_TREE_STATE}" ]]; then
-    echo "GIT_TREE_STATE must be set"
     exit 1
 fi
 
@@ -62,10 +44,6 @@ fi
 GCFLAGS=""
 if [[ ${DEBUG:-} = "1" ]]; then
     GCFLAGS="all=-N -l"
-fi
-
-if [[ -z "${BUILD_TIME}" ]]; then
-    BUILD_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 fi
 
 export CGO_ENABLED=0

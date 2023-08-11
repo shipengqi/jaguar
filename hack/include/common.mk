@@ -2,7 +2,7 @@
 BIN ?= jaguar
 
 # This repo's root import path (under GOPATH).
-PKG := github.com/shipengqi/jaguar
+PKG := github.com/shipengqi/jaguar/cmd/jaguar
 VERSION_PKG=github.com/shipengqi/component-base/pkg/version
 
 ifeq ($(origin VERSION), undefined)
