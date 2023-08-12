@@ -17,16 +17,6 @@
 set -o errexit
 set -o nounset
 
-if [[ -z "${GITHUB_TOKEN}" ]]; then
-    echo "GITHUB_TOKEN must be set"
-    exit 1
-fi
-
-if [[ -z "${GIT_TREE_STATE}" ]]; then
-    echo "GIT_TREE_STATE must be set"
-    exit 1
-fi
-
 if [[ -z "${GO_LDFLAGS}" ]]; then
     echo "GO_LDFLAGS must be set"
     exit 1
@@ -41,11 +31,17 @@ RELEASER=$(go env GOPATH)/bin/goreleaser
 # to publish the release to GitHub.
 if [[ "${PUBLISH:-}" != "1" ]]; then
     echo "Not set to publish"
-    GIT_TREE_STATE=${GIT_TREE_STATE} ${RELEASER} release \
+    ${RELEASER} release \
+        --clean \
         --snapshot \
         --skip-publish
 else
+    if [[ -z "${GITHUB_TOKEN}" ]]; then
+        echo "GITHUB_TOKEN must be set"
+        exit 1
+    fi
+
     echo "Getting ready to publish"
-    GIT_TREE_STATE=${GIT_TREE_STATE} ${RELEASER} release \
+    ${RELEASER} release \
     --clean
 fi

@@ -18,7 +18,7 @@ CLI ?= $(OUTPUT_DIR)/jaguar
 .PHONY: test.cover
 test.cover:
 	@echo "===========> Run unit test"
-	@go test -race -cover -coverprofile=$(OUTPUT_DIR)/coverage.out \
+	@go test -race -cover -coverprofile=$(REPO_ROOT)/coverage.out \
 			-timeout=10m -short -v ./...
 
 .PHONY: test.e2e

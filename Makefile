@@ -42,7 +42,7 @@ tag:
 
 ## release: release a version.
 .PHONY: release
-release:
+release: lint test test-e2e
 	@$(MAKE) release.run
 
 ## modules: add missing and remove unused modules.

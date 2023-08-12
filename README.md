@@ -10,7 +10,11 @@ A scaffold to quickly create a Go project.
 - https://github.com/songquanpeng/gin-template
 
 ## Todo
-- version flag error
+
+- jaguar --version tests
+- icon fmt for skeletons https://github.com/common-nighthawk/go-figure, https://github.com/moul/banner
+- Add log init for apiserver/grpc skeletons
 - https://github.com/gofiber/fiber apiserver
 - add more log for license/codegen command
 - add web static server for api, refer to the https://github.com/songquanpeng/gin-template
+- badges for skeletons

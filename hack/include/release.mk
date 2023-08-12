@@ -30,5 +30,5 @@ release.run: release.verify
 	@VERSION=${VERSION:-gitversion}
 	@GITHUB_TOKEN=$(GITHUB_TOKEN) \
 		PUBLISH=$(PUBLISH) \
-		GIT_TREE_STATE=$(GIT_TREE_STATE) \
+		GO_LDFLAGS="$(GO_LDFLAGS)" \
 		bash $(REPO_ROOT)/hack/release.sh

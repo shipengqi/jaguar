@@ -30,6 +30,7 @@ builds:
         goarch: ppc64
     ldflags:
       - "{{ .Env.GO_LDFLAGS }}"
+    main: ./cmd/jaguar
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
 #    wrap_in_directory: true
@@ -85,7 +86,7 @@ release:
 #  draft: false
 #  prerelease: auto
   footer: |
-    **Full Changelog**: https://github.com/shipengqi/crtctl/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/shipengqi/jaguar/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 
 # modelines, feel free to remove those if you don't want/use them:
