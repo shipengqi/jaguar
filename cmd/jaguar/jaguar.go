@@ -26,10 +26,22 @@ func main() {
 		"jaguar",
 		rootDesc,
 		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
+		jcli.EnableCommandVersion(),
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		log.Info(cmdutils.SubCmdDesc(""))
+		// The log content should ignore the logo message,
+		// so use 'fmt' instead of 'log'
+		desc := ""
+		if cmdutils.IsVersionCmd() {
+			desc = cmdutils.RootCmdDesc(rootDesc)
+		} else {
+			desc = cmdutils.SubCmdDesc("")
+		}
+		if desc == "" {
+			return
+		}
+		fmt.Println(desc)
 	}
 
 	app.AddCommands(
@@ -43,7 +55,7 @@ func main() {
 }
 
 func logInitializer() {
-	if cmdutils.IsHelpCmd(os.Args) {
+	if cmdutils.IsHelpOrVersionCmd() {
 		return
 	}
 

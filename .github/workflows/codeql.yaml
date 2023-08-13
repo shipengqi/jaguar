@@ -2,6 +2,8 @@ name: "codeql"
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 jobs:
   analyze:
     name: analyze
@@ -15,6 +17,8 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: stable
+      # Initializes the CodeQL tools for scanning.
       - uses: github/codeql-action/init@v2
+      # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
       - uses: github/codeql-action/autobuild@v2
       - uses: github/codeql-action/analyze@v2

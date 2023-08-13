@@ -32,6 +32,7 @@ func main() {
 		"examplecli",
 		rootDesc,
 		jcli.WithCommandDesc(jcli.IconBlue(fmt.Sprintf(iconFmt, rootDesc))),
+		jcli.EnableCommandVersion(),
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
