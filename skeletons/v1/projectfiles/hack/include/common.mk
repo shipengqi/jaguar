@@ -1,8 +1,9 @@
 # The binary to build.
-BIN ?= {{example}}
+BIN ?= jaguar
 
 # This repo's root import path (under GOPATH).
-PKG := {{example.module}}
+PKG := github.com/shipengqi/jaguar/cmd/jaguar
+VERSION_PKG=github.com/shipengqi/component-base/pkg/version
 
 ifeq ($(origin VERSION), undefined)
 VERSION := $(shell git describe --tags --always --match='v*')
@@ -34,7 +35,7 @@ endif
 BUILD_TOOLS ?= gsemver golangci-lint releaser ginkgo
 
 # Makefile settings
-# The --no-print-directory option of make tells make not to print
+# The --no-print-directory option of 'make' tells 'make' not to print
 # the message about entering and leaving the working directory.
 ifndef V
 MAKEFLAGS += --no-print-directory
@@ -43,3 +44,9 @@ endif
 ifeq ($(origin PUBLISH),undefined)
 PUBLISH := 0
 endif
+
+
+GO_LDFLAGS += -X $(VERSION_PKG).GitVersion=$(VERSION) \
+	-X $(VERSION_PKG).GitCommit=$(GIT_COMMIT) \
+	-X $(VERSION_PKG).GitTreeState=$(GIT_TREE_STATE) \
+	-X $(VERSION_PKG).BuildDate=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')

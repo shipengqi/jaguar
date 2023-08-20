@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GO_SUPPORTED_VERSIONS ?= 1.17|1.18|1.19|1.20
+GO_SUPPORTED_VERSIONS ?= 1.18|1.19|1.20
 
 .PHONY: go.build.verify
 go.build.verify:
@@ -24,22 +24,22 @@ endif
 go.build.dirs:
 	@mkdir -p $(OUTPUT_DIR)
 
-
 .PHONY: go.build
 go.build: go.build.verify go.build.dirs
-	@echo "===========> Building binary: $(OUTPUT_DIR)/$(BIN)"
-	@GOOS=$(GOOS) GOARCH=$(GOARCH) VERSION=$(VERSION) \
+	@echo "===========> Building: $(OUTPUT_DIR)/$(BIN)"
+	@GOOS=$(GOOS) \
 		PKG=$(PKG) BIN=$(BIN) \
-		GIT_COMMIT=$(GIT_COMMIT) GIT_TREE_STATE=$(GIT_TREE_STATE) \
 		OUTPUT_DIR=$(OUTPUT_DIR) \
-		BUILD_TIME="" \
-		bash ./hack/build.sh
+		GO_LDFLAGS="$(GO_LDFLAGS)" \
+		bash $(REPO_ROOT)/hack/build.sh
 
 .PHONY: go.lint
 go.lint: tools.verify.golangci-lint
 	@echo "===========> Run golangci-lint to lint source codes"
 	@golangci-lint run -c $(REPO_ROOT)/.golangci.yaml $(REPO_ROOT)/...
 
+# `-` indicates that ignore the command error
+# `-rm -vrf $(OUTPUT_DIR)` ignore if rm command execute error.
 .PHONY: go.clean
 go.clean:
 	@echo "===========> Cleaning all build output"

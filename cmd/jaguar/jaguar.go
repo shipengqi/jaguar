@@ -27,6 +27,9 @@ func main() {
 		rootDesc,
 		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
 		jcli.EnableCommandVersion(),
+		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
+			return cmd.Help()
+		}),
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
@@ -34,7 +37,7 @@ func main() {
 		// so use 'fmt' instead of 'log'
 		desc := ""
 		if cmdutils.IsVersionCmd() {
-			desc = cmdutils.RootCmdDesc(rootDesc)
+			desc = cmdutils.RootCmdDesc(rootDesc) + "\n"
 		} else {
 			desc = cmdutils.SubCmdDesc("")
 		}

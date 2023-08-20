@@ -7,11 +7,11 @@ require (
 	github.com/fatih/color v1.15.0
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.10
-	github.com/shipengqi/action v0.1.1
-	github.com/shipengqi/component-base v0.1.8
-	github.com/shipengqi/golib v0.1.36
-	github.com/shipengqi/jcli v0.1.22
-	github.com/shipengqi/log v0.1.14
+	github.com/shipengqi/action v0.1.2
+	github.com/shipengqi/component-base v0.1.9
+	github.com/shipengqi/golib v0.1.38
+	github.com/shipengqi/jcli v0.1.23
+	github.com/shipengqi/log v0.1.15
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
@@ -46,16 +46,15 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/shipengqi/errors v0.1.5 // indirect
+	github.com/shipengqi/errors v0.1.7 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.16.0 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.9.0 // indirect
-	go.uber.org/zap v1.24.0 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.25.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/mod v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect

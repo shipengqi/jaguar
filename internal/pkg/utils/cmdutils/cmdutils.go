@@ -19,24 +19,15 @@ const iconFmt = `     __
 
 func IsHelpCmd() bool {
 	args := os.Args
+	// Only the command itself, should print the help message
 	if len(args) == 1 {
 		return true
 	}
-	if len(args) > 1 && args[1] == "help" {
-		return true
-	}
-
-	if _, ok := cliutil.RetrieveFlagFromCLI("--help", "-h"); ok {
-		return true
-	}
-	return false
+	return cliutil.IsHelpCmd("-h")
 }
 
 func IsVersionCmd() bool {
-	if _, ok := cliutil.RetrieveFlagFromCLI("--version", "-v"); ok {
-		return true
-	}
-	return false
+	return cliutil.IsVersionCmd()
 }
 
 func IsHelpOrVersionCmd() bool {

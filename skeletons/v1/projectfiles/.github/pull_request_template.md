@@ -1,4 +1,4 @@
-Thank you for contributing to {{example}}!
+Thank you for contributing to {{.Project.Name}}!
 
 # Please add a summary of your change
 

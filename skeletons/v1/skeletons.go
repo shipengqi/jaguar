@@ -25,14 +25,23 @@ var CLI embed.FS
 //go:embed grpc
 var GRPC embed.FS
 
-//go:embed .gitignore
+//go:embed projectfiles/.gitignore
 var GitIgnore embed.FS
 
-//go:embed .golangci.yaml
+//go:embed projectfiles/.golangci.yaml
 var GoCI embed.FS
 
-//go:embed .goreleaser.yaml
+//go:embed projectfiles/.goreleaser.yaml
 var Releaser embed.FS
 
-//go:embed .gsemver.yaml
+//go:embed projectfiles/.gsemver.yaml
 var Semver embed.FS
+
+//go:embed projectfiles/.github
+var GitHubRepoFiles embed.FS
+
+//go:embed projectfiles/hack
+var Hack embed.FS
+
+//go:embed projectfiles/Makefile
+var Makefile embed.FS
