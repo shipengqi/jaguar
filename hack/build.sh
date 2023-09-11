@@ -53,11 +53,11 @@ if [[ "${GOOS}" = "windows" ]]; then
   OUTPUT="${OUTPUT}.exe"
 fi
 
-go build \
-    -o ${OUTPUT} \
-    -gcflags "${GCFLAGS}" \
-    -ldflags "${GO_LDFLAGS}" \
-    ${PKG}
+CGO_ENABLED=0 go build \
+  -o ${OUTPUT} \
+  -gcflags "${GCFLAGS}" \
+  -ldflags "${GO_LDFLAGS}" \
+  ${PKG}
 
 if [[ "$?" -eq 0 ]];then
     echo "Build ${OUTPUT} SUCCESS"

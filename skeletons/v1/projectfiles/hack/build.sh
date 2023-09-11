@@ -53,7 +53,7 @@ if [[ "${GOOS}" = "windows" ]]; then
   OUTPUT="${OUTPUT}.exe"
 fi
 
-go build \
+CGO_ENABLED=0 go build \
     -o ${OUTPUT} \
     -gcflags "${GCFLAGS}" \
     -ldflags "${GO_LDFLAGS}" \

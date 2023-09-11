@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/shipengqi/component-base/version"
 	"github.com/shipengqi/golib/fsutil"
 	"github.com/shipengqi/jcli"
 	"github.com/shipengqi/log"
@@ -28,6 +29,7 @@ func main() {
 		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
 		jcli.EnableCommandVersion(),
 		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
+			log.Infof("%s Version: \n%s", "=======>", version.Get().String())
 			return cmd.Help()
 		}),
 	)
@@ -46,7 +48,6 @@ func main() {
 		}
 		fmt.Println(desc)
 	}
-
 	app.AddCommands(
 		newCreateCmd(),
 		newCodeGenCmd(),

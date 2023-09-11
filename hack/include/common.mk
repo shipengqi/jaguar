@@ -1,9 +1,9 @@
 # The binary to build.
 BIN ?= jaguar
 
-# This repo's root import path (under GOPATH).
+# This repo's root import path
 PKG := github.com/shipengqi/jaguar/cmd/jaguar
-VERSION_PKG=github.com/shipengqi/component-base/pkg/version
+VERSION_PKG=github.com/shipengqi/component-base/version
 
 ifeq ($(origin VERSION), undefined)
 VERSION := $(shell git describe --tags --always --match='v*')
@@ -46,7 +46,7 @@ PUBLISH := 0
 endif
 
 
-GO_LDFLAGS += -X $(VERSION_PKG).GitVersion=$(VERSION) \
+GO_LDFLAGS += -X $(VERSION_PKG).Version=$(VERSION) \
 	-X $(VERSION_PKG).GitCommit=$(GIT_COMMIT) \
 	-X $(VERSION_PKG).GitTreeState=$(GIT_TREE_STATE) \
-	-X $(VERSION_PKG).BuildDate=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
+	-X $(VERSION_PKG).BuildTime=$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
