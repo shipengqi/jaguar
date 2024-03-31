@@ -2,16 +2,10 @@ package create
 
 import (
 	"github.com/charmbracelet/huh"
+
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/types"
 	"github.com/shipengqi/jaguar/internal/actions/create/ui"
-)
-
-const (
-	DefaultModuleMinLength  = 2
-	DefaultModuleMaxLength  = 128
-	DefaultProjectMinLength = 2
-	DefaultProjectMaxLength = 20
 )
 
 func prerun(cfg *config.Config) error {

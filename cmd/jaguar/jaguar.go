@@ -17,7 +17,7 @@ import (
 	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
-const rootDesc = "A scaffold to quickly create a Go project."
+const rootDesc = "A scaffold that makes it easy to create amazing Go applications."
 
 func main() {
 	defer finally()
@@ -71,16 +71,14 @@ func logInitializer() {
 		Output:               fmt.Sprintf("%s/jaguar/logs", os.TempDir()),
 		ConsoleLevel:         log.InfoLevel.String(),
 		FileLevel:            log.DebugLevel.String(),
+		FilenameEncoder:      filenameEncoder,
 	}
 
 	err := fsutil.MkDirAll(opts.Output)
 	if err != nil {
 		panic(err)
 	}
-	log.Configure(
-		opts,
-		log.WithFilenameEncoder(filenameEncoder),
-	)
+	log.Configure(opts)
 
 	log.Debugf("command: %s", strings.Join(os.Args, " "))
 }

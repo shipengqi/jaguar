@@ -1,6 +1,6 @@
 # jaguar
 
-A scaffold to quickly create a Go project.
+A scaffold that makes it easy to create amazing Go applications.
 
 - https://github.com/mix-go/mix
 - https://github.com/gourouting/singo
