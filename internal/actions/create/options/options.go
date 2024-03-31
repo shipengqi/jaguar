@@ -5,21 +5,25 @@ import (
 	"github.com/shipengqi/component-base/json"
 )
 
-const (
-	DefaultSkeletonVersion = "v1"
-)
-
 type Options struct {
-	Force           bool
-	Type            string
-	Module          string
-	SkeletonVersion string
+	Force             bool
+	IsUseGSemver      bool
+	IsUseGoReleaser   bool
+	IsUseGolangCILint bool
+	ProjectType       string
+	ProjectName       string
+	ModuleName        string
+	GoFramework       string
+	SkeletonVersion   string
 }
 
 func New() *Options {
 	o := Options{
-		Force:           false,
-		SkeletonVersion: DefaultSkeletonVersion,
+		Force:             false,
+		IsUseGSemver:      true,
+		IsUseGoReleaser:   true,
+		IsUseGolangCILint: true,
+		SkeletonVersion:   "v1",
 	}
 
 	return &o
@@ -27,10 +31,10 @@ func New() *Options {
 
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 	s := fss.FlagSet("new/create")
-	s.BoolVarP(&o.Force, "force", "f", o.Force, "Force overwriting of existing files.")
-	s.StringVar(&o.Type, "type", o.Type, "Project type")
-	s.StringVar(&o.Module, "module", o.Module, "Go module name")
-	s.StringVar(&o.SkeletonVersion, "skeleton-version", o.SkeletonVersion, "Skeleton version")
+	s.BoolVarP(&o.Force, "force", "f", o.Force, "force overwriting of existing files.")
+	s.StringVar(&o.ProjectType, "type", o.ProjectType, "the type of your application.")
+	s.StringVar(&o.ModuleName, "module", o.ModuleName, "the Go module name in the go.mod file.")
+	s.StringVar(&o.SkeletonVersion, "skeleton-version", o.SkeletonVersion, "skeleton version")
 
 	_ = s.MarkHidden("skeleton-version")
 	return

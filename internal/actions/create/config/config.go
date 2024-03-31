@@ -2,15 +2,11 @@ package config
 
 import (
 	"github.com/shipengqi/component-base/json"
-
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
 )
 
 type Config struct {
 	*options.Options
-
-	Type        string
-	ProjectName string
 }
 
 func (o *Config) String() string {

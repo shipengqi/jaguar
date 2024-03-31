@@ -32,5 +32,5 @@ func (c *Controller) Create(ctx *gin.Context) {
 		response.Fail(ctx, err)
 		return
 	}
-	response.OkWithData(ctx, u)
+	response.OKWithData(ctx, u)
 }

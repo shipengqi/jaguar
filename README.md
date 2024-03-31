@@ -8,7 +8,11 @@ A scaffold to quickly create a Go project.
 - https://github.com/wannanbigpig/gin-layout
 - https://github.com/gogf/gf
 - https://github.com/songquanpeng/gin-template
+- https://github.com/go-nunu/nunu
 - https://github.com/CocaineCong/micro-todoList
+- https://github.com/qifengzhang007/GinSkeleton
+- https://github.com/go-redis/cache
+- https://github.com/gowebly/gowebly/
 
 ## Todo
 
@@ -19,3 +23,7 @@ A scaffold to quickly create a Go project.
 - add more log for license/codegen command
 - add web static server for api, refer to the https://github.com/songquanpeng/gin-template
 - badges for skeletons
+- filepath instead of path
+- B2S, S2B
+- gotmpl file
+- logo

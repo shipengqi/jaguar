@@ -51,7 +51,7 @@ func OK(c *gin.Context) {
 	Send(c, map[string]interface{}{}, nil)
 }
 
-func OkWithData(c *gin.Context, data interface{}) {
+func OKWithData(c *gin.Context, data interface{}) {
 	Send(c, data, nil)
 }
 

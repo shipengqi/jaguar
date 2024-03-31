@@ -18,5 +18,5 @@ func (c *Controller) Get(ctx *gin.Context) {
 		return
 	}
 
-	response.OkWithData(ctx, user)
+	response.OKWithData(ctx, user)
 }

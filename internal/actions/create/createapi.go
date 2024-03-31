@@ -12,7 +12,7 @@ func newCreateAPIAction(cfg *config.Config) *action.Action {
 	act := &action.Action{
 		Name: ActionName,
 		Executable: func(_ *action.Action) bool {
-			return cfg.Type == types.ProjectTypeAPI
+			return cfg.ProjectType == types.ProjectTypeAPI
 		},
 		PreRun: func(act *action.Action) (err error) {
 			stages.Init(cfg.SkeletonVersion)

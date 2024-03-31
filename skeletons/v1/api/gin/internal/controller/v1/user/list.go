@@ -26,5 +26,5 @@ func (c *Controller) List(ctx *gin.Context) {
 		return
 	}
 
-	response.OkWithData(ctx, users)
+	response.OKWithData(ctx, users)
 }

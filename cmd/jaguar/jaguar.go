@@ -13,7 +13,7 @@ import (
 	"github.com/shipengqi/log"
 	"github.com/spf13/cobra"
 
-	"github.com/shipengqi/jaguar/cmd/jaguar/license"
+	"github.com/shipengqi/jaguar/cmd/jaguar/tool"
 	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
@@ -35,7 +35,7 @@ func main() {
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		// The log content should ignore the logo message,
+		// The log content should not contain the logo string,
 		// so use 'fmt' instead of 'log'
 		desc := ""
 		if cmdutils.IsVersionCmd() {
@@ -50,8 +50,7 @@ func main() {
 	}
 	app.AddCommands(
 		newCreateCmd(),
-		newCodeGenCmd(),
-		license.NewCmd(),
+		tool.NewCmd(),
 	)
 	cobra.EnableCommandSorting = false
 
@@ -83,7 +82,7 @@ func logInitializer() {
 		log.WithFilenameEncoder(filenameEncoder),
 	)
 
-	log.Debugf("track: %s", strings.Join(os.Args, " "))
+	log.Debugf("command: %s", strings.Join(os.Args, " "))
 }
 
 func filenameEncoder() string {
