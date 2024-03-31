@@ -31,7 +31,7 @@ func New() *Spinner {
 		endMsg:     "\n",
 		active:     false,
 		hideCursor: true,
-		stopC:      make(chan struct{}, 0),
+		stopC:      make(chan struct{}),
 		chars:      CharSets[DefaultCharsIndex],
 	}
 	return s
@@ -135,7 +135,7 @@ func (s *Spinner) Stop() {
 
 // Reset the spinner stop channel.
 func (s *Spinner) Reset() *Spinner {
-	s.stopC = make(chan struct{}, 0)
+	s.stopC = make(chan struct{})
 	s.active = false
 	return s
 }

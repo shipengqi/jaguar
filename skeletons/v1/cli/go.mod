@@ -4,17 +4,18 @@ go 1.20
 
 require (
 	github.com/shipengqi/action v0.1.1
-	github.com/shipengqi/component-base v0.1.7
+	github.com/shipengqi/component-base v0.1.8
 	github.com/shipengqi/golib v0.1.36
-	github.com/shipengqi/jcli v0.1.19
+	github.com/shipengqi/jcli v0.1.22
 	github.com/shipengqi/log v0.1.14
 	github.com/spf13/cobra v1.7.0
 )
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
-	github.com/bytedance/sonic v1.9.2 // indirect
-	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
+	github.com/bytedance/sonic v1.10.0 // indirect
+	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
+	github.com/chenzhuoyu/iasm v0.9.0 // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect

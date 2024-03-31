@@ -2,6 +2,8 @@ package cmdutils
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/shipengqi/golib/cliutil"
 	"github.com/shipengqi/jcli"
 	"github.com/shipengqi/log"
@@ -15,21 +17,21 @@ const iconFmt = `     __
 \______|    \//_____/            \/    
 %s`
 
-func IsHelpCmd(args []string) bool {
+func IsHelpCmd() bool {
+	args := os.Args
+	// Only the command itself, should print the help message
 	if len(args) == 1 {
 		return true
 	}
-	if len(args) > 1 && args[1] == "help" {
-		return true
-	}
+	return cliutil.IsHelpCmd("-h")
+}
 
-	if _, ok := cliutil.RetrieveFlagFromCLI("--help", "-h"); ok {
-		return true
-	}
-	if _, ok := cliutil.RetrieveFlagFromCLI("--version", "-v"); ok {
-		return true
-	}
-	return false
+func IsVersionCmd() bool {
+	return cliutil.IsVersionCmd()
+}
+
+func IsHelpOrVersionCmd() bool {
+	return IsHelpCmd() || IsVersionCmd()
 }
 
 func RootCmdDesc(rootDesc string) string {

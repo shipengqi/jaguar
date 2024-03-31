@@ -49,6 +49,5 @@ func addFile(f *file, cfg *config.Config) func() {
 		if modified {
 			log.Infof("%s: license added", f.path)
 		}
-		return
 	}
 }

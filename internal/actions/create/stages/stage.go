@@ -27,7 +27,7 @@ type Interface interface {
 	Run() error
 }
 
-func Init(version string) {
+func Init(_ string) {
 	// switch version {
 	// case "v1":
 	// 	fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore

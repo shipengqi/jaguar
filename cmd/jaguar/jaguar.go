@@ -7,12 +7,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/shipengqi/component-base/version"
 	"github.com/shipengqi/golib/fsutil"
 	"github.com/shipengqi/jcli"
 	"github.com/shipengqi/log"
 	"github.com/spf13/cobra"
 
-	"github.com/shipengqi/jaguar/cmd/jaguar/license"
+	"github.com/shipengqi/jaguar/cmd/jaguar/tool"
 	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
@@ -26,16 +27,30 @@ func main() {
 		"jaguar",
 		rootDesc,
 		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
+		jcli.EnableCommandVersion(),
+		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
+			log.Infof("%s Version: \n%s", "=======>", version.Get().String())
+			return cmd.Help()
+		}),
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		log.Info(cmdutils.SubCmdDesc(""))
+		// The log content should not contain the logo string,
+		// so use 'fmt' instead of 'log'
+		desc := ""
+		if cmdutils.IsVersionCmd() {
+			desc = cmdutils.RootCmdDesc(rootDesc) + "\n"
+		} else {
+			desc = cmdutils.SubCmdDesc("")
+		}
+		if desc == "" {
+			return
+		}
+		fmt.Println(desc)
 	}
-
 	app.AddCommands(
 		newCreateCmd(),
-		newCodeGenCmd(),
-		license.NewCmd(),
+		tool.NewCmd(),
 	)
 	cobra.EnableCommandSorting = false
 
@@ -43,7 +58,7 @@ func main() {
 }
 
 func logInitializer() {
-	if cmdutils.IsHelpCmd(os.Args) {
+	if cmdutils.IsHelpOrVersionCmd() {
 		return
 	}
 
@@ -67,7 +82,7 @@ func logInitializer() {
 		log.WithFilenameEncoder(filenameEncoder),
 	)
 
-	log.Debugf("track: %s", strings.Join(os.Args, " "))
+	log.Debugf("command: %s", strings.Join(os.Args, " "))
 }
 
 func filenameEncoder() string {

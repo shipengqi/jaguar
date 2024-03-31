@@ -29,23 +29,10 @@ if [[ -z "${GOOS}" ]]; then
     echo "GOOS must be set"
     exit 1
 fi
-if [[ -z "${GOARCH}" ]]; then
-    echo "GOARCH must be set"
-    exit 1
-fi
 
-if [[ -z "${VERSION}" ]]; then
-    echo "VERSION must be set"
-    exit 1
-fi
 
-if [[ -z "${GIT_COMMIT}" ]]; then
-    echo "GIT_COMMIT must be set"
-    exit 1
-fi
-
-if [[ -z "${GIT_TREE_STATE}" ]]; then
-    echo "GIT_TREE_STATE must be set"
+if [[ -z "${GO_LDFLAGS}" ]]; then
+    echo "GO_LDFLAGS must be set"
     exit 1
 fi
 
@@ -59,27 +46,18 @@ if [[ ${DEBUG:-} = "1" ]]; then
     GCFLAGS="all=-N -l"
 fi
 
-if [[ -z "${BUILD_TIME}" ]]; then
-    BUILD_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-fi
-
 export CGO_ENABLED=0
-
-LDFLAGS="-X ${PKG}/pkg/buildinfo.Version=${VERSION}"
-LDFLAGS="${LDFLAGS} -X ${PKG}/pkg/buildinfo.GitCommit=${GIT_COMMIT}"
-LDFLAGS="${LDFLAGS} -X ${PKG}/pkg/buildinfo.GitTreeState=${GIT_TREE_STATE}"
-LDFLAGS="${LDFLAGS} -X ${PKG}/pkg/buildinfo.BuildTime=${BUILD_TIME}"
 
 OUTPUT=${OUTPUT_DIR}/${BIN}
 if [[ "${GOOS}" = "windows" ]]; then
   OUTPUT="${OUTPUT}.exe"
 fi
 
-go build \
-    -o ${OUTPUT} \
-    -gcflags "${GCFLAGS}" \
-    -ldflags "${LDFLAGS}" \
-    ${PKG}
+CGO_ENABLED=0 go build \
+  -o ${OUTPUT} \
+  -gcflags "${GCFLAGS}" \
+  -ldflags "${GO_LDFLAGS}" \
+  ${PKG}
 
 if [[ "$?" -eq 0 ]];then
     echo "Build ${OUTPUT} SUCCESS"

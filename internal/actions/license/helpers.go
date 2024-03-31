@@ -137,6 +137,7 @@ func licenseHeader(path string, tmpl *template.Template, data *copyrightInfo) ([
 	return lic, err
 }
 
+//nolint:nakedret
 func licenseCharsForExt(path string) (top, mid, bot string, unknown bool) {
 	switch fileExtension(path) {
 	default:

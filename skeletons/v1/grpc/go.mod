@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.0-rc.5
 	github.com/shipengqi/component-base v0.1.7
-	github.com/shipengqi/jcli v0.1.19
+	github.com/shipengqi/jcli v0.1.20
 	github.com/shipengqi/log v0.1.14
 	github.com/spf13/pflag v1.0.5
 	google.golang.org/grpc v1.57.0

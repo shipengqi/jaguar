@@ -12,7 +12,7 @@ func newCreateGRPCAction(cfg *config.Config) *action.Action {
 	act := &action.Action{
 		Name: ActionName,
 		Executable: func(_ *action.Action) bool {
-			return cfg.Type == types.ProjectTypeGRPC
+			return cfg.ProjectType == types.ProjectTypeGRPC
 		},
 		PreRun: func(act *action.Action) (err error) {
 			stages.Init(cfg.SkeletonVersion)

@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/shipengqi/jaguar/internal/actions/create/options"
 	"github.com/shipengqi/jcli"
 
 	"github.com/shipengqi/jaguar/internal/actions/create"
-	"github.com/shipengqi/jaguar/internal/actions/create/options"
 	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 

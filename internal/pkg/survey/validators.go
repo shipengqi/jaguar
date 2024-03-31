@@ -28,7 +28,7 @@ func StringValidator(minLength, maxLength int) func(input interface{}) error {
 		if !ok {
 			return errors.New("value must be a valid string")
 		}
-		input = strings.TrimSpace(str)
+		str = strings.TrimSpace(str)
 		if minLength != NumberEmpty && len(str) < minLength {
 			return fmt.Errorf("length must be at least %d", minLength)
 		}

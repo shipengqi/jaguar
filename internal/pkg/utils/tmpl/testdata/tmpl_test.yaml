@@ -1,0 +1,10 @@
+name: Bug Report
+labels: [bug, triage]
+body:
+  - type: textarea
+    id: {{.Project.Name}}-version
+    attributes:
+      label: {{.Project.Name}} version
+      render: bash
+    validations:
+      required: true

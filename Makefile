@@ -35,11 +35,6 @@ export USAGE_OPTIONS
 build: modules
 	@$(MAKE) go.build
 
-## changelog: (Deprecated) generate changelogs.
-.PHONY: changelog
-changelog:
-	@$(MAKE) release.changelog
-
 ## tag: generate release tag.
 .PHONY: tag
 tag:
@@ -47,7 +42,7 @@ tag:
 
 ## release: release a version.
 .PHONY: release
-release:
+release: lint test test-e2e
 	@$(MAKE) release.run
 
 ## modules: add missing and remove unused modules.

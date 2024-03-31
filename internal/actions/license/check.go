@@ -54,8 +54,6 @@ func checkFile(fpath string) func() {
 		}
 		if isMissingLicenseHeader {
 			log.Warnf("%s: missing license header", fpath)
-			return
 		}
-		return
 	}
 }
