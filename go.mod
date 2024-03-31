@@ -11,12 +11,12 @@ require (
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.10
 	github.com/shipengqi/action v0.1.2
-	github.com/shipengqi/component-base v0.1.9
+	github.com/shipengqi/component-base v0.2.6
 	github.com/shipengqi/golib v0.1.38
 	github.com/shipengqi/jcli v0.1.23
 	github.com/shipengqi/log v0.1.15
 	github.com/sourcegraph/conc v0.3.0
-	github.com/spf13/cobra v1.7.0
+	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/tools v0.17.0
 )
@@ -25,7 +25,7 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/bytedance/sonic v1.10.0 // indirect
+	github.com/bytedance/sonic v1.11.3 // indirect
 	github.com/catppuccin/go v0.2.0 // indirect
 	github.com/charmbracelet/bubbles v0.17.2-0.20240108170749-ec883029c8e6 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
