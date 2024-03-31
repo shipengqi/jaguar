@@ -14,7 +14,7 @@ require (
 	github.com/shipengqi/component-base v0.2.6
 	github.com/shipengqi/golib v0.1.38
 	github.com/shipengqi/jcli v0.1.23
-	github.com/shipengqi/log v0.1.15
+	github.com/shipengqi/log v0.2.1
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
@@ -68,7 +68,7 @@ require (
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	go.uber.org/zap v1.25.0 // indirect
+	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.20.0 // indirect
