@@ -2,7 +2,6 @@ package survey
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	tea "github.com/charmbracelet/bubbletea"
 )
 
 const (

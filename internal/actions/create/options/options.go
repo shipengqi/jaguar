@@ -43,6 +43,7 @@ func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 // Validate is used to parse and validate the parameters entered by the user at
 // the command line when the program starts.
 func (o *Options) Validate() []error {
+	// Todo add config validators here
 	return nil
 }
 

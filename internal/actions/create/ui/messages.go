@@ -4,9 +4,6 @@ const (
 	// FormPromptSignature represents the prompt signature for the form.
 	FormPromptSignature = "> "
 
-	// FormWelcomeDescription represents the description of the welcome message.
-	FormWelcomeDescription = "A scaffold that makes it easy to create amazing Go applications.\n\n"
-
 	// FormGoModuleNameTitle represents the title for the Go module name input.
 	FormGoModuleNameTitle = "What's your Go module name in the go.mod file?\n"
 	// FormGoModuleNameDescription represents the description for the Go module name input.
@@ -41,4 +38,21 @@ const (
 	FormGolangCILintUsageTitle = "Use the Golang CI Lint to lint your Go code?\n"
 	// FormGolangCILintUsageDescription represents the description for the Golang CI Lint switch.
 	FormGolangCILintUsageDescription = "This tool will be used to lint your Go code.\n\nFor more info → https://github.com/golangci/golangci-lint"
+)
+
+const (
+	// CreateSpinnerTitle represents the title for the command create spinner.
+	CreateSpinnerTitle = " Jaguar CLI is creating your project. Please wait..."
+	// ErrorSummaryTitle represents the title of the unknown summary.
+	ErrorSummaryTitle = "✕ Oops... Something went wrong!\n"
+	// CreateSummaryTitle represents the title of the project summary.
+	CreateSummaryTitle = "✓ Your project has been created successfully!\n"
+
+	// CreateSummaryHeadingBackend represents the heading of the backend summary.
+	CreateSummaryHeadingBackend = "Backend ↘"
+	// CreateSummaryHeadingTools represents the heading of the tools summary.
+	CreateSummaryHeadingTools = "Tools ↘"
+
+	// MoreInformationTitle represents the title of the more information string.
+	MoreInformationTitle string = "\n✱ For more information go to the official docs: https://github.com/shipengqi/jaguar \n"
 )

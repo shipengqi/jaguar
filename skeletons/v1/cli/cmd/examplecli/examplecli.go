@@ -22,7 +22,7 @@ const iconFmt = `     __
 \______|    \//_____/            \/    
 %s`
 
-const rootDesc = "A scaffold to quickly create a Go project."
+const rootDesc = "A scaffold that makes it easy to create amazing Go applications."
 
 func main() {
 	defer finally()

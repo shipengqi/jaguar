@@ -1,13 +1,10 @@
 package create
 
 import (
-	"os"
-
 	"github.com/shipengqi/action"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
-	"github.com/shipengqi/jaguar/internal/actions/create/reporter"
 )
 
 const (
@@ -17,7 +14,7 @@ const (
 )
 
 func NewAction(opts *options.Options, args []string) (*action.Action, error) {
-	reporter.Init(os.Stdout)
+	// reporter.Init(os.Stdout)
 
 	cfg, _ := config.CreateConfigFromOptions(opts, args)
 	err := prerun(cfg)

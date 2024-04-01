@@ -1,10 +1,16 @@
 package ui
 
 import (
-	"errors"
-	"github.com/shipengqi/jaguar/internal/actions/create/config"
-
 	"github.com/charmbracelet/huh"
+
+	"github.com/shipengqi/jaguar/internal/actions/create/config"
+)
+
+const (
+	DefaultGoModuleMinLength    = 2
+	DefaultGoModuleMaxLength    = 128
+	DefaultProjectNameMinLength = 2
+	DefaultProjectNameMaxLength = 20
 )
 
 // GoModuleNameInput runs the go module name input.
@@ -13,12 +19,7 @@ func GoModuleNameInput(cfg *config.Config) *huh.Input {
 		Title(FormGoModuleNameTitle).
 		Description(FormGoModuleNameDescription).
 		Prompt(FormPromptSignature).
-		Validate(func(s string) error {
-			if s == "" {
-				return errors.New("enter correct Go module name")
-			}
-			return nil
-		}).
+		Validate(StringValidator("Go module name", DefaultGoModuleMinLength, DefaultGoModuleMaxLength)).
 		Value(&cfg.ModuleName)
 }
 
@@ -28,11 +29,6 @@ func ProjectNameInput(cfg *config.Config) *huh.Input {
 		Title(FormProjectNameTitle).
 		Description(FormProjectNameDescription).
 		Prompt(FormPromptSignature).
-		Validate(func(s string) error {
-			if s == "" {
-				return errors.New("enter correct project name")
-			}
-			return nil
-		}).
+		Validate(StringValidator("project name", DefaultProjectNameMinLength, DefaultProjectNameMaxLength)).
 		Value(&cfg.ProjectName)
 }
