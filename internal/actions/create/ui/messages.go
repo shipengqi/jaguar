@@ -15,9 +15,9 @@ const (
 	FormProjectNameDescription = "The name of the new workspace and initial project. (e.g., `project`).\n"
 
 	// FormGoFrameworkTitle represents the title for the Go framework select.
-	FormGoFrameworkTitle = "Select the Go web framework or router\n"
+	FormGoFrameworkTitle = "Select the Go web framework\n"
 	// FormGoFrameworkDescription represents the description for the Go framework select.
-	FormGoFrameworkDescription = "This framework (or router) will be used to build\nthe backend part of your application.\n"
+	FormGoFrameworkDescription = "This web framework will be used to build\nthe backend part of your application.\n"
 
 	// FormProjectTypeTitle represents the title for the reactivity library select.
 	FormProjectTypeTitle = "Select the project type\n"
@@ -48,8 +48,8 @@ const (
 	// CreateSummaryTitle represents the title of the project summary.
 	CreateSummaryTitle = "✓ Your project has been created successfully!\n"
 
-	// CreateSummaryHeadingBackend represents the heading of the backend summary.
-	CreateSummaryHeadingBackend = "Backend ↘"
+	// CreateSummaryHeadingApp represents the heading of the application summary.
+	CreateSummaryHeadingApp = "Application ↘"
 	// CreateSummaryHeadingTools represents the heading of the tools summary.
 	CreateSummaryHeadingTools = "Tools ↘"
 
