@@ -2,30 +2,30 @@ package helpers
 
 import (
 	"embed"
+	"io"
 	"io/fs"
 	"os"
 	"path"
+	"strings"
+	"text/template"
+
+	"github.com/shipengqi/jaguar/internal/actions/create/types"
 )
 
-// CopyFile copies a file from src to dst.
-func CopyFile(embedfs embed.FS, src, dst string) (err error) {
-	sdata, err := embedfs.ReadFile(src)
-	if err != nil {
-		return
+const (
+	GoTemplateSuffix = ".gotmpl"
+)
+
+// CopyAndCompleteFile copies a template from src to dst, and complete it.
+func CopyAndCompleteFile(embedfs embed.FS, src, dst string, data *types.TemplateData) (err error) {
+	if strings.HasSuffix(src, GoTemplateSuffix) {
+		return CopyAndCompleteGoTemplate(embedfs, src, dst, data)
 	}
-	info, err := embedfs.Open(src)
-	if err != nil {
-		return err
-	}
-	sinfo, err := info.Stat()
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(dst, sdata, sinfo.Mode())
+	return CopyFile(embedfs, src, dst)
 }
 
-// Copy copies a file or directory from src to dst.
-func Copy(embedfs embed.FS, src, dst string) error {
+// CopyAndCompleteFiles copies a file or directory from src to dst.
+func CopyAndCompleteFiles(embedfs embed.FS, src, dst string, data *types.TemplateData) error {
 	var (
 		err   error
 		fds   []os.DirEntry
@@ -42,7 +42,7 @@ func Copy(embedfs embed.FS, src, dst string) error {
 	}
 	// copies a file
 	if !sinfo.IsDir() {
-		return CopyFile(embedfs, src, dst)
+		return CopyAndCompleteFile(embedfs, src, dst, data)
 	}
 	// tries to create dst directory
 	if err = os.MkdirAll(dst, sinfo.Mode()); err != nil {
@@ -56,11 +56,11 @@ func Copy(embedfs embed.FS, src, dst string) error {
 		dfp := path.Join(dst, fd.Name())
 
 		if fd.IsDir() {
-			if err = Copy(embedfs, sfp, dfp); err != nil {
+			if err = CopyAndCompleteFiles(embedfs, sfp, dfp, data); err != nil {
 				return err
 			}
 		} else {
-			if err = CopyFile(embedfs, sfp, dfp); err != nil {
+			if err = CopyAndCompleteFile(embedfs, sfp, dfp, data); err != nil {
 				return err
 			}
 		}
@@ -68,23 +68,60 @@ func Copy(embedfs embed.FS, src, dst string) error {
 	return nil
 }
 
-func CalculateFilesFromEmbedFS(embedfs embed.FS, src string, result *int) error {
-	var (
-		err error
-		fds []os.DirEntry
-	)
-	if fds, err = embedfs.ReadDir(src); err != nil {
+// CopyFile copies a file from src to dst.
+func CopyFile(embedfs embed.FS, src, dst string) (err error) {
+	sdata, err := embedfs.ReadFile(src)
+	if err != nil {
+		return
+	}
+	info, err := embedfs.Open(src)
+	if err != nil {
 		return err
 	}
-	for _, fd := range fds {
-		sfp := path.Join(src, fd.Name())
-		if fd.IsDir() {
-			if err = CalculateFilesFromEmbedFS(embedfs, sfp, result); err != nil {
-				return err
-			}
-		} else {
-			*result++
-		}
+	defer func() { _ = info.Close() }()
+	sinfo, err := info.Stat()
+	if err != nil {
+		return err
 	}
-	return nil
+	return os.WriteFile(dst, sdata, sinfo.Mode())
+}
+
+func CopyAndCompleteGoTemplate(embedfs embed.FS, src, dst string, data *types.TemplateData) (err error) {
+	// parse template from embed file system
+	tmpl, err := template.ParseFS(embedfs, src)
+	if err != nil {
+		return
+	}
+	// create a new temp file with the given data.
+	tempf, err := os.CreateTemp("", "TEMPLATE_")
+	if err != nil {
+		return err
+	}
+	defer func() { _ = os.Remove(tempf.Name()) }()
+
+	// set variables to the template.
+	if err = tmpl.Execute(tempf, data); err != nil {
+		return err
+	}
+
+	// Reset the record position to the beginning of the file.
+	if _, err = tempf.Seek(0, 0); err != nil {
+		return err
+	}
+
+	outputf, err := os.Create(strings.TrimSuffix(dst, ".gotmpl"))
+	if err != nil {
+		return err
+	}
+	defer func() {
+		_ = tempf.Close()
+		_ = outputf.Close()
+	}()
+
+	// Copy file from the temp file to the output.
+	if _, err = io.Copy(outputf, tempf); err != nil {
+		return err
+	}
+
+	return
 }
