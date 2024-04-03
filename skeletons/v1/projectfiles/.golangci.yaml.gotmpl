@@ -1,0 +1,29 @@
+run:
+  deadline: 2m
+
+linters:
+  disable-all: true
+  enable:
+    - misspell
+    - govet
+    - staticcheck
+    - errcheck
+    - unparam
+    - ineffassign
+    - nakedret
+    - gocyclo
+    - dupl
+    - goimports
+    - revive
+    - gosec
+    - gosimple
+    - typecheck
+    - unused
+
+linters-settings:
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: {{ .App.ModuleName }}
+  dupl:
+    threshold: 600

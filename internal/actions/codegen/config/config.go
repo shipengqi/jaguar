@@ -20,8 +20,8 @@ type Config struct {
 	TargetDir     string
 }
 
-func (o *Config) String() string {
-	data, _ := json.Marshal(o)
+func (c *Config) String() string {
+	data, _ := json.Marshal(c)
 
 	return string(data)
 }

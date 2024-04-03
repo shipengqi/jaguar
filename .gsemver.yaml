@@ -12,4 +12,4 @@ bumpStrategies:
     preRelease: false
     preReleaseTemplate:
     preReleaseOverwrite: false
-    buildMetadataTemplate: "{{.Commits | len}}.{{(.Commits | first).Hash.Short}}"
+    buildMetadataTemplate: "\{\{.Commits | len\}\}.\{\{(.Commits | first).Hash.Short\}\}"

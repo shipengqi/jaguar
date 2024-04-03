@@ -2,7 +2,13 @@ package stages
 
 import (
 	"embed"
-	// skeletonsv1 "github.com/shipengqi/jaguar/skeletons/v1"
+	"fmt"
+
+	"github.com/shipengqi/jaguar/internal/actions/create/config"
+	"github.com/shipengqi/jaguar/internal/actions/create/helpers"
+	"github.com/shipengqi/jaguar/internal/actions/create/options"
+	"github.com/shipengqi/jaguar/internal/actions/create/types"
+	"github.com/shipengqi/jaguar/skeletons"
 )
 
 const (
@@ -23,27 +29,69 @@ const (
 
 var fsmap = make(map[string]embed.FS)
 
-type Interface interface {
-	Run() error
+type Stages struct {
+	cfg      *config.Config
+	skeleton skeletons.Skeleton
 }
 
-func Init(_ string) {
-	// switch version {
-	// case "v1":
-	// 	fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore
-	// 	fsmap[FilenameGoCI] = skeletonsv1.GoCI
-	// 	fsmap[FilenameReleaser] = skeletonsv1.Releaser
-	// 	fsmap[FilenameSemver] = skeletonsv1.Semver
-	// 	fsmap[types.ProjectTypeAPI] = skeletonsv1.API
-	// 	fsmap[types.ProjectTypeCLI] = skeletonsv1.CLI
-	// 	fsmap[types.ProjectTypeGRPC] = skeletonsv1.GRPC
-	// default:
-	// 	fsmap[FilenameGitIgnore] = skeletonsv1.GitIgnore
-	// 	fsmap[FilenameGoCI] = skeletonsv1.GoCI
-	// 	fsmap[FilenameReleaser] = skeletonsv1.Releaser
-	// 	fsmap[FilenameSemver] = skeletonsv1.Semver
-	// 	fsmap[types.ProjectTypeAPI] = skeletonsv1.API
-	// 	fsmap[types.ProjectTypeCLI] = skeletonsv1.CLI
-	// 	fsmap[types.ProjectTypeGRPC] = skeletonsv1.GRPC
-	// }
+func New(cfg *config.Config) *Stages {
+	return &Stages{cfg: cfg}
+}
+
+func (s *Stages) initialize() error {
+	ss := skeletons.New()
+	switch s.cfg.SkeletonVersion {
+	case options.SkeletonVersion1:
+		s.skeleton = ss.V1
+	default:
+		return fmt.Errorf("unknown version '%s'", s.cfg.SkeletonVersion)
+	}
+	return nil
+}
+
+func (s *Stages) Run() error {
+	var err error
+
+	if err = s.initialize(); err != nil {
+		return err
+	}
+
+	var efs embed.FS
+	data := s.cfg.ExportTemplateData()
+	src := fmt.Sprintf("%s/%s", s.cfg.SkeletonVersion, s.cfg.ProjectType)
+
+	switch s.cfg.ProjectType {
+	case types.ProjectTypeAPI:
+		src = fmt.Sprintf("%s/%s/%s", s.cfg.SkeletonVersion, types.ProjectTypeAPI, s.cfg.GoFramework)
+		efs = s.skeleton.API
+	case types.ProjectTypeCLI:
+		efs = s.skeleton.CLI
+	case types.ProjectTypeGRPC:
+		efs = s.skeleton.GRPC
+	}
+	if err = helpers.CopyAndCompleteFiles(efs, src, s.cfg.ProjectName, data); err != nil {
+		return err
+	}
+	if s.cfg.IsUseGolangCILint {
+		if err = helpers.CopyAndCompleteFile(s.skeleton.ProjectFiles,
+			fmt.Sprintf("%s/projectfiles/.golangci.yaml.gotmpl", s.cfg.SkeletonVersion),
+			fmt.Sprintf("%s/.golangci.yaml", s.cfg.ProjectName), data); err != nil {
+			return err
+		}
+	}
+	if s.cfg.IsUseGoReleaser {
+		if err = helpers.CopyAndCompleteFile(s.skeleton.ProjectFiles,
+			fmt.Sprintf("%s/projectfiles/.goreleaser.yaml.gotmpl", s.cfg.SkeletonVersion),
+			fmt.Sprintf("%s/.goreleaser.yaml", s.cfg.ProjectName), data); err != nil {
+			return err
+		}
+	}
+	if s.cfg.IsUseGSemver {
+		if err = helpers.CopyAndCompleteFile(s.skeleton.ProjectFiles,
+			fmt.Sprintf("%s/projectfiles/.gsemver.yaml", s.cfg.SkeletonVersion),
+			fmt.Sprintf("%s/.gsemver.yaml", s.cfg.ProjectName), data); err != nil {
+			return err
+		}
+	}
+	return nil
 }

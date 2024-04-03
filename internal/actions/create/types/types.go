@@ -6,10 +6,20 @@ const (
 	ProjectTypeGRPC = "grpc"
 )
 
-const (
-	StatusOk     = "OK"
-	StatusPass   = "PASS"
-	StatusFailed = "FAILED"
-	StatusSkip   = "SKIP"
-	StatusWarn   = "WARN"
-)
+type TemplateData struct {
+	App   AppData
+	Build BuildData
+}
+
+type AppData struct {
+	Name           string
+	EnvPrefix      string
+	ModuleName     string
+	DocumentLink   string
+	NormalizedName string
+}
+
+type BuildData struct {
+	Bin  string
+	Root string
+}

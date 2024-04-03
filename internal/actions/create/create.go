@@ -2,6 +2,7 @@ package create
 
 import (
 	"github.com/shipengqi/action"
+	"github.com/shipengqi/jaguar/internal/actions/create/stages"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
@@ -14,8 +15,6 @@ const (
 )
 
 func NewAction(opts *options.Options, args []string) (*action.Action, error) {
-	// reporter.Init(os.Stdout)
-
 	cfg, _ := config.CreateConfigFromOptions(opts, args)
 	err := prerun(cfg)
 	if err != nil {
@@ -23,13 +22,11 @@ func NewAction(opts *options.Options, args []string) (*action.Action, error) {
 	}
 	act := &action.Action{
 		Name: ActionName,
+		Run: func(act *action.Action) error {
+			ss := stages.New(cfg)
+			return ss.Run()
+		},
 	}
-
-	_ = act.AddAction(
-		newCreateAPIAction(cfg),
-		newCreateCLIAction(cfg),
-		newCreateGRPCAction(cfg),
-	)
 
 	return act, nil
 }
