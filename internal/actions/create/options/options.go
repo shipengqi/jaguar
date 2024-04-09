@@ -7,14 +7,14 @@ import (
 )
 
 const (
-	FlagProjectType     = "type"
-	FlagModuleName      = "module"
-	FlagWebFramework    = "web-framework"
-	FlagUseGolangCILint = "use-golangci-lint"
-	FlagUseGoReleaser   = "use-goreleaser"
-	FlagUseGSemver      = "use-gsemver"
-	FlagAddWorkflows    = "add-workflows"
-	FlagSkeletonVersion = "skeleton-version"
+	FlagProjectType      = "type"
+	FlagModuleName       = "module"
+	FlagWebFramework     = "web-framework"
+	FlagUseGolangCILint  = "use-golangci-lint"
+	FlagUseGoReleaser    = "use-goreleaser"
+	FlagUseGSemver       = "use-gsemver"
+	FlagUseGithubActions = "use-github-actions"
+	FlagSkeletonVersion  = "skeleton-version"
 )
 
 const (
@@ -27,7 +27,7 @@ type Options struct {
 	IsUseGSemver       bool
 	IsUseGoReleaser    bool
 	IsUseGolangCILint  bool
-	AddCommonWorkflows bool
+	IsUseGithubActions bool
 	ProjectType        string
 	ProjectName        string
 	ModuleName         string
@@ -37,10 +37,11 @@ type Options struct {
 
 func New() *Options {
 	o := Options{
-		IsUseGSemver:      true,
-		IsUseGoReleaser:   true,
-		IsUseGolangCILint: true,
-		SkeletonVersion:   SkeletonVersion1,
+		IsUseGSemver:       true,
+		IsUseGoReleaser:    true,
+		IsUseGolangCILint:  true,
+		IsUseGithubActions: true,
+		SkeletonVersion:    SkeletonVersion1,
 	}
 
 	return &o
@@ -54,7 +55,7 @@ func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 	o.fs.BoolVar(&o.IsUseGolangCILint, FlagUseGolangCILint, o.IsUseGolangCILint, "use the Golang CI Lint to lint your Go code.")
 	o.fs.BoolVar(&o.IsUseGoReleaser, FlagUseGoReleaser, o.IsUseGoReleaser, "use the GoReleaser to deliver your Go binaries.")
 	o.fs.BoolVar(&o.IsUseGSemver, FlagUseGSemver, o.IsUseGSemver, "use the GSemver to generate your next semver version.")
-	o.fs.BoolVar(&o.AddCommonWorkflows, FlagAddWorkflows, o.AddCommonWorkflows, "add common Github workflows.")
+	o.fs.BoolVar(&o.IsUseGithubActions, FlagUseGithubActions, o.IsUseGithubActions, "add common Github actions.")
 	o.fs.StringVar(&o.SkeletonVersion, FlagSkeletonVersion, o.SkeletonVersion, "skeleton version")
 
 	_ = o.fs.MarkHidden("skeleton-version")

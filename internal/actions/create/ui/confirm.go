@@ -35,3 +35,13 @@ func IsUseGSemverConfirm(cfg *config.Config) *huh.Confirm {
 		Negative("No").
 		Value(&cfg.IsUseGSemver)
 }
+
+// IsUseGitHubActions runs the confirmation if GitHub Actions is added.
+func IsUseGitHubActions(cfg *config.Config) *huh.Confirm {
+	return huh.NewConfirm().
+		Title(FormGitHubActionsUsageTitle).
+		Description(FormGitHubActionsUsageDescription).
+		Affirmative("Yes").
+		Negative("No").
+		Value(&cfg.IsUseGSemver)
+}

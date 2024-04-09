@@ -55,6 +55,9 @@ func runToolsForm(cfg *config.Config) error {
 	if !cfg.Changed(options.FlagUseGSemver) {
 		groups = append(groups, huh.NewGroup(ui.IsUseGSemverConfirm(cfg)))
 	}
+	if !cfg.Changed(options.FlagUseGithubActions) {
+		groups = append(groups, huh.NewGroup(ui.IsUseGitHubActions(cfg)))
+	}
 
 	return huh.NewForm(groups...).Run()
 }
