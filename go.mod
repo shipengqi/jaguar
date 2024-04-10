@@ -9,7 +9,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.17.1
 	github.com/onsi/gomega v1.32.0
 	github.com/shipengqi/action v0.2.0
-	github.com/shipengqi/component-base v0.2.6
+	github.com/shipengqi/component-base v0.2.7
 	github.com/shipengqi/golib v0.2.12
 	github.com/shipengqi/jcli v0.2.10
 	github.com/shipengqi/log v0.2.2

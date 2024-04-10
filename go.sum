@@ -123,8 +123,8 @@ github.com/sagikazarmark/slog-shim v0.1.0 h1:diDBnUNK9N/354PgrxMywXnAwEr1QZcOr6g
 github.com/sagikazarmark/slog-shim v0.1.0/go.mod h1:SrcSrq8aKtyuqEI1uvTDTK1arOWRIczQRv+GVI1AkeQ=
 github.com/shipengqi/action v0.2.0 h1:eP/Yfiz9/MvFVvU8fnmI6+8V/HeZACrwJhCciD8jksk=
 github.com/shipengqi/action v0.2.0/go.mod h1:LQUUAYreS+e58ftML88F8DSxV9CsLGZi8TbXW8csRHc=
-github.com/shipengqi/component-base v0.2.6 h1:CtVmRWSb0XUhQ6VxvxmDNPJFojqxTVW4ytFXLjeYKfY=
-github.com/shipengqi/component-base v0.2.6/go.mod h1:rM8ivvN3ps15+ZzC/y8/xao3g7rsMZU9vkkIe4Z5nt4=
+github.com/shipengqi/component-base v0.2.7 h1:E2hxMCGj4mVO3IpmFFrCHeHgkOoW4PHXrCHkUl05a6w=
+github.com/shipengqi/component-base v0.2.7/go.mod h1:rM8ivvN3ps15+ZzC/y8/xao3g7rsMZU9vkkIe4Z5nt4=
 github.com/shipengqi/errors v0.3.0 h1:PrhXl3v0GpelUubjwO07d3C1DZU+IF1Fm2mGaQha4NI=
 github.com/shipengqi/errors v0.3.0/go.mod h1:6s/KEoXw9JRDoS1kC0CTWmibiIEQt3ZCTX3t1EzNEdI=
 github.com/shipengqi/golib v0.2.12 h1:/0hrev7+J8KChxEvoVdS2kbGQT8VO4C4qFAhtn6ZI8o=
