@@ -8,7 +8,7 @@ import (
 	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
-const createCmdDesc = "Creates a new Go project."
+const createCmdDesc = "Creates a new Go application."
 
 func newCreateCmd() *jcli.Command {
 	o := options.New()

@@ -62,6 +62,7 @@ func Secure(c *gin.Context) {
 		// that the browser should remember that a site is only to be accessed using HTTPS.
 		c.Header("Strict-Transport-Security", "max-age=31536000")
 	}
+	c.Next()
 }
 
 func defaults() map[string]gin.HandlerFunc {

@@ -15,19 +15,8 @@ import (
 )
 
 const (
-	FilenameGitIgnore = ".gitignore"
-	FilenameGoCI      = ".golangci.yaml"
-	FilenameReleaser  = ".goreleaser.yaml"
-	FilenameSemver    = ".gsemver.yaml"
-)
-
-const (
-	titleClean     = "Cleaning project"
-	titleProject   = "Creating %s project files"
-	titleMakeRules = "Creating make rules"
-	titleSwagger   = "Configuring swagger"
-	titleInitMod   = "Initializing Go module"
-	titleModTidy   = "Installing dependencies"
+	titleSwagger = "Configuring swagger"
+	titleModTidy = "Installing dependencies"
 )
 
 var fsmap = make(map[string]embed.FS)
@@ -61,6 +50,12 @@ func (s *Stages) Run(cancel context.CancelFunc) error {
 
 	log.Debug("initializing ...")
 	if err = s.initialize(); err != nil {
+		return err
+	}
+
+	// Todo add --force option, if --force=false and the folder is not empty, retrun error
+	log.Debugf("cleaning '%s'...", s.cfg.ProjectName)
+	if err = os.RemoveAll(s.cfg.ProjectName); err != nil {
 		return err
 	}
 
@@ -146,7 +141,7 @@ func (s *Stages) Run(cancel context.CancelFunc) error {
 			return err
 		}
 	}
-	
+
 	hackdir := fmt.Sprintf("%s/hack", s.cfg.ProjectName)
 	log.Debugf("generating build files '%s'...", hackdir)
 	if err = helpers.CopyAndCompleteFiles(s.skeleton.ProjectFiles,

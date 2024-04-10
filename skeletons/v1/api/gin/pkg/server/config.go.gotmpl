@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	// RecommendedHomeDir defines the default directory used to place all idm service configurations.
+	// RecommendedHomeDir defines the default directory used to place all service configurations.
 	RecommendedHomeDir = ".{{ .App.NormalizedName }}"
 
-	// RecommendedEnvPrefix defines the ENV prefix used by all idm service.
+	// RecommendedEnvPrefix defines the ENV prefix used by all services.
 	RecommendedEnvPrefix = "{{ .App.EnvPrefix }}"
 
 	// RecommendedTokenTimeout defines the duration that a jwt token is valid.
@@ -77,7 +77,6 @@ type InsecureServingInfo struct {
 
 // JwtInfo defines jwt fields used to create jwt authentication middleware.
 type JwtInfo struct {
-	// defaults to "idm jwt"
 	Realm string
 	// defaults to empty
 	Key string

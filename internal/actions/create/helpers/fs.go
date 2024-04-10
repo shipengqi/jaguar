@@ -45,7 +45,7 @@ func CopyAndCompleteFiles(embedfs embed.FS, src, dst string, data *types.Templat
 		return CopyAndCompleteFile(embedfs, src, dst, data)
 	}
 	// tries to create dst directory
-	if err = os.MkdirAll(dst, sinfo.Mode()); err != nil {
+	if err = os.MkdirAll(dst, 0o700); err != nil {
 		return err
 	}
 	if fds, err = embedfs.ReadDir(src); err != nil {
@@ -74,16 +74,7 @@ func CopyFile(embedfs embed.FS, src, dst string) (err error) {
 	if err != nil {
 		return
 	}
-	info, err := embedfs.Open(src)
-	if err != nil {
-		return err
-	}
-	defer func() { _ = info.Close() }()
-	sinfo, err := info.Stat()
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(dst, sdata, sinfo.Mode())
+	return os.WriteFile(dst, sdata, 0o600)
 }
 
 func CopyAndCompleteGoTemplate(embedfs embed.FS, src, dst string, data *types.TemplateData) (err error) {
