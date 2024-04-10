@@ -131,6 +131,8 @@ github.com/shipengqi/golib v0.2.12 h1:/0hrev7+J8KChxEvoVdS2kbGQT8VO4C4qFAhtn6ZI8
 github.com/shipengqi/golib v0.2.12/go.mod h1:PIezev9VXxmhjawpu3j1JgLSNKLMq5AB8gLouJ83mrw=
 github.com/shipengqi/jcli v0.2.10 h1:LT25o5547zGqMXdVRejT5ZMwD73Vc7OadWdLp2t37qs=
 github.com/shipengqi/jcli v0.2.10/go.mod h1:CXCt8hG5hvVI4OpTJwihDEhPV7dFet+mrcacwhzLEXM=
+github.com/shipengqi/jcli v0.2.11 h1:5bYvJeikyZb1i0w6jbSONGsuC0Ei1Qr25iiakg8gN3g=
+github.com/shipengqi/jcli v0.2.11/go.mod h1:iXf6lEp6Anc6GGz8q6NowZv7BjOqxLQ7XSKw014ut84=
 github.com/shipengqi/log v0.2.2 h1:+JvLIb3Xycl3/XJFVZn+ZzbJF7HeUBhdNvOdUoFHHS0=
 github.com/shipengqi/log v0.2.2/go.mod h1:YqXfNjg7aDR/KrXoU5KC3vCQ/YldJltQbyEwnlpJOb4=
 github.com/sourcegraph/conc v0.3.0 h1:OQTbbt6P72L20UqAkXXuLOj79LfEanQ+YQFNpLA9ySo=
