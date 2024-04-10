@@ -68,7 +68,7 @@ func logInitializer() {
 		DisableConsoleCaller: true,
 		DisableConsoleLevel:  true,
 		DisableConsoleTime:   true,
-		Output:               fmt.Sprintf("%s/jaguar/logs", os.TempDir()),
+		Output:               fmt.Sprintf("%s/{{ .App.NormalizedName }}/logs", os.TempDir()),
 		ConsoleLevel:         log.InfoLevel.String(),
 		FileLevel:            log.DebugLevel.String(),
 		FilenameEncoder:      filenameEncoder,

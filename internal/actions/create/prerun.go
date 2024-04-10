@@ -6,7 +6,6 @@ import (
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
-	"github.com/shipengqi/jaguar/internal/actions/create/types"
 	"github.com/shipengqi/jaguar/internal/actions/create/ui"
 )
 
@@ -40,11 +39,12 @@ func runProjectTypeForm(cfg *config.Config) error {
 
 func runToolsForm(cfg *config.Config) error {
 	var groups []*huh.Group
-	if cfg.ProjectType == types.ProjectTypeAPI {
-		if _, ok := ui.SupportedGoFrameworks[cfg.GoFramework]; !ok || strutil.IsEmpty(cfg.GoFramework) {
-			groups = append(groups, huh.NewGroup(ui.GoFrameworkSelect(cfg)))
-		}
-	}
+	// Todo The fiber is still under development and needs to be hidden.
+	// if cfg.ProjectType == types.ProjectTypeAPI {
+	// 	if _, ok := ui.SupportedGoFrameworks[cfg.GoFramework]; !ok || strutil.IsEmpty(cfg.GoFramework) {
+	// 		groups = append(groups, huh.NewGroup(ui.GoFrameworkSelect(cfg)))
+	// 	}
+	// }
 
 	if !cfg.Changed(options.FlagUseGolangCILint) {
 		groups = append(groups, huh.NewGroup(ui.IsUseGolangCILintConfirm(cfg)))
@@ -54,6 +54,9 @@ func runToolsForm(cfg *config.Config) error {
 	}
 	if !cfg.Changed(options.FlagUseGSemver) {
 		groups = append(groups, huh.NewGroup(ui.IsUseGSemverConfirm(cfg)))
+	}
+	if !cfg.Changed(options.FlagUseGithubActions) {
+		groups = append(groups, huh.NewGroup(ui.IsUseGitHubActions(cfg)))
 	}
 
 	return huh.NewForm(groups...).Run()

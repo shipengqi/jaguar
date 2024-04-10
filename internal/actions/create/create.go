@@ -1,11 +1,15 @@
 package create
 
 import (
+	"context"
+	"github.com/shipengqi/jaguar/internal/actions/create/ui"
+
+	"github.com/charmbracelet/huh/spinner"
 	"github.com/shipengqi/action"
-	"github.com/shipengqi/jaguar/internal/actions/create/stages"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
+	"github.com/shipengqi/jaguar/internal/actions/create/stages"
 )
 
 const (
@@ -23,8 +27,23 @@ func NewAction(opts *options.Options, args []string) (*action.Action, error) {
 	act := &action.Action{
 		Name: ActionName,
 		Run: func(act *action.Action) error {
+			ctx, cancel := context.WithCancel(context.Background())
 			ss := stages.New(cfg)
-			return ss.Run()
+			var result error
+			go func() {
+				result = ss.Run(cancel)
+			}()
+			if err = spinner.New().Type(spinner.Line).
+				Title(" Jaguar CLI is creating your project. Please wait ...").
+				Context(ctx).Run(); err != nil {
+				return err
+			}
+			if result != nil {
+				return result
+			}
+
+			ui.ShowSummary(cfg)
+			return nil
 		},
 	}
 

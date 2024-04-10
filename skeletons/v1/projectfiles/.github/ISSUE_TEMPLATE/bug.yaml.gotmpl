@@ -24,7 +24,7 @@ body:
     id: {{ .App.NormalizedName }}-version
     attributes:
       label: {{ .App.NormalizedName }} version
-      description: "`{{ .App.NormalizedName }} version` output"
+      description: "`{{ .App.NormalizedName }} --version` output"
       render: bash
     validations:
       required: true

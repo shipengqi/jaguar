@@ -140,7 +140,7 @@ func LoggerWithConfig(c gin.LoggerConfig) gin.HandlerFunc {
 
 			param.Path = path
 
-			GetLoggerWithCtx(ctx).Info(formatter(param))
+			GetLoggerWithCtx(ctx).Infot(formatter(param))
 		}
 	}
 }

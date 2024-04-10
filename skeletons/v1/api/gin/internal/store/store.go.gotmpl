@@ -9,7 +9,7 @@ import (
 
 var _client Factory
 
-// Factory defines the idm platform storage interface.
+// Factory defines the storage interface.
 type Factory interface {
 	Users() UserStore
 	Close() error
@@ -20,7 +20,7 @@ func Client() Factory {
 	return _client
 }
 
-// SetClient set the idm store client.
+// SetClient set the store client.
 func SetClient(factory Factory) {
 	_client = factory
 }

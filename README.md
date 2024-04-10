@@ -13,6 +13,7 @@ A scaffold that makes it easy to create amazing Go applications.
 - https://github.com/qifengzhang007/GinSkeleton
 - https://github.com/go-redis/cache
 - https://github.com/gowebly/gowebly/
+- https://github.com/snowlyg/iris-admin
 
 ## Todo
 

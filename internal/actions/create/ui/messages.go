@@ -34,6 +34,11 @@ const (
 	// FormGSemverUsageDescription represents the description for the GSemver switch.
 	FormGSemverUsageDescription = "This tool will generate the next semver version using the git commit convention.\n\nFor more info → https://github.com/arnaud-deprez/gsemver"
 
+	// FormGitHubActionsUsageTitle represents the title for the GitHub Actions switch.
+	FormGitHubActionsUsageTitle = "Use the GitHub Actions to automate your build, test, and deployment pipeline?\n"
+	// FormGitHubActionsUsageDescription represents the description for the GitHub Actions switch.
+	FormGitHubActionsUsageDescription = "The GitHub Actions is a continuous integration and continuous delivery (CI/CD) platform \nthat allows you to automate your build, test, and deployment pipeline. \n\nFor more info → https://docs.github.com/en/actions"
+
 	// FormGolangCILintUsageTitle represents the title for the Golang CI Lint switch.
 	FormGolangCILintUsageTitle = "Use the Golang CI Lint to lint your Go code?\n"
 	// FormGolangCILintUsageDescription represents the description for the Golang CI Lint switch.
