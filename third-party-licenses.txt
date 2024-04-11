@@ -3,7 +3,9 @@ Other dependencies and licenses:
 Open Source Software Licensed under the Apache License Version 2.0:
 --------------------------------------------------------------------
 1. google/addlicense
-Copyright 2013-2022 The Cobra Authors.
+Copyright 2018 Google LLC.
+
+2. gowebly/gowebly
 
 Terms of the Apache License Version 2.0:
 --------------------------------------------------------------------

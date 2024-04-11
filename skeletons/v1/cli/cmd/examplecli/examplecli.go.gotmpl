@@ -33,6 +33,9 @@ func main() {
 		rootDesc,
 		jcli.WithCommandDesc(jcli.IconBlue(fmt.Sprintf(iconFmt, rootDesc))),
 		jcli.EnableCommandVersion(),
+        jcli.WithCommandRunFunc(func(cmd *jcli.Command, _ []string) error {
+            return cmd.Help()
+        }),
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
