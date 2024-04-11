@@ -31,9 +31,10 @@ func (c *Config) ExportTemplateData() *types.TemplateData {
 		App: types.AppData{
 			Name:           c.ProjectName,
 			ModuleName:     c.ModuleName,
-			DocumentLink:   fmt.Sprintf("https://%s", c.ModuleName),
+			Logo:           helpers.NormalizeAppLogo(c.ProjectName),
 			EnvPrefix:      helpers.NormalizeAppEnv(c.ProjectName),
 			NormalizedName: helpers.NormalizeAppName(c.ProjectName),
+			DocumentLink:   fmt.Sprintf("https://%s", c.ModuleName),
 		},
 		Build: types.BuildData{
 			Bin:  bin,

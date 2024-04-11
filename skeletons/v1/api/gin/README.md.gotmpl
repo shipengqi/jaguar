@@ -28,8 +28,9 @@ mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
 
 Substitute `password` with the password of your choice. Once the password is reset, the server is ready for use.
 
-Update the `{{ .App.Name }}\configs\apiserver.yaml` file and start server:
+Update the `{{ .App.Name }}/configs/apiserver.yaml` file and start server:
 
 ```
-$ ./apiserver --config {{ .App.Name }}\configs\apiserver.yaml
+$ go mod tidy
+$ go run ./cmd/apiserver --config ./configs/apiserver.yaml
 ```
