@@ -34,7 +34,7 @@ func main() {
 		}),
 	)
 
-	app.CobraCommand().PersistentPreRun = func(_ *cobra.Command, args []string) {
+	app.CobraCommand().PersistentPreRun = func(_ *cobra.Command, _ []string) {
 		// The log content should not contain the logo string,
 		// so use 'fmt' instead of 'log'
 		desc := ""
