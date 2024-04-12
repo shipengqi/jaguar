@@ -3,13 +3,13 @@ package create
 import (
 	"context"
 
-	"github.com/charmbracelet/huh/spinner"
 	"github.com/shipengqi/action"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
 	"github.com/shipengqi/jaguar/internal/actions/create/stages"
 	"github.com/shipengqi/jaguar/internal/actions/create/ui"
+	"github.com/shipengqi/jaguar/internal/pkg/spinner"
 )
 
 const (

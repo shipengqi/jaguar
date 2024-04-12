@@ -35,4 +35,3 @@ jobs:
         with:
           args: --timeout=10m
           version: latest
-          install-mode: "goinstall"
