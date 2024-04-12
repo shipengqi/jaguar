@@ -2,7 +2,6 @@ package create
 
 import (
 	"context"
-	"github.com/shipengqi/jaguar/internal/actions/create/ui"
 
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/shipengqi/action"
@@ -10,6 +9,7 @@ import (
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/options"
 	"github.com/shipengqi/jaguar/internal/actions/create/stages"
+	"github.com/shipengqi/jaguar/internal/actions/create/ui"
 )
 
 const (

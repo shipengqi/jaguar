@@ -2,6 +2,7 @@ package ui
 
 import (
 	"github.com/charmbracelet/huh"
+
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 )
 

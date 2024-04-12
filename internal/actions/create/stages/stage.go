@@ -4,8 +4,9 @@ import (
 	"context"
 	"embed"
 	"fmt"
-	"github.com/shipengqi/log"
 	"os"
+
+	"github.com/shipengqi/log"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/helpers"
@@ -13,13 +14,6 @@ import (
 	"github.com/shipengqi/jaguar/internal/actions/create/types"
 	"github.com/shipengqi/jaguar/skeletons"
 )
-
-const (
-	titleSwagger = "Configuring swagger"
-	titleModTidy = "Installing dependencies"
-)
-
-var fsmap = make(map[string]embed.FS)
 
 type Processor func(cfg *config.Config) error
 
@@ -47,6 +41,10 @@ func (s *Stages) Run(cancel context.CancelFunc) error {
 	var err error
 
 	defer func() { cancel() }()
+
+	// Todo more stages
+	// "Configuring swagger"
+	// "Installing dependencies"
 
 	log.Debug("initializing ...")
 	if err = s.initialize(); err != nil {
