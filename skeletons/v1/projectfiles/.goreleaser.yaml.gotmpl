@@ -16,19 +16,19 @@ builds:
       - amd64
       - arm
       - arm64
-      - ppc64le
+      - ppc64
     ignore:
-      # don't build arm for darwin and arm/arm64 for windows
+      # don't build arm/ppc64 for darwin and arm/arm64/ppc64 for windows
       - goos: darwin
         goarch: arm
       - goos: darwin
-        goarch: ppc64le
+        goarch: ppc64
       - goos: windows
         goarch: arm
       - goos: windows
         goarch: arm64
       - goos: windows
-        goarch: ppc64le
+        goarch: ppc64
     ldflags:
       - -X "github.com/shipengqi/component-base/version.Version={{"{{ .Tag }}"}}"
       - -X "github.com/shipengqi/component-base/version.GitCommit={{"{{ .ShortCommit }}"}}"
