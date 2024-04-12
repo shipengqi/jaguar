@@ -129,8 +129,6 @@ github.com/shipengqi/errors v0.3.0 h1:PrhXl3v0GpelUubjwO07d3C1DZU+IF1Fm2mGaQha4N
 github.com/shipengqi/errors v0.3.0/go.mod h1:6s/KEoXw9JRDoS1kC0CTWmibiIEQt3ZCTX3t1EzNEdI=
 github.com/shipengqi/golib v0.2.12 h1:/0hrev7+J8KChxEvoVdS2kbGQT8VO4C4qFAhtn6ZI8o=
 github.com/shipengqi/golib v0.2.12/go.mod h1:PIezev9VXxmhjawpu3j1JgLSNKLMq5AB8gLouJ83mrw=
-github.com/shipengqi/jcli v0.2.10 h1:LT25o5547zGqMXdVRejT5ZMwD73Vc7OadWdLp2t37qs=
-github.com/shipengqi/jcli v0.2.10/go.mod h1:CXCt8hG5hvVI4OpTJwihDEhPV7dFet+mrcacwhzLEXM=
 github.com/shipengqi/jcli v0.2.11 h1:5bYvJeikyZb1i0w6jbSONGsuC0Ei1Qr25iiakg8gN3g=
 github.com/shipengqi/jcli v0.2.11/go.mod h1:iXf6lEp6Anc6GGz8q6NowZv7BjOqxLQ7XSKw014ut84=
 github.com/shipengqi/log v0.2.2 h1:+JvLIb3Xycl3/XJFVZn+ZzbJF7HeUBhdNvOdUoFHHS0=
@@ -205,5 +203,7 @@ gopkg.in/natefinch/lumberjack.v2 v2.2.1/go.mod h1:YD8tP3GAjkrDg1eZH7EGmyESg/lsYs
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+moul.io/banner v1.0.1 h1:+WsemGLhj2pOajw2eR5VYjLhOIqs0XhIRYchzTyMLk0=
+moul.io/banner v1.0.1/go.mod h1:XwvIGKkhKRKyN1vIdmR5oaKQLIkMhkMqrsHpS94QzAU=
 nullprogram.com/x/optparse v1.0.0/go.mod h1:KdyPE+Igbe0jQUrVfMqDMeJQIJZEuyV7pjYmp6pbG50=
 rsc.io/pdf v0.1.1/go.mod h1:n8OzWcQ6Sp37PL01nO98y4iUCRdTGarVfzxY20ICaU4=

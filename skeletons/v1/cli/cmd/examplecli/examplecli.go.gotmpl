@@ -14,15 +14,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const iconFmt = `     __                                   
-    |__|____     ____  __ _______ _______ 
-    |  \__  \   / ___\|  |  \__  \\_  __ \
-    |  |/ __ \_/ /_/  >  |  // __ \|  | \/
-/\__|  (____  /\___  /|____/(____  /__|   
-\______|    \//_____/            \/    
+const iconFmt = `{{ .App.Logo }}
 %s`
 
-const rootDesc = "An example of a CLI application created by the jaguar CLI."
+const rootDesc = "An example of a CLI application created by the Jaguar CLI."
 
 func main() {
 	defer finally()
@@ -39,7 +34,10 @@ func main() {
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		log.Info(subdesc(""))
+		desc := subdesc("")
+		if len(desc) > 0 {
+			fmt.Println(desc)
+		}
 	}
 
 	app.AddCommands(
