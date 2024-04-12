@@ -1,6 +1,6 @@
 module github.com/shipengqi/jaguar
 
-go 1.20
+go 1.22
 
 require (
 	github.com/charmbracelet/huh v0.3.0
