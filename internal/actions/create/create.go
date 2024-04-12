@@ -26,7 +26,7 @@ func NewAction(opts *options.Options, args []string) (*action.Action, error) {
 	}
 	act := &action.Action{
 		Name: ActionName,
-		Run: func(act *action.Action) error {
+		Run: func(_ *action.Action) error {
 			ctx, cancel := context.WithCancel(context.Background())
 			ss := stages.New(cfg)
 			var result error

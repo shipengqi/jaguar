@@ -19,7 +19,7 @@ const (
 func NewAction(cfg *config.Config) *action.Action {
 	act := &action.Action{
 		Name: ActionName,
-		Run: func(act *action.Action) error {
+		Run: func(_ *action.Action) error {
 			g := NewGenerator(cfg.TrimPrefix)
 
 			err := g.parsePackage(cfg.OriginArgs, cfg.BuildTagSlice)

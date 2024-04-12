@@ -28,7 +28,7 @@ func main() {
 		rootDesc,
 		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
 		jcli.EnableCommandVersion(),
-		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
+		jcli.WithCommandRunFunc(func(cmd *jcli.Command, _ []string) error {
 			log.Infof("%s Version: \n%s", "=======>", version.Get().String())
 			return cmd.Help()
 		}),

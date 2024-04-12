@@ -14,7 +14,7 @@ import (
 func NewRemoveLicenseAction(cfg *config.Config, args []string) *action.Action {
 	act := &action.Action{
 		Name: ActionNameRemove,
-		Run: func(act *action.Action) error {
+		Run: func(_ *action.Action) error {
 			// process at most 1000 files in parallel
 			ch := make(chan *file, 1000)
 			done := make(chan struct{})
