@@ -17,14 +17,6 @@
 set -o errexit
 set -o nounset
 
-if [[ -z "${GO_LDFLAGS}" ]]; then
-    echo "GO_LDFLAGS must be set"
-    exit 1
-fi
-
-# set .Env.GO_LDFLAGS for goreleaser.yaml
-export GO_LDFLAGS=${GO_LDFLAGS}
-
 RELEASER=$(go env GOPATH)/bin/goreleaser
 
 # $PUBLISH must explicitly be set to '1' for goreleaser

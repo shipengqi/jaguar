@@ -81,7 +81,7 @@ func CopyAndCompleteGoTemplate(embedfs embed.FS, src, dst string, data *types.Te
 	// parse template from embed file system
 	tmpl, err := template.ParseFS(embedfs, src)
 	if err != nil {
-		return
+		return err
 	}
 	// create a new temp file with the given data.
 	tempf, err := os.CreateTemp("", "TEMPLATE_")
@@ -114,5 +114,5 @@ func CopyAndCompleteGoTemplate(embedfs embed.FS, src, dst string, data *types.Te
 		return err
 	}
 
-	return
+	return err
 }

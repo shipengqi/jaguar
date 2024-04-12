@@ -7,6 +7,7 @@ snapshot:
 builds:
   - env:
       - CGO_ENABLED=0
+      - GIT_TREE_STATE=clean
     goos:
       - linux
       - windows
@@ -29,14 +30,17 @@ builds:
       - goos: windows
         goarch: ppc64
     ldflags:
-      - "{{ .Env.GO_LDFLAGS }}"
-    main: ./cmd/jaguar
+      - -X "github.com/shipengqi/component-base/version.Version={{ .Tag }}"
+      - -X "github.com/shipengqi/component-base/version.GitCommit={{ .ShortCommit }}"
+      - -X "github.com/shipengqi/component-base/version.BuildTime={{ .Date }}"
+      - -X "github.com/shipengqi/component-base/version.GitTreeState={{ .Env.GIT_TREE_STATE }}"
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
 #    wrap_in_directory: true
     files:
       - LICENSE
       - README.md
+      - CHANGELOG/**
     # Can be used to change the archive formats for specific GOOSs.
     # Most common use case is to archive as zip on Windows.
     # Default is empty.
@@ -44,47 +48,29 @@ archives:
       - goos: windows
         format: zip
 checksum:
-  name_template: 'checksums.txt'
+  name_template: 'CHECKSUM'
 changelog:
   sort: asc
   use: github
   filters:
     exclude:
-      - "^test:"
-      - "^chore"
-      - "merge conflict"
-      - Merge pull request
-      - Merge remote-tracking branch
-      - Merge branch
-      - go mod tidy
+      - '^Merge'
   groups:
-    - title: "New Features"
-      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+    - title: 'New Features'
+      regexp: "^.*feat.*:+.*$"
       order: 100
-    - title: "Security updates"
-      regexp: '^.*?sec(\([[:word:]]+\))??!?:.+$'
-      order: 150
-    - title: "Bug fixes"
-      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+    - title: 'Bug Fixes'
+      regexp: "^.*fix.*:+.*$"
       order: 200
-    - title: "Dependency updates"
-      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
+    - title: 'Dependency Updates'
+      regexp: "^.*(feat|fix)\\(deps\\)*:+.*$"
       order: 300
-    - title: "Documentation updates"
-      regexp: '^.*?docs(\([[:word:]]+\))??!?:.+$'
-      order: 400
-    - title: "Build process updates"
-      regexp: '^.*?build(\([[:word:]]+\))??!?:.+$'
+    - title: 'Documentation Updates'
+      regexp: "^.*docs.*:+.*$"
       order: 400
     - title: Other work
       order: 9999
-
 release:
-#  github:
-#    owner: shipengqi
-#    name: crtctl
-#  draft: false
-#  prerelease: auto
   footer: |
     **Full Changelog**: https://github.com/shipengqi/jaguar/compare/{{ .PreviousTag }}...{{ .Tag }}
 

@@ -1,9 +1,10 @@
 package helpers
 
 import (
-	"moul.io/banner"
 	"regexp"
 	"strings"
+
+	"moul.io/banner"
 )
 
 func NormalizeAppName(value string) string {

@@ -18,7 +18,7 @@ func newRemoveCmd() *jcli.Command {
 		rmCmdDesc,
 		jcli.WithCommandDesc(cmdutils.SubCmdDesc(rmCmdDesc)),
 		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
+		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
 			if len(args) == 0 {
 				return nil
 			}
