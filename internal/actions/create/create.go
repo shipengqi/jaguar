@@ -33,7 +33,7 @@ func NewAction(opts *options.Options, args []string) (*action.Action, error) {
 			go func() {
 				result = ss.Run(cancel)
 			}()
-			if err = spinner.New().Type(spinner.Line).
+			if err = spinner.New().Type(spinner.Dots).
 				Title(" Jaguar CLI is creating your project. Please wait ...").
 				Context(ctx).Run(); err != nil {
 				return err
