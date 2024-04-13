@@ -5,6 +5,7 @@ import (
 
 	"{{ .App.ModuleName }}/internal/actions/hello"
 	"{{ .App.ModuleName }}/internal/actions/hello/options"
+	"{{ .App.ModuleName }}/internal/pkg/utils/cmdutils"
 )
 
 const helloCmdDesc = "Example: Say Hello."
@@ -14,7 +15,7 @@ func newHelloCmd() *jcli.Command {
 	c := jcli.NewCommand(
 		hello.ActionName,
 		helloCmdDesc,
-		jcli.WithCommandDesc(subdesc(helloCmdDesc)),
+		jcli.WithCommandDesc(cmdutils.SubCmdDesc(helloCmdDesc)),
 		jcli.WithCommandAliases(hello.ActionNameAlias),
 		jcli.WithCommandCliOptions(o),
 		jcli.WithCommandRunFunc(func(cmd *jcli.Command, args []string) error {
