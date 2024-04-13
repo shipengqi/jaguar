@@ -23,5 +23,6 @@ func NormalizeAppEnv(value string) string {
 func NormalizeAppLogo(name string) string {
 	re, _ := regexp.Compile(`[^a-z-_?.]+`)
 	name = re.ReplaceAllString(strings.ToLower(name), " ")
-	return banner.Inline(name)
+	logo := banner.Inline(name)
+	return strings.ReplaceAll(logo, "`", "` + \"`\" + `")
 }
