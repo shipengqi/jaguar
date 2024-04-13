@@ -25,9 +25,10 @@ func NewApp() *jcli.App {
 }
 
 func run(opts *options.Options) jcli.RunFunc {
+    // setting up the global logger before the application runs
+    log.Configure(opts.Log)
 	return func() error {
-		log.Configure(opts.Log)
-		defer func() { _ = log.Flush() }()
+		defer func() { _ = log.Close() }()
 
 		cfg, err := config.CreateConfigFromOptions(opts)
 		if err != nil {
