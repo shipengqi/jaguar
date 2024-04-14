@@ -12,6 +12,7 @@ type TemplateData struct {
 }
 
 type AppData struct {
+	Type           string
 	Name           string
 	Logo           string
 	EnvPrefix      string

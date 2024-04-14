@@ -30,6 +30,7 @@ func (c *Config) ExportTemplateData() *types.TemplateData {
 	return &types.TemplateData{
 		App: types.AppData{
 			Name:           c.ProjectName,
+			Type:           c.ProjectType,
 			ModuleName:     c.ModuleName,
 			Logo:           helpers.NormalizeAppLogo(c.ProjectName),
 			EnvPrefix:      helpers.NormalizeAppEnv(c.ProjectName),
