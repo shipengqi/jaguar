@@ -6,9 +6,7 @@ A scaffold that makes it easy to create amazing Go applications.
 [![release](https://img.shields.io/github/release/shipengqi/jaguar.svg)](https://github.com/shipengqi/jaguar/releases)
 [![license](https://img.shields.io/github/license/shipengqi/jaguar)](https://github.com/shipengqi/jaguar/blob/main/LICENSE)
 
-## Usage
-
-### Installation
+## Installation
 
 ### From the Binary Releases
 
@@ -18,7 +16,7 @@ Download the pre-compiled binaries from the [releases page](https://github.com/s
 $ jaguar --version
 ```
 
-#### Go Install
+### Go Install
 
 You must have a working Go environment:
 
@@ -34,6 +32,8 @@ You must have a working Go environment:
 $ git clone https://github.com/shipengqi/jaguar.git
 $ make build
 ```
+
+## Usage
 
 ### Create a new project
 
