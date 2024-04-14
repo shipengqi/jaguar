@@ -34,6 +34,7 @@ builds:
       - -X "github.com/shipengqi/component-base/version.GitCommit={{ .ShortCommit }}"
       - -X "github.com/shipengqi/component-base/version.BuildTime={{ .Date }}"
       - -X "github.com/shipengqi/component-base/version.GitTreeState={{ .Env.GIT_TREE_STATE }}"
+    main: ./cmd/jaguar
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
 #    wrap_in_directory: true
