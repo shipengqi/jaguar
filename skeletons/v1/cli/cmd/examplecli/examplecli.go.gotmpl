@@ -7,11 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shipengqi/golib/cliutil"
 	"github.com/shipengqi/golib/fsutil"
 	"github.com/shipengqi/jcli"
 	"github.com/shipengqi/log"
 	"github.com/spf13/cobra"
+
+	"{{ .App.ModuleName }}/internal/pkg/utils/cmdutils"
 )
 
 const iconFmt = `{{ .App.Logo }}
@@ -26,7 +27,7 @@ func main() {
 	app := jcli.NewCommand(
 		"examplecli",
 		rootDesc,
-		jcli.WithCommandDesc(jcli.IconBlue(fmt.Sprintf(iconFmt, rootDesc))),
+		jcli.WithCommandDesc(cmdutils.RootCmdDesc(rootDesc)),
 		jcli.EnableCommandVersion(),
         jcli.WithCommandRunFunc(func(cmd *jcli.Command, _ []string) error {
             return cmd.Help()
@@ -34,32 +35,28 @@ func main() {
 	)
 
 	app.CobraCommand().PersistentPreRun = func(cmd *cobra.Command, args []string) {
-		desc := subdesc("")
-		if len(desc) > 0 {
-			fmt.Println(desc)
+		desc := ""
+		if cmdutils.IsVersionCmd() {
+			desc = cmdutils.RootCmdDesc(rootDesc) + "\n"
+		} else {
+			desc = cmdutils.SubCmdDesc("")
 		}
+		if desc == "" {
+			return
+		}
+		fmt.Println(desc)
 	}
 
 	app.AddCommands(
 		newHelloCmd(),
 	)
+    cobra.EnableCommandSorting = false
 
 	app.Run()
 }
 
-func subdesc(cmdDesc string) string {
-	if log.EncodedFilename() != "" {
-		desc := fmt.Sprintf("A Log: %s\n", log.EncodedFilename())
-		return jcli.IconBlue(fmt.Sprintf(iconFmt, desc))
-	}
-	if cmdDesc != "" {
-		return jcli.IconBlue(fmt.Sprintf(iconFmt, cmdDesc))
-	}
-	return ""
-}
-
 func logInitializer() {
-	if isHelpCmd(os.Args) {
+	if cmdutils.IsHelpOrVersionCmd() {
 		return
 	}
 
@@ -81,24 +78,7 @@ func logInitializer() {
 	}
 	log.Configure(opts)
 
-	log.Debugf("executed: %s", strings.Join(os.Args, " "))
-}
-
-func isHelpCmd(args []string) bool {
-	if len(args) == 1 {
-		return true
-	}
-	if len(args) > 1 && args[1] == "help" {
-		return true
-	}
-
-	if _, ok := cliutil.RetrieveFlagFromCLI("--help", "-h"); ok {
-		return true
-	}
-	if _, ok := cliutil.RetrieveFlagFromCLI("--version", "-v"); ok {
-		return true
-	}
-	return false
+	log.Debugf("command: %s", strings.Join(os.Args, " "))
 }
 
 func filenameEncoder() string {

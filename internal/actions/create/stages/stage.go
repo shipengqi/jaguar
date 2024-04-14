@@ -128,6 +128,13 @@ func (s *Stages) Run(cancel context.CancelFunc) error {
 				return err
 			}
 		}
+		if !s.cfg.IsUseGoReleaser {
+			releasecifile := fmt.Sprintf("%s/.github/workflows/release.yaml", s.cfg.ProjectName)
+			log.Debugf("Go Releaser is disabled, remove '%s'", releasecifile)
+			if err = os.Remove(releasecifile); err != nil {
+				return err
+			}
+		}
 	}
 
 	makefile := fmt.Sprintf("%s/Makefile", s.cfg.ProjectName)
