@@ -151,13 +151,12 @@ func (s *GenericAPIServer) Run() error {
 	// Initializing the server in a goroutine so that
 	// it won't block the graceful shutdown handling below
 	eg.Go(func() error {
-		log.Infof("Start to listening the incoming requests on http address: %s", s.InsecureServingInfo.Address)
+		log.Infof("Start to listening the incoming requests at http address: %s", s.InsecureServingInfo.Address)
 		if err := s.insecureServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatal(err.Error())
 			return err
 		}
 
-		log.Infof("Server on %s stopped", s.InsecureServingInfo.Address)
+		log.Infof("HTTP server at %s stopped", s.InsecureServingInfo.Address)
 		return nil
 	})
 
@@ -167,13 +166,12 @@ func (s *GenericAPIServer) Run() error {
 			return nil
 		}
 
-		log.Infof("Start to listening the incoming requests on https address: %s", s.SecureServingInfo.Address())
+		log.Infof("Start to listening the incoming requests at https address: %s", s.SecureServingInfo.Address())
 		if err := s.secureServer.ListenAndServeTLS(cert, key); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatal(err.Error())
 			return err
 		}
 
-		log.Infof("Server on %s stopped", s.SecureServingInfo.Address())
+		log.Infof("HTTP server at %s stopped", s.SecureServingInfo.Address())
 		return nil
 	})
 

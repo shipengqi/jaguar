@@ -1,0 +1,17 @@
+package interceptors
+
+import (
+	"runtime/debug"
+
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
+	"github.com/shipengqi/log"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+func grpcPanicRecoveryHandler() recovery.RecoveryHandlerFunc {
+	return func(p any) (err error) {
+		log.Error("recovered from panic", "panic", p, "stack", debug.Stack())
+		return status.Errorf(codes.Internal, "%s", p)
+	}
+}
