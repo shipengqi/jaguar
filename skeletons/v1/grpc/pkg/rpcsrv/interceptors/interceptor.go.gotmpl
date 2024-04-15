@@ -1,0 +1,30 @@
+package interceptors
+
+import (
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
+	"github.com/shipengqi/log"
+	"google.golang.org/grpc"
+
+	customlogging "{{ .App.ModuleName }}/pkg/rpcsrv/interceptors/logging"
+)
+
+// UnaryServerInterceptors store registered grpc.UnaryServerInterceptor.
+var UnaryServerInterceptors = defaultUnaryServerInterceptors()
+
+// StreamServerInterceptors store registered grpc.StreamServerInterceptors.
+var StreamServerInterceptors = defaultStreamServerInterceptors()
+
+func defaultUnaryServerInterceptors() map[string]grpc.UnaryServerInterceptor {
+	return map[string]grpc.UnaryServerInterceptor{
+		"logger":   logging.UnaryServerInterceptor(customlogging.InterceptorLogger(log.L())),
+		"recovery": recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler())),
+	}
+}
+
+func defaultStreamServerInterceptors() map[string]grpc.StreamServerInterceptor {
+	return map[string]grpc.StreamServerInterceptor{
+		"logger":   logging.StreamServerInterceptor(customlogging.InterceptorLogger(log.L())),
+		"recovery": recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler())),
+	}
+}

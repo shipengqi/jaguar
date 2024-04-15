@@ -1,37 +1,32 @@
 package rpcsrv
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/shipengqi/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/keepalive"
+
+	"{{ .App.ModuleName }}/pkg/rpcsrv/interceptors"
 )
 
 type Config struct {
 	*Options
 
-	id                       string
-	domain                   string
-	addr                     string
-	grpcopts                 []grpc.ServerOption
-	unaryServerInterceptors  []grpc.UnaryServerInterceptor
-	streamServerInterceptors []grpc.StreamServerInterceptor
-	ctx                      context.Context
+	id       string
+	domain   string
+	addr     string
+	grpcopts []grpc.ServerOption
 }
 
 func CreateConfigFromOptions(opts *Options) *Config {
 	return &Config{
-		Options:                  opts,
-		id:                       "",
-		domain:                   "",
-		addr:                     fmt.Sprintf("%s:%d", opts.BindAddress, opts.BindPort),
-		grpcopts:                 initGrpcServerOptions(opts),
-		unaryServerInterceptors:  nil,
-		streamServerInterceptors: nil,
-		ctx:                      nil,
+		Options:  opts,
+		id:       "",
+		domain:   "",
+		addr:     fmt.Sprintf("%s:%d", opts.BindAddress, opts.BindPort),
+		grpcopts: initGrpcServerOptions(opts),
 	}
 }
 
@@ -48,6 +43,8 @@ func initGrpcServerOptions(opts *Options) []grpc.ServerOption {
 			MaxConnectionAge:      opts.MaxConnectionAge,
 			MaxConnectionAgeGrace: opts.MaxConnectionAgeGrace,
 		}),
+		initUnaryInterceptors(opts),
+		initStreamInterceptors(opts),
 	}
 
 	if opts.ServerCert.CertFile != "" && opts.ServerCert.KeyFile != "" {
@@ -58,6 +55,39 @@ func initGrpcServerOptions(opts *Options) []grpc.ServerOption {
 			gopts = append(gopts, grpc.Creds(cs))
 		}
 	}
-
 	return gopts
+}
+
+func initUnaryInterceptors(opts *Options) grpc.ServerOption {
+	var unaryInterceptors []grpc.UnaryServerInterceptor
+
+	for _, m := range opts.UnaryInterceptors {
+		inter, ok := interceptors.UnaryServerInterceptors[m]
+		if !ok {
+			log.Warnf("can not find unary interceptor: %s", m)
+			continue
+		}
+
+		log.Infof("install unary interceptor: %s", m)
+		unaryInterceptors = append(unaryInterceptors, inter)
+	}
+	return grpc.ChainUnaryInterceptor(unaryInterceptors...)
+
+}
+
+func initStreamInterceptors(opts *Options) grpc.ServerOption {
+	var streamInterceptors []grpc.StreamServerInterceptor
+
+	for _, m := range opts.StreamInterceptors {
+		inter, ok := interceptors.StreamServerInterceptors[m]
+		if !ok {
+			log.Warnf("can not find stream interceptor: %s", m)
+			continue
+		}
+
+		log.Infof("install stream interceptor: %s", m)
+		streamInterceptors = append(streamInterceptors, inter)
+	}
+
+	return grpc.ChainStreamInterceptor(streamInterceptors...)
 }
