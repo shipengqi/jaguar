@@ -6,6 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 
 	pb "{{ .App.ModuleName }}/pkg/api/proto/v1"
 )
@@ -18,8 +19,17 @@ func main() {
 	defer func() { _ = conn.Close() }()
 
 	client := pb.NewUserClient(conn)
+	// there are two ways to create metadata
+	// 1. metadata.New
+	md := metadata.New(map[string]string{"authorization": "bearer example-only"})
+	// 2. metadata.Pairs
+	// metadata.Pairs("authorization", "bearer example-only")
 
-	resp, err := client.Create(context.Background(), &pb.CreateRequest{Request: "gRPC"})
+	// setup metadata
+	// OutgoingContext is used to send requests
+	// InComingContext is used to receive requests
+	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	resp, err := client.Create(ctx, &pb.CreateRequest{Request: "gRPC"})
 	if err != nil {
 		log.Fatalf("client.Search err: %v", err)
 	}

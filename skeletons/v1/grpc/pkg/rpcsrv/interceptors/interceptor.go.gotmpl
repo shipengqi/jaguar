@@ -1,10 +1,13 @@
 package interceptors
 
 import (
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/auth"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/selector"
 	"github.com/shipengqi/log"
 	"google.golang.org/grpc"
+
 
 	customlogging "{{ .App.ModuleName }}/pkg/rpcsrv/interceptors/logging"
 )
@@ -18,6 +21,7 @@ var StreamServerInterceptors = defaultStreamServerInterceptors()
 func defaultUnaryServerInterceptors() map[string]grpc.UnaryServerInterceptor {
 	return map[string]grpc.UnaryServerInterceptor{
 		"logger":   logging.UnaryServerInterceptor(customlogging.InterceptorLogger(log.L())),
+		"auth":     selector.UnaryServerInterceptor(auth.UnaryServerInterceptor(grpcAuthHandler), selector.MatchFunc(allButHealthZ)),
 		"recovery": recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler())),
 	}
 }
@@ -25,6 +29,7 @@ func defaultUnaryServerInterceptors() map[string]grpc.UnaryServerInterceptor {
 func defaultStreamServerInterceptors() map[string]grpc.StreamServerInterceptor {
 	return map[string]grpc.StreamServerInterceptor{
 		"logger":   logging.StreamServerInterceptor(customlogging.InterceptorLogger(log.L())),
+		"auth":     selector.StreamServerInterceptor(auth.StreamServerInterceptor(grpcAuthHandler), selector.MatchFunc(allButHealthZ)),
 		"recovery": recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler())),
 	}
 }
