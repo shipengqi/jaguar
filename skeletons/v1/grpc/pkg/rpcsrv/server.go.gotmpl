@@ -9,9 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
 	"github.com/oklog/run"
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/shipengqi/log"
 	"google.golang.org/grpc"
@@ -22,15 +20,14 @@ type Server struct {
 	cfg        *Config
 	srv        *grpc.Server
 	metricsSrv *http.Server
-	promReg    prometheus.Registerer
 }
 
 func New(opts *Options) *Server {
 	grpc.EnableTracing = false
 
 	cfg := CreateConfigFromOptions(opts)
-	srv := grpc.NewServer(cfg.grpcopts...)
-
+	srv := grpc.NewServer(cfg.InitGrpcServerOptions()...)
+	cfg.InitializeMetrics(srv)
 	reflection.Register(srv)
 
 	return &Server{cfg: cfg, srv: srv}
@@ -57,7 +54,6 @@ func (s *Server) Run() error {
 
 	if s.cfg.MetricsOptions.BindPort > 0 {
 		g.Add(func() error {
-			s.setupMetrics()
 			mux := s.initMetricsHandler()
 			addr := fmt.Sprintf("%s:%d", s.cfg.MetricsOptions.BindAddress, s.cfg.MetricsOptions.BindPort)
 			s.metricsSrv = &http.Server{
@@ -88,12 +84,6 @@ func (s *Server) Run() error {
 		log.Fatal(err.Error())
 	}
 	return nil
-}
-
-func (s *Server) setupMetrics() {
-	srvMetrics := grpcprom.NewServerMetrics()
-	s.promReg = prometheus.DefaultRegisterer
-	s.promReg.MustRegister(srvMetrics)
 }
 
 func (s *Server) initMetricsHandler() *http.ServeMux {

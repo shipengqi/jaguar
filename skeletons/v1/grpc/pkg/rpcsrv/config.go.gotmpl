@@ -3,6 +3,8 @@ package rpcsrv
 import (
 	"fmt"
 
+	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/shipengqi/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -17,38 +19,46 @@ type Config struct {
 	id       string
 	domain   string
 	addr     string
-	grpcopts []grpc.ServerOption
+	metrics  *grpcprom.ServerMetrics
+	registry *prometheus.Registry
 }
 
 func CreateConfigFromOptions(opts *Options) *Config {
-	return &Config{
-		Options:  opts,
-		id:       "",
-		domain:   "",
-		addr:     fmt.Sprintf("%s:%d", opts.BindAddress, opts.BindPort),
-		grpcopts: initGrpcServerOptions(opts),
+	cfg := &Config{
+		Options: opts,
+		id:      "",
+		domain:  "",
+		addr:    fmt.Sprintf("%s:%d", opts.BindAddress, opts.BindPort),
 	}
+	cfg.metrics = grpcprom.NewServerMetrics()
+	cfg.registry = prometheus.NewRegistry()
+	cfg.registry.MustRegister(cfg.metrics)
+	return cfg
 }
 
-func initGrpcServerOptions(opts *Options) []grpc.ServerOption {
+func (c *Config) InitializeMetrics(srv *grpc.Server) {
+	c.metrics.InitializeMetrics(srv)
+}
+
+func (c *Config) InitGrpcServerOptions() []grpc.ServerOption {
 	gopts := []grpc.ServerOption{
-		grpc.MaxConcurrentStreams(uint32(opts.MaxConcurrentStreams)),
-		grpc.MaxRecvMsgSize(opts.MaxMsgSize),
+		grpc.MaxConcurrentStreams(uint32(c.Options.MaxConcurrentStreams)),
+		grpc.MaxRecvMsgSize(c.Options.MaxMsgSize),
 		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
-			MinTime: opts.Keepalive / defaultMiniKeepAliveTimeRate,
+			MinTime: c.Options.Keepalive / defaultMiniKeepAliveTimeRate,
 		}),
 		grpc.KeepaliveParams(keepalive.ServerParameters{
-			Time:                  opts.Keepalive,
-			Timeout:               opts.Timeout,
-			MaxConnectionAge:      opts.MaxConnectionAge,
-			MaxConnectionAgeGrace: opts.MaxConnectionAgeGrace,
+			Time:                  c.Options.Keepalive,
+			Timeout:               c.Options.Timeout,
+			MaxConnectionAge:      c.Options.MaxConnectionAge,
+			MaxConnectionAgeGrace: c.Options.MaxConnectionAgeGrace,
 		}),
-		initUnaryInterceptors(opts),
-		initStreamInterceptors(opts),
+		c.initUnaryInterceptors(),
+		c.initStreamInterceptors(),
 	}
 
-	if opts.ServerCert.CertFile != "" && opts.ServerCert.KeyFile != "" {
-		if cs, err := credentials.NewServerTLSFromFile(opts.ServerCert.CertFile, opts.ServerCert.KeyFile); err != nil {
+	if c.Options.ServerCert.CertFile != "" && c.Options.ServerCert.KeyFile != "" {
+		if cs, err := credentials.NewServerTLSFromFile(c.Options.ServerCert.CertFile, c.Options.ServerCert.KeyFile); err != nil {
 			log.Warnf("failed to generate transport credentials, use insecure mode.")
 			log.Debugf("credentials.NewServerTLSFromFile err: %v", err)
 		} else {
@@ -58,10 +68,10 @@ func initGrpcServerOptions(opts *Options) []grpc.ServerOption {
 	return gopts
 }
 
-func initUnaryInterceptors(opts *Options) grpc.ServerOption {
+func (c *Config) initUnaryInterceptors() grpc.ServerOption {
 	var unaryInterceptors []grpc.UnaryServerInterceptor
 
-	for _, m := range opts.UnaryInterceptors {
+	for _, m := range c.Options.UnaryInterceptors {
 		inter, ok := interceptors.UnaryServerInterceptors[m]
 		if !ok {
 			log.Warnf("can not find unary interceptor: %s", m)
@@ -71,14 +81,16 @@ func initUnaryInterceptors(opts *Options) grpc.ServerOption {
 		log.Infof("install unary interceptor: %s", m)
 		unaryInterceptors = append(unaryInterceptors, inter)
 	}
+	if c.Options.MetricsOptions.BindPort > 0 {
+		unaryInterceptors = append(unaryInterceptors, c.metrics.UnaryServerInterceptor())
+	}
 	return grpc.ChainUnaryInterceptor(unaryInterceptors...)
-
 }
 
-func initStreamInterceptors(opts *Options) grpc.ServerOption {
+func (c *Config) initStreamInterceptors() grpc.ServerOption {
 	var streamInterceptors []grpc.StreamServerInterceptor
 
-	for _, m := range opts.StreamInterceptors {
+	for _, m := range c.Options.StreamInterceptors {
 		inter, ok := interceptors.StreamServerInterceptors[m]
 		if !ok {
 			log.Warnf("can not find stream interceptor: %s", m)
@@ -88,6 +100,8 @@ func initStreamInterceptors(opts *Options) grpc.ServerOption {
 		log.Infof("install stream interceptor: %s", m)
 		streamInterceptors = append(streamInterceptors, inter)
 	}
-
+	if c.Options.MetricsOptions.BindPort > 0 {
+		streamInterceptors = append(streamInterceptors, c.metrics.StreamServerInterceptor())
+	}
 	return grpc.ChainStreamInterceptor(streamInterceptors...)
 }
