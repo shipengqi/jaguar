@@ -16,4 +16,12 @@ func NewAPITest() {
 	Context("Generate API code", func() {
 
 	})
+
+	Context("Open the swagger document", func() {
+
+	})
+
+	Context("Ping", func() {
+
+	})
 }
