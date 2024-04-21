@@ -40,3 +40,17 @@ $ make build
 ```
 $ jaguar new
 ```
+
+### Add license
+
+Add the copyright license headers for source code files:
+```
+$ jaguar tool license add <project>
+```
+
+### Generate Error Codes
+
+Automatically generate error codes for API skeleton:
+```
+$ jaguar tool codegen --types int ./<API code directory>
+```
