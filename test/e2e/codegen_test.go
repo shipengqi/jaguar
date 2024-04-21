@@ -28,7 +28,7 @@ func CodeGenTest() {
 
 	Context("Generate register go file", func() {
 		It("should generate go file", func() {
-			se, err = RunCLITest("codegen", "--types", "int", "./testdata/codes")
+			se, err = RunCLITest("tool", "codegen", "--types", "int", "./testdata/codes")
 			NoError(err)
 
 			ShouldExists(_defaultGenGoFilePath)
@@ -36,14 +36,14 @@ func CodeGenTest() {
 		})
 
 		It("should fail without --types", func() {
-			se, err = RunCLITest("codegen", "./testdata/codes")
+			se, err = RunCLITest("tool", "codegen", "./testdata/codes")
 			NoError(err)
 			ExitCode(se, 1)
 			ShouldContains(se, "--types is required")
 		})
 
 		It("should fail with empty --types", func() {
-			se, err = RunCLITest("codegen", "--types", "unknowntype")
+			se, err = RunCLITest("tool", "codegen", "--types", "unknowntype")
 			NoError(err)
 			ExitCode(se, 1)
 			ShouldContains(se, "no values defined for type unknowntype")
@@ -52,7 +52,7 @@ func CodeGenTest() {
 
 	Context("Generate error codes markdown", func() {
 		It("should generate markdown with default filename", func() {
-			se, err = RunCLITest("codegen", "--types", "int", "--doc", "./testdata/codes")
+			se, err = RunCLITest("tool", "codegen", "--types", "int", "--doc", "./testdata/codes")
 			NoError(err)
 
 			ShouldExists(_defaultGenDocFilePath)
@@ -60,7 +60,7 @@ func CodeGenTest() {
 		})
 
 		It("should generate markdown with given filename", func() {
-			se, err = RunCLITest("codegen", "--types", "int", "--doc", "--output", _testFilePath, "./testdata/codes")
+			se, err = RunCLITest("tool", "codegen", "--types", "int", "--doc", "--output", _testFilePath, "./testdata/codes")
 			NoError(err)
 
 			ShouldExists(_testFilePath)

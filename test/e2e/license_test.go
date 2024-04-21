@@ -7,7 +7,7 @@ import (
 func LicenseTest() {
 	Context("Check License Header", func() {
 		It("should output the files without license", func() {
-			se, err = RunCLITest("license", "check", "./testdata/license")
+			se, err = RunCLITest("tool", "license", "check", "./testdata/license")
 			NoError(err)
 			ShouldContains(se, "without-license\\test.go: missing license header")
 			ShouldContains(se, "without-license\\test.html: missing license header")
@@ -21,7 +21,7 @@ func LicenseTest() {
 		})
 
 		It("should skip the given directory and file", func() {
-			se, err = RunCLITest("license", "check", "./testdata/license",
+			se, err = RunCLITest("tool", "license", "check", "./testdata/license",
 				"--skip-files", "skip.css", "--skip-dirs", "skip-dir")
 			NoError(err)
 			ShouldNotContains(se, "with-license\\")
@@ -32,7 +32,7 @@ func LicenseTest() {
 
 	Context("Add License Header", func() {
 		It("should write the license into files", func() {
-			se, err = RunCLITest("license", "add", "./testdata/license/without-license")
+			se, err = RunCLITest("tool", "license", "add", "./testdata/license/without-license")
 			NoError(err)
 			ShouldContains(se, "without-license\\test.go: license added")
 			ShouldContains(se, "without-license\\test.html: license added")
@@ -41,7 +41,7 @@ func LicenseTest() {
 			ShouldContains(se, "without-license\\test.ts: license added")
 			ShouldContains(se, "without-license\\test.yaml: license added")
 
-			se, err = RunCLITest("license", "check", "./testdata/license",
+			se, err = RunCLITest("tool", "license", "check", "./testdata/license",
 				"--skip-files", "skip.css", "--skip-dirs", "skip-dir")
 			NoError(err)
 			ShouldNotContains(se, "without-license\\test.go: license added")
@@ -55,7 +55,7 @@ func LicenseTest() {
 
 	Context("Remove License Header", func() {
 		It("should remove the license from files", func() {
-			se, err = RunCLITest("license", "remove", "./testdata/license/without-license")
+			se, err = RunCLITest("tool", "license", "remove", "./testdata/license/without-license")
 			NoError(err)
 			ShouldContains(se, "without-license\\test.go: license removed")
 			ShouldContains(se, "without-license\\test.html: license removed")
@@ -64,7 +64,7 @@ func LicenseTest() {
 			ShouldContains(se, "without-license\\test.ts: license removed")
 			ShouldContains(se, "without-license\\test.yaml: license removed")
 
-			se, err = RunCLITest("license", "check", "./testdata/license",
+			se, err = RunCLITest("tool", "license", "check", "./testdata/license",
 				"--skip-files", "skip.css", "--skip-dirs", "skip-dir")
 			NoError(err)
 			ShouldContains(se, "without-license\\test.go: missing license header")
