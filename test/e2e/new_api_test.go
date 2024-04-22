@@ -2,11 +2,10 @@ package e2e_test
 
 import (
 	"fmt"
+	. "github.com/onsi/ginkgo/v2"
 	"os"
 	"strconv"
 	"strings"
-
-	. "github.com/onsi/ginkgo/v2"
 )
 
 type NewCommandTestCase struct {
@@ -73,8 +72,12 @@ func NewAPITest() {
 }
 
 func genNewCommandTestCase(title, t, n, m string, lint, release, semver, actions bool) NewCommandTestCase {
+	pt := strings.ToUpper(t)
+	if t == "gprc" {
+		pt = "gRPC"
+	}
 	expects := []string{
-		fmt.Sprintf("Application type: %s", strings.ToUpper(t)),
+		fmt.Sprintf("Application type: %s", pt),
 	}
 	framework := "Gin"
 	if t != "api" {

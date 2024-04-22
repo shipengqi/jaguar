@@ -2,11 +2,11 @@ package ui
 
 import (
 	"fmt"
-	"github.com/shipengqi/jaguar/internal/actions/create/types"
 	"strconv"
 
 	"github.com/shipengqi/jaguar/internal/actions/create/config"
 	"github.com/shipengqi/jaguar/internal/actions/create/helpers"
+	"github.com/shipengqi/jaguar/internal/actions/create/types"
 )
 
 func ShowSummary(cfg *config.Config) {
