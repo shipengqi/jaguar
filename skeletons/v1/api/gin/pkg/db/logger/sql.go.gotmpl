@@ -11,6 +11,7 @@ import (
 	"unicode"
 
 	"gorm.io/gorm/utils"
+	"github.com/shipengqi/golib/convutil"
 )
 
 const (
@@ -110,7 +111,7 @@ func ExplainSQL(sql string, numericPlaceholder *regexp.Regexp, escaper string, a
 		var idx int
 		var newSQL strings.Builder
 
-		for _, v := range []byte(sql) {
+		for _, v := range convutil.S2B(sql) {
 			if v == '?' {
 				if len(vars) > idx {
 					newSQL.WriteString(vars[idx])

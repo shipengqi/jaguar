@@ -3,6 +3,7 @@ package options
 import (
 	cliflag "github.com/shipengqi/component-base/cli/flag"
 	"github.com/shipengqi/component-base/json"
+	"github.com/shipengqi/golib/convutil"
 	"github.com/spf13/pflag"
 )
 
@@ -81,5 +82,5 @@ func (o *Options) Validate() []error {
 func (o *Options) String() string {
 	data, _ := json.Marshal(o)
 
-	return string(data)
+	return convutil.B2S(data)
 }

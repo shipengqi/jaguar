@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/shipengqi/component-base/json"
+	"github.com/shipengqi/golib/convutil"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +14,7 @@ type Extend map[string]interface{}
 // String returns the string format of Extend.
 func (ext Extend) String() string {
 	data, _ := json.Marshal(ext)
-	return string(data)
+	return convutil.B2S(data)
 }
 
 // Merge merge extend fields from ExtendShadow.
@@ -21,7 +22,7 @@ func (ext Extend) Merge(shadow string) Extend {
 	var extend Extend
 
 	// ExtendShadow in the database is always trusted
-	_ = json.Unmarshal([]byte(shadow), &extend)
+	_ = json.Unmarshal(convutil.S2B(shadow), &extend)
 	for k, v := range extend {
 		if _, ok := ext[k]; !ok {
 			ext[k] = v
@@ -123,7 +124,7 @@ func (obj *ObjectMeta) BeforeUpdate(tx *gorm.DB) error {
 
 // AfterFind run after find to unmarshal an ExtendShadow string into Extend struct.
 func (obj *ObjectMeta) AfterFind(tx *gorm.DB) error {
-	if err := json.Unmarshal([]byte(obj.ExtendShadow), &obj.Extend); err != nil {
+	if err := json.Unmarshal(convutil.S2B(obj.ExtendShadow), &obj.Extend); err != nil {
 		return err
 	}
 	return nil

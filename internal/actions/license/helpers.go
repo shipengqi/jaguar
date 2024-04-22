@@ -122,8 +122,8 @@ func hasLicense(b []byte) bool {
 		n = len(b)
 	}
 
-	return bytes.Contains(bytes.ToLower(b[:n]), []byte("copyright")) ||
-		bytes.Contains(bytes.ToLower(b[:n]), []byte("mozilla public"))
+	return bytes.Contains(bytes.ToLower(b[:n]), convutil.S2B("copyright")) ||
+		bytes.Contains(bytes.ToLower(b[:n]), convutil.S2B("mozilla public"))
 }
 
 func licenseHeader(path string, tmpl *template.Template, data *copyrightInfo) ([]byte, error) {
