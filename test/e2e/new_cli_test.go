@@ -13,9 +13,7 @@ func NewCLITest() {
 
 	})
 
-	Context("Add License", func() {
-		It("Check License", func() {})
-		It("Add License", func() {})
-		It("Check License", func() {})
+	Context("Sub command", func() {
+
 	})
 }
