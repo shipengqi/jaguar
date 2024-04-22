@@ -6,14 +6,18 @@ import (
 
 func NewCLITest() {
 	Context("New With Flag Parameters", func() {
+		It("should create an CLI project with new command", func() {
 
+		})
 	})
 
 	Context("New Without Flag Parameters", func() {
+		It("should create an CLI project with new command", func() {
 
+		})
 	})
 
-	Context("Sub command", func() {
+	Context("Run The Sub command", func() {
 
 	})
 }

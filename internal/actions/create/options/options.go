@@ -9,6 +9,7 @@ import (
 const (
 	FlagProjectType      = "type"
 	FlagModuleName       = "module"
+	FlagProjectName      = "project"
 	FlagWebFramework     = "web-framework"
 	FlagUseGolangCILint  = "use-golangci-lint"
 	FlagUseGoReleaser    = "use-goreleaser"
@@ -51,6 +52,7 @@ func New() *Options {
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 	o.fs = fss.FlagSet("New/Create")
 	o.fs.StringVarP(&o.ProjectType, FlagProjectType, "t", o.ProjectType, "the type of your application.")
+	o.fs.StringVarP(&o.ProjectName, FlagProjectName, "n", o.ProjectName, "the name of your application.")
 	o.fs.StringVarP(&o.ModuleName, FlagModuleName, "m", o.ModuleName, "the Go module name in the go.mod file.")
 	o.fs.StringVar(&o.GoFramework, FlagWebFramework, o.GoFramework, "the web framework will be used to build the backend part of your application.\nMust be one of: gin, fiber.")
 	o.fs.BoolVar(&o.IsUseGolangCILint, FlagUseGolangCILint, o.IsUseGolangCILint, "use the Golang CI Lint to lint your Go code.")

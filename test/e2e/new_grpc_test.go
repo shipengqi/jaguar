@@ -6,11 +6,15 @@ import (
 
 func NewGRPCTest() {
 	Context("New With Flag Parameters", func() {
+		It("should create an gRPC project with new command", func() {
 
+		})
 	})
 
 	Context("New Without Flag Parameters", func() {
+		It("should create an gRPC project with new command", func() {
 
+		})
 	})
 
 	Context("Get the reflection response", func() {
