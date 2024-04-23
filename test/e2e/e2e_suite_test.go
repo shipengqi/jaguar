@@ -37,6 +37,9 @@ func TestE2e(t *testing.T) {
 		t.Skip("Skipping E2E tests")
 	}
 
+	// For more information: https://onsi.github.io/gomega/#adjusting-output
+	// format.MaxDepth = 0
+
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "E2E Suite")
 }

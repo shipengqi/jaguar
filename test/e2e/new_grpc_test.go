@@ -1,8 +1,9 @@
 package e2e_test
 
 import (
-	. "github.com/onsi/ginkgo/v2"
 	"os"
+
+	. "github.com/onsi/ginkgo/v2"
 )
 
 func NewGRPCTest() {
