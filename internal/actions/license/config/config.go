@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/shipengqi/component-base/json"
+	"github.com/shipengqi/golib/convutil"
 	"github.com/shipengqi/log"
 
 	"github.com/shipengqi/jaguar/internal/actions/license/options"
@@ -23,7 +24,7 @@ type Config struct {
 func (c *Config) String() string {
 	data, _ := json.Marshal(c)
 
-	return string(data)
+	return convutil.B2S(data)
 }
 
 // CreateConfigFromOptions creates a running configuration instance based

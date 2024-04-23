@@ -37,6 +37,9 @@ func TestE2e(t *testing.T) {
 		t.Skip("Skipping E2E tests")
 	}
 
+	// For more information: https://onsi.github.io/gomega/#adjusting-output
+	// format.MaxDepth = 0
+
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "E2E Suite")
 }
@@ -53,7 +56,11 @@ var _ = BeforeSuite(func() {
 // Helpers
 
 func RunCLITest(args ...string) (*gexec.Session, error) {
-	cmd := exec.Command(CliOpts.Cli, args...)
+	return RunCommandTest(CliOpts.Cli, args...)
+}
+
+func RunCommandTest(command string, args ...string) (*gexec.Session, error) {
+	cmd := exec.Command(command, args...)
 	session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 	return session.Wait(), err
 }
