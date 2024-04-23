@@ -16,19 +16,19 @@ func NewCLITest() {
 		})
 		tests := []NewCommandTestCase{
 			genNewCommandTestCase("should create an CLI project",
-				"api", testCLIProjectName, testCLIModule,
+				"cli", testCLIProjectName, testCLIModule,
 				true, true, true, true),
 			genNewCommandTestCase("should create an CLI project but disable lint",
-				"api", testCLIProjectName, testCLIModule,
+				"cli", testCLIProjectName, testCLIModule,
 				false, true, true, true),
 			genNewCommandTestCase("should create an CLI project but disable releaser",
-				"api", testCLIProjectName, testCLIModule,
+				"cli", testCLIProjectName, testCLIModule,
 				true, false, true, true),
 			genNewCommandTestCase("should create an CLI project but disable semver",
-				"api", testCLIProjectName, testCLIModule,
+				"cli", testCLIProjectName, testCLIModule,
 				true, true, false, true),
 			genNewCommandTestCase("should create an CLI project but disable actions",
-				"api", testCLIProjectName, testCLIModule,
+				"cli", testCLIProjectName, testCLIModule,
 				true, true, true, false),
 		}
 		for _, t := range tests {
@@ -47,9 +47,5 @@ func NewCLITest() {
 		It("should create an CLI project with new command", func() {
 
 		})
-	})
-
-	Context("Run The Sub command", func() {
-
 	})
 }

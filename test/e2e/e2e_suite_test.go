@@ -53,7 +53,11 @@ var _ = BeforeSuite(func() {
 // Helpers
 
 func RunCLITest(args ...string) (*gexec.Session, error) {
-	cmd := exec.Command(CliOpts.Cli, args...)
+	return RunCommandTest(CliOpts.Cli, args...)
+}
+
+func RunCommandTest(command string, args ...string) (*gexec.Session, error) {
+	cmd := exec.Command(command, args...)
 	session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 	return session.Wait(), err
 }

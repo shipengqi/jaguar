@@ -57,18 +57,6 @@ func NewAPITest() {
 
 		})
 	})
-
-	Context("Generate API error codes", func() {
-
-	})
-
-	Context("Open the swagger document", func() {
-
-	})
-
-	Context("Ping", func() {
-
-	})
 }
 
 func genNewCommandTestCase(title, t, n, m string, lint, release, semver, actions bool) NewCommandTestCase {

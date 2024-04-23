@@ -16,19 +16,19 @@ func NewGRPCTest() {
 		})
 		tests := []NewCommandTestCase{
 			genNewCommandTestCase("should create an gRPC project",
-				"api", testRPCProjectName, testRPCModule,
+				"grpc", testRPCProjectName, testRPCModule,
 				true, true, true, true),
 			genNewCommandTestCase("should create an gRPC project but disable lint",
-				"api", testRPCProjectName, testRPCModule,
+				"grpc", testRPCProjectName, testRPCModule,
 				false, true, true, true),
 			genNewCommandTestCase("should create an gRPC project but disable releaser",
-				"api", testRPCProjectName, testRPCModule,
+				"grpc", testRPCProjectName, testRPCModule,
 				true, false, true, true),
 			genNewCommandTestCase("should create an gRPC project but disable semver",
-				"api", testRPCProjectName, testRPCModule,
+				"grpc", testRPCProjectName, testRPCModule,
 				true, true, false, true),
 			genNewCommandTestCase("should create an gRPC project but disable actions",
-				"api", testRPCProjectName, testRPCModule,
+				"grpc", testRPCProjectName, testRPCModule,
 				true, true, true, false),
 		}
 		for _, t := range tests {
@@ -47,13 +47,5 @@ func NewGRPCTest() {
 		It("should create an gRPC project with new command", func() {
 
 		})
-	})
-
-	Context("Get the reflection response", func() {
-
-	})
-
-	Context("Ping", func() {
-
 	})
 }
