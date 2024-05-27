@@ -8,7 +8,7 @@ require (
 	github.com/charmbracelet/huh v0.3.0
 	github.com/charmbracelet/lipgloss v0.11.0
 	github.com/muesli/termenv v0.15.2
-	github.com/onsi/ginkgo/v2 v2.18.0
+	github.com/onsi/ginkgo/v2 v2.19.0
 	github.com/onsi/gomega v1.33.1
 	github.com/shipengqi/action v0.2.0
 	github.com/shipengqi/component-base v0.2.9
