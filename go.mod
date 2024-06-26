@@ -10,7 +10,7 @@ require (
 	github.com/muesli/termenv v0.15.2
 	github.com/onsi/ginkgo/v2 v2.19.0
 	github.com/onsi/gomega v1.33.1
-	github.com/shipengqi/action v0.2.0
+	github.com/shipengqi/action v0.2.1
 	github.com/shipengqi/component-base v0.2.9
 	github.com/shipengqi/golib v0.2.13
 	github.com/shipengqi/jcli v0.2.14
