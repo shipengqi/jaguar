@@ -130,8 +130,8 @@ github.com/shipengqi/component-base v0.2.10 h1:r/oQeFw/rD1ekk5o6Jb95Ff0FpKSIiZtD
 github.com/shipengqi/component-base v0.2.10/go.mod h1:LfbMJtgUW7nNPwmVIi5wJMif/066edkcIJtkDDJgEQQ=
 github.com/shipengqi/errors v0.3.0 h1:PrhXl3v0GpelUubjwO07d3C1DZU+IF1Fm2mGaQha4NI=
 github.com/shipengqi/errors v0.3.0/go.mod h1:6s/KEoXw9JRDoS1kC0CTWmibiIEQt3ZCTX3t1EzNEdI=
-github.com/shipengqi/golib v0.2.14 h1:XOMvaXa6EidldYBYndlC1PhWHSS1LLk+P/zws338/JE=
-github.com/shipengqi/golib v0.2.14/go.mod h1:dwpllsqMwCd18ZZHZwpwO1UCNp4vYOQjKCY37VN+qY8=
+github.com/shipengqi/golib v0.2.15 h1:0CUW0ukcwym1lM0hew4DS2AT3H4ipPV96N8yPThMeVc=
+github.com/shipengqi/golib v0.2.15/go.mod h1:CB4NhzRSfmGce5NGtgyfSGX4AlaWX7BSb8FenMnDadY=
 github.com/shipengqi/jcli v0.2.14 h1:cyXhZtpWIRs200NMZYaH+llXpzG2234Hp0aHL2qIznc=
 github.com/shipengqi/jcli v0.2.14/go.mod h1:3e51mSH4v+bPRCKhjWlJq7fxnpgS6GAMvPfS9uKNzTs=
 github.com/shipengqi/log v0.2.3 h1:dH1LEgFV1jkojNvVf2qdjcYrWIEQ7LsHPkPaeefsTcA=
