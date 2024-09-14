@@ -29,3 +29,8 @@ linters-settings:
     local-prefixes: github.com/shipengqi/jaguar
   dupl:
     threshold: 600
+issues:
+  exclude-rules:
+    - linters:
+        - govet
+      text: "printf: non-constant format string in call to"    
