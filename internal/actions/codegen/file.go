@@ -97,6 +97,7 @@ func (f *File) genDecl(node ast.Node) bool {
 				log.Fatalf("internal error: value of %s is not an integer: %s", name, value.String())
 			}
 			if !isInt {
+				//nolint:gosec
 				u64 = uint64(i64)
 			}
 			v := Value{
