@@ -12,8 +12,8 @@ require (
 	github.com/onsi/gomega v1.34.1
 	github.com/shipengqi/action v0.2.1
 	github.com/shipengqi/component-base v0.2.11
-	github.com/shipengqi/golib v0.2.16
-	github.com/shipengqi/jcli v0.2.14
+	github.com/shipengqi/golib v0.2.17
+	github.com/shipengqi/jcli v0.2.15
 	github.com/shipengqi/log v0.2.3
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/cobra v1.8.1
@@ -65,9 +65,9 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
-	github.com/shipengqi/errors v0.3.0 // indirect
+	github.com/shipengqi/errors v0.3.3 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/spf13/cast v1.6.0 // indirect
+	github.com/spf13/cast v1.7.0 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
