@@ -9,7 +9,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.13.0
 	github.com/muesli/termenv v0.15.3-0.20240618155329-98d742f6907a
 	github.com/onsi/ginkgo/v2 v2.20.2
-	github.com/onsi/gomega v1.34.1
+	github.com/onsi/gomega v1.34.2
 	github.com/shipengqi/action v0.2.1
 	github.com/shipengqi/component-base v0.2.11
 	github.com/shipengqi/golib v0.2.17
