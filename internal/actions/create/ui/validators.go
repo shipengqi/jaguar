@@ -10,17 +10,17 @@ const (
 	NumberEmpty = -1
 )
 
-func NumberValidator(field string, min, max int) func(string) error {
+func NumberValidator(field string, minVal, maxVal int) func(string) error {
 	return func(input string) error {
 		v, err := strconv.Atoi(input)
 		if err != nil {
 			return fmt.Errorf("%s must be a valid number", field)
 		}
-		if min != NumberEmpty && v < min {
-			return fmt.Errorf("%s must be at least %d", field, min)
+		if minVal != NumberEmpty && v < minVal {
+			return fmt.Errorf("%s must be at least %d", field, minVal)
 		}
-		if max != NumberEmpty && v > max {
-			return fmt.Errorf("%s cannot exceed %d", field, max)
+		if maxVal != NumberEmpty && v > maxVal {
+			return fmt.Errorf("%s cannot exceed %d", field, maxVal)
 		}
 		return nil
 	}
