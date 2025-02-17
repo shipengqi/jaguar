@@ -12,7 +12,7 @@ require (
 	github.com/onsi/gomega v1.36.2
 	github.com/shipengqi/action v0.2.1
 	github.com/shipengqi/component-base v0.2.11
-	github.com/shipengqi/golib v0.2.21
+	github.com/shipengqi/golib v0.2.22
 	github.com/shipengqi/jcli v0.2.15
 	github.com/shipengqi/log v0.2.3
 	github.com/sourcegraph/conc v0.3.0
