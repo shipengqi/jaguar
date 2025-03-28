@@ -22,9 +22,10 @@ func (c *Config) String() string {
 
 func (c *Config) ExportTemplateData() *types.TemplateData {
 	bin := "apiserver"
-	if c.ProjectType == types.ProjectTypeCLI {
+	switch projectType := c.ProjectType; projectType {
+	case types.ProjectTypeCLI:
 		bin = "examplecli"
-	} else if c.ProjectType == types.ProjectTypeGRPC {
+	case types.ProjectTypeGRPC:
 		bin = "rpcserver"
 	}
 	return &types.TemplateData{
