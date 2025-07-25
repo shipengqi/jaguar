@@ -12,7 +12,7 @@ require (
 	github.com/onsi/gomega v1.37.0
 	github.com/shipengqi/action v0.2.1
 	github.com/shipengqi/component-base v0.2.11
-	github.com/shipengqi/golib v0.2.27
+	github.com/shipengqi/golib v0.2.28
 	github.com/shipengqi/jcli v0.2.15
 	github.com/shipengqi/log v0.2.3
 	github.com/sourcegraph/conc v0.3.0
@@ -82,7 +82,7 @@ require (
 	golang.org/x/mod v0.25.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
