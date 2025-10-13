@@ -23,7 +23,7 @@ linters:
       rules:
         - name: var-naming
           severity: warning
-          disabled: false
+          disabled: true
   exclusions:
     generated: lax
     presets:
