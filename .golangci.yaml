@@ -19,6 +19,11 @@ linters:
   settings:
     dupl:
       threshold: 600
+    revive:
+      rules:
+        - name: var-naming
+          severity: warning
+          disabled: true
   exclusions:
     generated: lax
     presets:

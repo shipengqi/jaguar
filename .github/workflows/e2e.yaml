@@ -1,4 +1,8 @@
 name: "e2e test"
+permissions:
+  contents: read
+  pull-requests: write
+  
 on:
   push:
     branches: [ main ]
@@ -21,7 +25,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: 1.24
+          go-version: stable
         id: go
       # Look for a CLI that's made for this PR
       - name: Fetch built CLI
@@ -54,7 +58,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: 1.22
+          go-version: stable
       - name: Check out the code
         uses: actions/checkout@v5
       - name: Fetch built CLI
