@@ -64,4 +64,3 @@ func runSpinner(ctx context.Context) {
 		}
 	}
 }
-

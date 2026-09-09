@@ -1,12 +1,12 @@
 package create
 
 const (
-	ProjectTypeGoAPI  = "go-api"
+	ProjectTypeGoAPI   = "go-api"
 	ProjectTypeGoEmbed = "go-embed"
-	ProjectTypeGoCLI  = "go-cli"
-	ProjectTypeGoGRPC = "go-grpc"
-	ProjectTypeNodeJS = "nodejs"
-	ProjectTypePython = "python"
+	ProjectTypeGoCLI   = "go-cli"
+	ProjectTypeGoGRPC  = "go-grpc"
+	ProjectTypeNodeJS  = "nodejs"
+	ProjectTypePython  = "python"
 
 	FrameworkGin     = "gin"
 	FrameworkFiber   = "fiber"
@@ -32,15 +32,15 @@ type TemplateData struct {
 }
 
 type AppData struct {
-	Type             string
-	Name             string
-	Language         string
-	Framework        string
-	Logo             string
-	EnvPrefix        string
-	ModuleName       string
-	DocumentLink     string
-	NormalizedName   string
+	Type           string
+	Name           string
+	Language       string
+	Framework      string
+	Logo           string
+	EnvPrefix      string
+	ModuleName     string
+	DocumentLink   string
+	NormalizedName string
 }
 
 type BuildData struct {

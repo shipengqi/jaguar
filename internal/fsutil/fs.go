@@ -73,7 +73,7 @@ func copyAndCompleteGoTemplate(embedfs embed.FS, src, dst string, data any) erro
 	if err != nil {
 		return err
 	}
-	defer func() { _ = os.Remove(tmpf.Name()) }()
+	defer func() { _ = os.Remove(tmpf.Name()) }() //nolint:gosec // path is constructed internally, no user input
 
 	if err = tmpl.Execute(tmpf, data); err != nil {
 		return err

@@ -4,14 +4,13 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 	"text/template"
 	"unicode"
-
-	"log/slog"
 )
 
 type copyrightInfo struct {
@@ -199,7 +198,7 @@ func prefix(t *template.Template, d *copyrightInfo, top, mid, bot string) ([]byt
 	}
 	s := bufio.NewScanner(&buf)
 	for s.Scan() {
-		_, _ = fmt.Fprintln(&out, strings.TrimRightFunc(mid+s.Text(), unicode.IsSpace))
+		_, _ = fmt.Fprintln(&out, strings.TrimRightFunc(mid+s.Text(), unicode.IsSpace)) //nolint:gosec // plain text output, not HTML
 	}
 	if bot != "" {
 		_, _ = fmt.Fprintln(&out, bot)

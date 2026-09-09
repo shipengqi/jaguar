@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"charm.land/lipgloss/v2"
@@ -56,10 +57,16 @@ func initLogger() {
 	_ = os.MkdirAll(logDir, 0o700)
 	logFile := filepath.Join(logDir,
 		fmt.Sprintf("%s.%s.log", filepath.Base(os.Args[0]), time.Now().Format("20060102150405")))
-	f, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600)
+	f, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600) //nolint:gosec // path is constructed internally, no user input
 	if err != nil {
 		return
 	}
 	slog.SetDefault(slog.New(slog.NewTextHandler(f, &slog.HandlerOptions{Level: slog.LevelDebug})))
-	slog.Debug("command started", "args", os.Args)
+
+	safeArgs := make([]string, len(os.Args))
+	for i, arg := range os.Args {
+		safeArgs[i] = strings.ReplaceAll(arg, "\n", "\\n")
+		safeArgs[i] = strings.ReplaceAll(safeArgs[i], "\r", "\\r")
+	}
+	slog.Debug("command started", "args", safeArgs)
 }
