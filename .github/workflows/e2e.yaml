@@ -32,7 +32,7 @@ jobs:
         run: make build
 
       - name: Upload jaguar binary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jaguar-bin
           path: _output/linux/amd64/bin/jaguar
