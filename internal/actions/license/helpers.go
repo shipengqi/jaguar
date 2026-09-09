@@ -11,8 +11,7 @@ import (
 	"text/template"
 	"unicode"
 
-	"github.com/shipengqi/golib/convutil"
-	"github.com/shipengqi/log"
+	"log/slog"
 )
 
 type copyrightInfo struct {
@@ -37,7 +36,7 @@ var heads = []string{
 func walk(ch chan<- *file, start string, dirRegs, fileRegs []*regexp.Regexp) {
 	_ = filepath.Walk(start, func(path string, fi os.FileInfo, err error) error {
 		if err != nil {
-			log.Debugf("%s error: %v", path, err)
+			slog.Debug("walk error", "path", path, "err", err)
 			return nil
 		}
 		if fi.IsDir() {
@@ -71,7 +70,7 @@ func hashBang(b []byte) []byte {
 	}
 	first := bytes.ToLower(line)
 	for _, h := range heads {
-		if bytes.HasPrefix(first, convutil.S2B(h)) {
+		if bytes.HasPrefix(first, []byte(h)) {
 			return line
 		}
 	}
@@ -122,8 +121,8 @@ func hasLicense(b []byte) bool {
 		n = len(b)
 	}
 
-	return bytes.Contains(bytes.ToLower(b[:n]), convutil.S2B("copyright")) ||
-		bytes.Contains(bytes.ToLower(b[:n]), convutil.S2B("mozilla public"))
+	return bytes.Contains(bytes.ToLower(b[:n]), []byte("copyright")) ||
+		bytes.Contains(bytes.ToLower(b[:n]), []byte("mozilla public"))
 }
 
 func licenseHeader(path string, tmpl *template.Template, data *copyrightInfo) ([]byte, error) {

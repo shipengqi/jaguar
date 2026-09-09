@@ -1,24 +1,22 @@
 package license
 
 import (
-	"github.com/shipengqi/jcli"
+	"github.com/spf13/cobra"
 
 	"github.com/shipengqi/jaguar/internal/actions/license"
 	"github.com/shipengqi/jaguar/internal/actions/license/config"
 	"github.com/shipengqi/jaguar/internal/actions/license/options"
-	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
 const addCmdDesc = "Add the copyright license headers for source code files."
 
-func newAddCmd() *jcli.Command {
+func newAddCmd() *cobra.Command {
 	o := options.New()
-	c := jcli.NewCommand(
-		license.ActionNameAdd,
-		addCmdDesc,
-		jcli.WithCommandDesc(cmdutils.SubCmdDesc(addCmdDesc)),
-		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
+	cmd := &cobra.Command{
+		Use:          license.ActionNameAdd + " [dirs...]",
+		Short:        addCmdDesc,
+		SilenceUsage: true,
+		RunE: func(_ *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return nil
 			}
@@ -26,9 +24,9 @@ func newAddCmd() *jcli.Command {
 			if err != nil {
 				return err
 			}
-			return license.NewAddLicenseAction(cfg, args).Execute()
-		}),
-	)
-
-	return c
+			return license.NewAddLicenseAction(cfg, args)()
+		},
+	}
+	o.AddFlags(cmd.Flags())
+	return cmd
 }

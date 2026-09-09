@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 
 	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 type NewCommandTestCase struct {
@@ -21,30 +21,37 @@ func NewAPITest() {
 		testAPIModule      = "github.com/user/testapi"
 	)
 	Context("New With Flag Parameters", func() {
+		var outDir string
+		BeforeEach(func() {
+			var err error
+			outDir, err = os.MkdirTemp("", "jaguar-new-api-*")
+			Expect(err).NotTo(HaveOccurred())
+		})
 		AfterEach(func() {
-			_ = os.RemoveAll(testAPIProjectName)
+			_ = os.RemoveAll(outDir)
 		})
 		tests := []NewCommandTestCase{
 			genNewCommandTestCase("should create an API project",
-				"api", testAPIProjectName, testAPIModule,
+				"go-api", testAPIProjectName, testAPIModule,
 				true, true, true, true),
 			genNewCommandTestCase("should create an API project but disable lint",
-				"api", testAPIProjectName, testAPIModule,
+				"go-api", testAPIProjectName, testAPIModule,
 				false, true, true, true),
 			genNewCommandTestCase("should create an API project but disable releaser",
-				"api", testAPIProjectName, testAPIModule,
+				"go-api", testAPIProjectName, testAPIModule,
 				true, false, true, true),
 			genNewCommandTestCase("should create an API project but disable semver",
-				"api", testAPIProjectName, testAPIModule,
+				"go-api", testAPIProjectName, testAPIModule,
 				true, true, false, true),
 			genNewCommandTestCase("should create an API project but disable actions",
-				"api", testAPIProjectName, testAPIModule,
+				"go-api", testAPIProjectName, testAPIModule,
 				true, true, true, false),
 		}
 		for _, t := range tests {
 			testcase := t
 			It(testcase.title, func() {
-				se, err = RunCLITest(testcase.commands...)
+				cmds := append(testcase.commands, "-o", outDir)
+				se, err = RunCLITest(cmds...)
 				NoError(err)
 				for _, v := range testcase.expects {
 					ShouldContains(se, v)
@@ -61,47 +68,36 @@ func NewAPITest() {
 }
 
 func genNewCommandTestCase(title, t, n, m string, lint, release, semver, actions bool) NewCommandTestCase {
-	pt := strings.ToUpper(t)
-	if t == "grpc" {
-		pt = "gRPC"
-	}
 	expects := []string{
-		fmt.Sprintf("Application type: %s", pt),
+		fmt.Sprintf("Project type:  %s", t),
 	}
-	framework := "Gin"
-	if t != "api" {
-		framework = "N/A"
+	framework := "N/A"
+	if t == "go-api" || t == "go-embed" {
+		framework = "gin"
 	}
-	expects = append(expects, fmt.Sprintf("Go web framework: %s", framework))
-	expects = append(expects, fmt.Sprintf("Is use golangci-lint to lint your Go code? %s", strconv.FormatBool(lint)))
-	expects = append(expects, fmt.Sprintf("Is use GoReleaser to deliver your Go binaries? %s", strconv.FormatBool(release)))
-	expects = append(expects, fmt.Sprintf("Is use GSemver to generate your next semver version? %s", strconv.FormatBool(semver)))
-	expects = append(expects,
-		fmt.Sprintf("Is use the GitHub Actions to automate your build, test, and deployment pipeline? %s", strconv.FormatBool(actions)))
+	expects = append(expects, fmt.Sprintf("Framework:     %s", framework))
+	expects = append(expects, fmt.Sprintf("golangci-lint: %s", strconv.FormatBool(lint)))
+	expects = append(expects, fmt.Sprintf("GoReleaser:    %s", strconv.FormatBool(release)))
+	expects = append(expects, fmt.Sprintf("GSemver:       %s", strconv.FormatBool(semver)))
+	expects = append(expects, fmt.Sprintf("GitHub Actions:%s", strconv.FormatBool(actions)))
 
-	commands := []string{
-		"new", "-t",
-	}
-	commands = append(commands, t, "-n", n, "-m", m)
+	commands := []string{"new", n, "-t", t, "-m", m}
 
 	if !lint {
 		commands = append(commands, "--use-golangci-lint=false")
 	} else {
 		commands = append(commands, "--use-golangci-lint")
 	}
-
 	if !release {
 		commands = append(commands, "--use-goreleaser=false")
 	} else {
 		commands = append(commands, "--use-goreleaser")
 	}
-
 	if !semver {
 		commands = append(commands, "--use-gsemver=false")
 	} else {
 		commands = append(commands, "--use-gsemver")
 	}
-
 	if !actions {
 		commands = append(commands, "--use-github-actions=false")
 	} else {

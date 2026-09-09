@@ -3,7 +3,7 @@ BIN ?= jaguar
 
 # This repo's root import path
 PKG := github.com/shipengqi/jaguar/cmd/jaguar
-VERSION_PKG=github.com/shipengqi/component-base/version
+VERSION_PKG=github.com/shipengqi/jaguar/pkg/version
 
 ifeq ($(origin VERSION), undefined)
 VERSION := $(shell git describe --tags --always --match='v*')

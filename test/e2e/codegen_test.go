@@ -39,14 +39,14 @@ func CodeGenTest() {
 			se, err = RunCLITest("tool", "codegen", "./testdata/codes")
 			NoError(err)
 			ExitCode(se, 1)
-			ShouldContains(se, "--types is required")
+			ShouldContainsErr(se, "--types is required")
 		})
 
 		It("should fail with empty --types", func() {
 			se, err = RunCLITest("tool", "codegen", "--types", "unknowntype")
 			NoError(err)
 			ExitCode(se, 1)
-			ShouldContains(se, "no values defined for type unknowntype")
+			ShouldContainsErr(se, "no values defined for type unknowntype")
 		})
 	})
 

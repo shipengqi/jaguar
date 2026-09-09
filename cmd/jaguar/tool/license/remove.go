@@ -1,24 +1,22 @@
 package license
 
 import (
-	"github.com/shipengqi/jcli"
+	"github.com/spf13/cobra"
 
 	"github.com/shipengqi/jaguar/internal/actions/license"
 	"github.com/shipengqi/jaguar/internal/actions/license/config"
 	"github.com/shipengqi/jaguar/internal/actions/license/options"
-	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
 const rmCmdDesc = "Remove copyright license headers contained in source code files."
 
-func newRemoveCmd() *jcli.Command {
+func newRemoveCmd() *cobra.Command {
 	o := options.New()
-	c := jcli.NewCommand(
-		license.ActionNameRemove,
-		rmCmdDesc,
-		jcli.WithCommandDesc(cmdutils.SubCmdDesc(rmCmdDesc)),
-		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
+	cmd := &cobra.Command{
+		Use:          license.ActionNameRemove + " [dirs...]",
+		Short:        rmCmdDesc,
+		SilenceUsage: true,
+		RunE: func(_ *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return nil
 			}
@@ -26,9 +24,9 @@ func newRemoveCmd() *jcli.Command {
 			if err != nil {
 				return err
 			}
-			return license.NewRemoveLicenseAction(cfg, args).Execute()
-		}),
-	)
-
-	return c
+			return license.NewRemoveLicenseAction(cfg, args)()
+		},
+	}
+	o.AddFlags(cmd.Flags())
+	return cmd
 }

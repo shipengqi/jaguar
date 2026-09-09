@@ -1,0 +1,107 @@
+package rpcsrv
+
+import (
+	"fmt"
+
+	grpcprom "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
+	"github.com/prometheus/client_golang/prometheus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/keepalive"
+
+	"{{ .App.ModuleName }}/pkg/rpcsrv/interceptors"
+	"{{ .App.ModuleName }}/pkg/xlog"
+)
+
+type Config struct {
+	*Options
+
+	id       string
+	domain   string
+	addr     string
+	metrics  *grpcprom.ServerMetrics
+	registry *prometheus.Registry
+}
+
+func CreateConfigFromOptions(opts *Options) *Config {
+	cfg := &Config{
+		Options: opts,
+		id:      "",
+		domain:  "",
+		addr:    fmt.Sprintf("%s:%d", opts.BindAddress, opts.BindPort),
+	}
+	cfg.metrics = grpcprom.NewServerMetrics()
+	cfg.registry = prometheus.NewRegistry()
+	cfg.registry.MustRegister(cfg.metrics)
+	return cfg
+}
+
+func (c *Config) InitializeMetrics(srv *grpc.Server) {
+	c.metrics.InitializeMetrics(srv)
+}
+
+func (c *Config) InitGrpcServerOptions() []grpc.ServerOption {
+	gopts := []grpc.ServerOption{
+		grpc.MaxConcurrentStreams(uint32(c.Options.MaxConcurrentStreams)),
+		grpc.MaxRecvMsgSize(c.Options.MaxMsgSize),
+		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+			MinTime: c.Options.Keepalive / defaultMiniKeepAliveTimeRate,
+		}),
+		grpc.KeepaliveParams(keepalive.ServerParameters{
+			Time:                  c.Options.Keepalive,
+			Timeout:               c.Options.Timeout,
+			MaxConnectionAge:      c.Options.MaxConnectionAge,
+			MaxConnectionAgeGrace: c.Options.MaxConnectionAgeGrace,
+		}),
+		c.initUnaryInterceptors(),
+		c.initStreamInterceptors(),
+	}
+
+	if c.Options.ServerCert.CertFile != "" && c.Options.ServerCert.KeyFile != "" {
+		if cs, err := credentials.NewServerTLSFromFile(c.Options.ServerCert.CertFile, c.Options.ServerCert.KeyFile); err != nil {
+			xlog.Warnf("failed to generate transport credentials, use insecure mode.")
+			xlog.Debugf("credentials.NewServerTLSFromFile err: %v", err)
+		} else {
+			gopts = append(gopts, grpc.Creds(cs))
+		}
+	}
+	return gopts
+}
+
+func (c *Config) initUnaryInterceptors() grpc.ServerOption {
+	var unaryInterceptors []grpc.UnaryServerInterceptor
+
+	for _, m := range c.Options.UnaryInterceptors {
+		inter, ok := interceptors.UnaryServerInterceptors[m]
+		if !ok {
+			xlog.Warnf("can not find unary interceptor: %s", m)
+			continue
+		}
+
+		xlog.Infof("install unary interceptor: %s", m)
+		unaryInterceptors = append(unaryInterceptors, inter)
+	}
+	if c.Options.MetricsOptions.BindPort > 0 {
+		unaryInterceptors = append(unaryInterceptors, c.metrics.UnaryServerInterceptor())
+	}
+	return grpc.ChainUnaryInterceptor(unaryInterceptors...)
+}
+
+func (c *Config) initStreamInterceptors() grpc.ServerOption {
+	var streamInterceptors []grpc.StreamServerInterceptor
+
+	for _, m := range c.Options.StreamInterceptors {
+		inter, ok := interceptors.StreamServerInterceptors[m]
+		if !ok {
+			xlog.Warnf("can not find stream interceptor: %s", m)
+			continue
+		}
+
+		xlog.Infof("install stream interceptor: %s", m)
+		streamInterceptors = append(streamInterceptors, inter)
+	}
+	if c.Options.MetricsOptions.BindPort > 0 {
+		streamInterceptors = append(streamInterceptors, c.metrics.StreamServerInterceptor())
+	}
+	return grpc.ChainStreamInterceptor(streamInterceptors...)
+}

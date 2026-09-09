@@ -5,9 +5,8 @@ import (
 	"go/constant"
 	"go/token"
 	"go/types"
+	"log"
 	"strings"
-
-	"github.com/shipengqi/log"
 )
 
 // File holds a single parsed file and associated data.

@@ -1,53 +1,49 @@
 package license
 
 import (
-	"github.com/shipengqi/action"
-	"github.com/shipengqi/log"
-	"github.com/sourcegraph/conc/pool"
+	"fmt"
+	"log/slog"
+	"sync"
 
 	"github.com/shipengqi/jaguar/internal/actions/license/config"
 )
 
-func NewAddLicenseAction(cfg *config.Config, args []string) *action.Action {
-	act := &action.Action{
-		Name: ActionNameAdd,
-		Run: func(_ *action.Action) error {
-			// process at most 1000 files in parallel
-			ch := make(chan *file, 1000)
-			done := make(chan struct{})
-			go addFiles(ch, done, cfg)
-			for _, d := range args {
-				walk(ch, d, cfg.SkipDirRegs, cfg.SkipFileRegs)
-			}
-			close(ch)
-			<-done
-			return nil
-		},
+func NewAddLicenseAction(cfg *config.Config, args []string) func() error {
+	return func() error {
+		ch := make(chan *file, 1000)
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			addFiles(ch, cfg)
+		}()
+		for _, d := range args {
+			walk(ch, d, cfg.SkipDirRegs, cfg.SkipFileRegs)
+		}
+		close(ch)
+		wg.Wait()
+		return nil
 	}
-
-	return act
 }
 
-func addFiles(ch chan *file, done chan struct{}, cfg *config.Config) {
-	p := pool.New().WithMaxGoroutines(100)
+func addFiles(ch <-chan *file, cfg *config.Config) {
+	sem := make(chan struct{}, 100)
+	var wg sync.WaitGroup
 	for f := range ch {
-		fi := f // https://golang.org/doc/faq#closures_and_goroutines
-		p.Go(addFile(fi, cfg))
+		f := f
+		sem <- struct{}{}
+		wg.Add(1)
+		go func() {
+			defer func() { <-sem; wg.Done() }()
+			modified, err := addLicense(f.path, f.mode, cfg.LicenseTmpl, &copyrightInfo{cfg.HeaderOptions.Year, cfg.HeaderOptions.Holder})
+			if err != nil {
+				slog.Warn("add license", "path", f.path, "err", err)
+				return
+			}
+			if modified {
+				fmt.Printf("%s: license added\n", f.path)
+			}
+		}()
 	}
-	p.Wait()
-	close(done)
-}
-
-func addFile(f *file, cfg *config.Config) func() {
-	return func() {
-		modified, err := addLicense(f.path, f.mode, cfg.LicenseTmpl, &copyrightInfo{cfg.HeaderOptions.Year,
-			cfg.HeaderOptions.Holder})
-		if err != nil {
-			log.Warnf("%s: %s", f.path, err.Error())
-			return
-		}
-		if modified {
-			log.Infof("%s: license added", f.path)
-		}
-	}
+	wg.Wait()
 }

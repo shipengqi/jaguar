@@ -1,33 +1,35 @@
 package tool
 
 import (
-	"github.com/shipengqi/jcli"
+	"fmt"
+
+	"github.com/spf13/cobra"
 
 	"github.com/shipengqi/jaguar/internal/actions/codegen"
 	"github.com/shipengqi/jaguar/internal/actions/codegen/config"
 	"github.com/shipengqi/jaguar/internal/actions/codegen/options"
-	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
 const codeGenCmdDesc = "Automatically generate error codes for API skeleton."
 
-func newCodeGenCmd() *jcli.Command {
+func newCodeGenCmd() *cobra.Command {
 	o := options.New()
-	c := jcli.NewCommand(
-		codegen.ActionName,
-		codeGenCmdDesc,
-		jcli.WithCommandDesc(cmdutils.SubCmdDesc(codeGenCmdDesc)),
-		jcli.WithCommandAliases(codegen.ActionNameAlias),
-		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
+	cmd := &cobra.Command{
+		Use:          codegen.ActionName + " [files...]",
+		Short:        codeGenCmdDesc,
+		Aliases:      []string{codegen.ActionNameAlias},
+		SilenceUsage: true,
+		RunE: func(_ *cobra.Command, args []string) error {
+			if errs := o.Validate(); len(errs) > 0 {
+				return fmt.Errorf("%v", errs[0])
+			}
 			cfg, err := config.CreateConfigFromOptions(o, args)
 			if err != nil {
 				return err
 			}
-			a := codegen.NewAction(cfg)
-			return a.Execute()
-		}),
-	)
-
-	return c
+			return codegen.NewAction(cfg)()
+		},
+	}
+	o.AddFlags(cmd.Flags())
+	return cmd
 }

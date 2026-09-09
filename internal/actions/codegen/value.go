@@ -1,9 +1,8 @@
 package codegen
 
 import (
+	"log/slog"
 	"regexp"
-
-	"github.com/shipengqi/log"
 )
 
 // Value represents a declared constant.
@@ -29,8 +28,7 @@ func (v *Value) String() string {
 func (v *Value) ParseComment() (string, string) {
 	reg := regexp.MustCompile(`\w\s*-\s*(\d{3})\s*:\s*([A-Z].*)\s*\.\n*`)
 	if !reg.MatchString(v.comment) {
-		log.Infof("constant '%s' have wrong comment format, register with 500 as default", v.originalName)
-
+		slog.Info("constant has wrong comment format, register with 500 as default", "constant", v.originalName)
 		return "500", "Internal server error"
 	}
 

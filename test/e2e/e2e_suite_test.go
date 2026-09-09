@@ -2,13 +2,15 @@ package e2e_test
 
 import (
 	"flag"
+	"os"
 	"os/exec"
+	"regexp"
 	"testing"
+	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
-	"github.com/shipengqi/golib/fsutil"
 
 	. "github.com/shipengqi/jaguar/test/e2e"
 )
@@ -23,6 +25,7 @@ var _ = Describe("Sorted Tests", func() {
 	Describe("New API project", NewAPITest)
 	Describe("New CLI project", NewCLITest)
 	Describe("New gRPC project", NewGRPCTest)
+	Describe("Compile and Run", CompileAndRunTest)
 })
 
 var (
@@ -61,8 +64,9 @@ func RunCLITest(args ...string) (*gexec.Session, error) {
 
 func RunCommandTest(command string, args ...string) (*gexec.Session, error) {
 	cmd := exec.Command(command, args...)
+	cmd.Env = append(os.Environ(), "NO_COLOR=1")
 	session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
-	return session.Wait(), err
+	return session.Wait(30 * time.Second), err
 }
 
 func NoError(err error) {
@@ -73,20 +77,30 @@ func ExitCode(session *gexec.Session, expected int) {
 	Ω(session.ExitCode()).Should(Equal(expected))
 }
 
+var ansiEscape = regexp.MustCompile(`\x1b\[[0-9;]*[a-zA-Z]`)
+
+func stripANSI(b []byte) string {
+	return ansiEscape.ReplaceAllString(string(b), "")
+}
+
 func ShouldContains(session *gexec.Session, expected string) {
-	Ω(session.Out.Contents()).Should(ContainSubstring(expected))
+	Ω(stripANSI(session.Out.Contents())).Should(ContainSubstring(expected))
+}
+
+func ShouldContainsErr(session *gexec.Session, expected string) {
+	Ω(stripANSI(session.Err.Contents())).Should(ContainSubstring(expected))
 }
 
 func ShouldNotContains(session *gexec.Session, expected string) {
-	Ω(session.Out.Contents()).ShouldNot(ContainSubstring(expected))
+	Ω(stripANSI(session.Out.Contents())).ShouldNot(ContainSubstring(expected))
 }
 
 func ShouldExists(fpath string) {
-	exists := fsutil.IsExists(fpath)
-	Expect(exists).To(Equal(true))
+	_, err := os.Stat(fpath)
+	Expect(err).To(BeNil())
 }
 
 func ShouldNotExists(fpath string) {
-	exists := fsutil.IsExists(fpath)
-	Expect(exists).To(Equal(false))
+	_, err := os.Stat(fpath)
+	Expect(os.IsNotExist(err)).To(Equal(true))
 }

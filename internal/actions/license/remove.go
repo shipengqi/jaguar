@@ -2,77 +2,72 @@ package license
 
 import (
 	"bytes"
+	"fmt"
+	"log/slog"
 	"os"
-
-	"github.com/shipengqi/action"
-	"github.com/shipengqi/log"
-	"github.com/sourcegraph/conc/pool"
+	"sync"
 
 	"github.com/shipengqi/jaguar/internal/actions/license/config"
 )
 
-func NewRemoveLicenseAction(cfg *config.Config, args []string) *action.Action {
-	act := &action.Action{
-		Name: ActionNameRemove,
-		Run: func(_ *action.Action) error {
-			// process at most 1000 files in parallel
-			ch := make(chan *file, 1000)
-			done := make(chan struct{})
-			go removeFiles(ch, done, cfg)
-			for _, d := range args {
-				walk(ch, d, cfg.SkipDirRegs, cfg.SkipFileRegs)
-			}
-			close(ch)
-			<-done
-			return nil
-		},
+func NewRemoveLicenseAction(cfg *config.Config, args []string) func() error {
+	return func() error {
+		ch := make(chan *file, 1000)
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			removeFiles(ch, cfg)
+		}()
+		for _, d := range args {
+			walk(ch, d, cfg.SkipDirRegs, cfg.SkipFileRegs)
+		}
+		close(ch)
+		wg.Wait()
+		return nil
 	}
-
-	return act
 }
 
-func removeFiles(ch chan *file, done chan struct{}, cfg *config.Config) {
-	p := pool.New().WithMaxGoroutines(100)
+func removeFiles(ch <-chan *file, cfg *config.Config) {
+	sem := make(chan struct{}, 100)
+	var wg sync.WaitGroup
 	for f := range ch {
-		fi := f // https://golang.org/doc/faq#closures_and_goroutines
-		p.Go(removeFile(fi, cfg))
+		f := f
+		sem <- struct{}{}
+		wg.Add(1)
+		go func() {
+			defer func() { <-sem; wg.Done() }()
+			removeFile(f, cfg)
+		}()
 	}
-	p.Wait()
-	close(done)
+	wg.Wait()
 }
 
-func removeFile(f *file, cfg *config.Config) func() {
-	return func() {
-		var lic []byte
-		var err error
-		lic, err = licenseHeader(f.path, cfg.LicenseTmpl, &copyrightInfo{cfg.HeaderOptions.Year,
-			cfg.HeaderOptions.Holder})
-		if err != nil {
-			log.Debugf("%s: %s", f.path, err.Error())
-			return
-		}
-		if lic == nil {
-			log.Debugf("%s: unknown file extension", f.path)
-			return
-		}
-
-		b, err := os.ReadFile(f.path)
-		if err != nil {
-			log.Debugf("%s: %s", f.path, err.Error())
-			return
-		}
-
-		if !bytes.Contains(b, lic) {
-			log.Infof("%s: skipped", f.path)
-			return
-		}
-		modified := bytes.Replace(b, lic, []byte{}, 1)
-		err = os.WriteFile(f.path, modified, f.mode)
-		if err != nil {
-			log.Debugf("%s: %s", f.path, err.Error())
-			return
-		}
-
-		log.Infof("%s: license removed", f.path)
+func removeFile(f *file, cfg *config.Config) {
+	lic, err := licenseHeader(f.path, cfg.LicenseTmpl, &copyrightInfo{cfg.HeaderOptions.Year, cfg.HeaderOptions.Holder})
+	if err != nil {
+		slog.Debug("remove license", "path", f.path, "err", err)
+		return
 	}
+	if lic == nil {
+		slog.Debug("unknown file extension", "path", f.path)
+		return
+	}
+
+	b, err := os.ReadFile(f.path)
+	if err != nil {
+		slog.Debug("read file", "path", f.path, "err", err)
+		return
+	}
+
+	if !bytes.Contains(b, lic) {
+		slog.Debug("skipped", "path", f.path)
+		return
+	}
+	modified := bytes.Replace(b, lic, []byte{}, 1)
+	if err = os.WriteFile(f.path, modified, f.mode); err != nil {
+		slog.Debug("write file", "path", f.path, "err", err)
+		return
+	}
+	fmt.Printf("%s: license removed\n", f.path)
 }

@@ -30,10 +30,10 @@ builds:
       - goos: windows
         goarch: ppc64
     ldflags:
-      - -X "github.com/shipengqi/component-base/version.Version={{ .Tag }}"
-      - -X "github.com/shipengqi/component-base/version.GitCommit={{ .ShortCommit }}"
-      - -X "github.com/shipengqi/component-base/version.BuildTime={{ .Date }}"
-      - -X "github.com/shipengqi/component-base/version.GitTreeState={{ .Env.GIT_TREE_STATE }}"
+      - -X "github.com/shipengqi/jaguar/pkg/version.Version={{ .Tag }}"
+      - -X "github.com/shipengqi/jaguar/pkg/version.GitCommit={{ .ShortCommit }}"
+      - -X "github.com/shipengqi/jaguar/pkg/version.BuildTime={{ .Date }}"
+      - -X "github.com/shipengqi/jaguar/pkg/version.GitTreeState={{ .Env.GIT_TREE_STATE }}"
     main: ./cmd/jaguar
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"

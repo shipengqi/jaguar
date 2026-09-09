@@ -4,6 +4,7 @@ import (
 	"os"
 
 	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 func NewGRPCTest() {
@@ -12,30 +13,37 @@ func NewGRPCTest() {
 		testRPCModule      = "github.com/user/testrpc"
 	)
 	Context("New With Flag Parameters", func() {
+		var outDir string
+		BeforeEach(func() {
+			var err error
+			outDir, err = os.MkdirTemp("", "jaguar-new-grpc-*")
+			Expect(err).NotTo(HaveOccurred())
+		})
 		AfterEach(func() {
-			_ = os.RemoveAll(testRPCProjectName)
+			_ = os.RemoveAll(outDir)
 		})
 		tests := []NewCommandTestCase{
 			genNewCommandTestCase("should create an gRPC project",
-				"grpc", testRPCProjectName, testRPCModule,
+				"go-grpc", testRPCProjectName, testRPCModule,
 				true, true, true, true),
 			genNewCommandTestCase("should create an gRPC project but disable lint",
-				"grpc", testRPCProjectName, testRPCModule,
+				"go-grpc", testRPCProjectName, testRPCModule,
 				false, true, true, true),
 			genNewCommandTestCase("should create an gRPC project but disable releaser",
-				"grpc", testRPCProjectName, testRPCModule,
+				"go-grpc", testRPCProjectName, testRPCModule,
 				true, false, true, true),
 			genNewCommandTestCase("should create an gRPC project but disable semver",
-				"grpc", testRPCProjectName, testRPCModule,
+				"go-grpc", testRPCProjectName, testRPCModule,
 				true, true, false, true),
 			genNewCommandTestCase("should create an gRPC project but disable actions",
-				"grpc", testRPCProjectName, testRPCModule,
+				"go-grpc", testRPCProjectName, testRPCModule,
 				true, true, true, false),
 		}
 		for _, t := range tests {
 			testcase := t
 			It(testcase.title, func() {
-				se, err = RunCLITest(testcase.commands...)
+				cmds := append(testcase.commands, "-o", outDir)
+				se, err = RunCLITest(cmds...)
 				NoError(err)
 				for _, v := range testcase.expects {
 					ShouldContains(se, v)

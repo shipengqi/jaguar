@@ -3,9 +3,7 @@ package options
 import (
 	"errors"
 
-	cliflag "github.com/shipengqi/component-base/cli/flag"
-	"github.com/shipengqi/component-base/json"
-	"github.com/shipengqi/golib/convutil"
+	"github.com/spf13/pflag"
 )
 
 type Options struct {
@@ -20,28 +18,18 @@ func New() *Options {
 	return &Options{}
 }
 
-func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
-	s := fss.FlagSet("codegen")
-	s.StringVar(&o.Types, "types", o.Types, "Comma-separated list of type names.")
-	s.StringVar(&o.Output, "output", o.Output, "Output filename, format: <src dir>/<type>_string.go.")
-	s.StringVar(&o.BuildTags, "build-tags", o.BuildTags, "Comma-separated list of build tags to apply.")
-	s.StringVar(&o.TrimPrefix, "trim-prefix", o.TrimPrefix, "Trim the `prefix` from the generated constant names.")
-	s.BoolVar(&o.Doc, "doc", o.Doc, "Generate error code documentation in markdown format.")
-	return
+func (o *Options) AddFlags(fs *pflag.FlagSet) {
+	fs.StringVar(&o.Types, "types", o.Types, "Comma-separated list of type names.")
+	fs.StringVar(&o.Output, "output", o.Output, "Output filename.")
+	fs.StringVar(&o.BuildTags, "build-tags", o.BuildTags, "Comma-separated list of build tags to apply.")
+	fs.StringVar(&o.TrimPrefix, "trim-prefix", o.TrimPrefix, "Trim the prefix from the generated constant names.")
+	fs.BoolVar(&o.Doc, "doc", o.Doc, "Generate error code documentation in markdown format.")
 }
 
-// Validate is used to parse and validate the parameters entered by the user at
-// the command line when the program starts.
 func (o *Options) Validate() []error {
 	var errs []error
 	if o.Types == "" {
 		errs = append(errs, errors.New("--types is required"))
 	}
 	return errs
-}
-
-func (o *Options) String() string {
-	data, _ := json.Marshal(o)
-
-	return convutil.B2S(data)
 }

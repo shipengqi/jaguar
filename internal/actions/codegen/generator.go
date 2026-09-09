@@ -6,10 +6,10 @@ import (
 	"go/ast"
 	"go/format"
 	"go/types"
+	"log"
 	"strings"
 	"text/template"
 
-	"github.com/shipengqi/log"
 	"golang.org/x/tools/go/packages"
 )
 
@@ -152,7 +152,7 @@ func (g *Generator) generateDocs(typeName string) error {
 	_ = tmpl.Execute(&buf, "`")
 
 	// Generate code that will fail if the constants change value.
-	g.Printf(buf.String())
+	g.Printf("%s", buf.String())
 	for _, v := range values {
 		code, description := v.ParseComment()
 		g.Printf("| %s | %d | %s | %s |\n", v.originalName, v.value, code, description)

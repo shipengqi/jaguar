@@ -1,31 +1,30 @@
 package main
 
 import (
-	"github.com/shipengqi/jcli"
+	"github.com/spf13/cobra"
 
-	"github.com/shipengqi/jaguar/internal/actions/create"
-	"github.com/shipengqi/jaguar/internal/actions/create/options"
-	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
+	"github.com/shipengqi/jaguar/internal/create"
 )
 
-const createCmdDesc = "Creates a new Go application."
+const createCmdDesc = "Creates a new application project from a scaffold template."
 
-func newCreateCmd() *jcli.Command {
-	o := options.New()
-	c := jcli.NewCommand(
-		create.ActionName,
-		createCmdDesc,
-		jcli.WithCommandDesc(cmdutils.SubCmdDesc(createCmdDesc)),
-		jcli.WithCommandAliases(create.ActionNameAlias, create.ActionNameAliasShort),
-		jcli.WithCommandCliOptions(o),
-		jcli.WithCommandRunFunc(func(_ *jcli.Command, args []string) error {
-			a, err := create.NewAction(o, args)
-			if err != nil {
-				return err
+func newCreateCmd() *cobra.Command {
+	cfg := create.NewConfig()
+
+	cmd := &cobra.Command{
+		Use:     create.ActionName + " [project-name]",
+		Short:   createCmdDesc,
+		Aliases: []string{create.ActionNameAlias, create.ActionNameAliasShort},
+		Args:    cobra.MaximumNArgs(1),
+		RunE: func(_ *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				cfg.ProjectName = args[0]
 			}
-			return a.Execute()
-		}),
-	)
+			return create.Run(cfg)
+		},
+		SilenceUsage: true,
+	}
 
-	return c
+	cfg.AddFlags(cmd.Flags())
+	return cmd
 }

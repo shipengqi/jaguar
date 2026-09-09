@@ -1,26 +1,23 @@
 package license
 
 import (
-	"github.com/shipengqi/jcli"
+	"github.com/spf13/cobra"
 
 	"github.com/shipengqi/jaguar/internal/actions/license"
-	"github.com/shipengqi/jaguar/internal/pkg/utils/cmdutils"
 )
 
 const licenseCmdDesc = "Ensures source code files have copyright license headers by scanning directory patterns recursively."
 
-func NewCmd() *jcli.Command {
-	c := jcli.NewCommand(
-		license.ActionName,
-		licenseCmdDesc,
-		jcli.WithCommandDesc(cmdutils.SubCmdDesc(licenseCmdDesc)),
-	)
-
-	c.AddCommands(
+func NewCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:          license.ActionName,
+		Short:        licenseCmdDesc,
+		SilenceUsage: true,
+	}
+	cmd.AddCommand(
 		newAddCmd(),
 		newCheckCmd(),
 		newRemoveCmd(),
 	)
-
-	return c
+	return cmd
 }

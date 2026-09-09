@@ -17,18 +17,18 @@ jobs:
   golangci:
     strategy:
       matrix:
-        go: [ '1.23', '1.24', '1.25' ]
+        go: [ '1.22', '1.23', '1.24' ]
         os: [ ubuntu-latest, windows-latest ]
     permissions:
-      contents: read  # for actions/checkout to fetch code
-      pull-requests: read  # for golangci/golangci-lint-action to fetch pull requests
+      contents: read
+      pull-requests: read
     name: lint
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-go@v6
         with:
-          go-version: stable # get the latest stable version from the go-versions repository manifest.
+          go-version: ${{ matrix.go }}
           cache: false
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8

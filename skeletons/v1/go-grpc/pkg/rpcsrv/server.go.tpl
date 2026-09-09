@@ -1,0 +1,95 @@
+package rpcsrv
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net"
+	"net/http"
+	"syscall"
+	"time"
+
+	"github.com/oklog/run"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
+	"{{ .App.ModuleName }}/pkg/xlog"
+)
+
+type Server struct {
+	cfg        *Config
+	srv        *grpc.Server
+	metricsSrv *http.Server
+}
+
+func New(opts *Options) *Server {
+	grpc.EnableTracing = false
+
+	cfg := CreateConfigFromOptions(opts)
+	srv := grpc.NewServer(cfg.InitGrpcServerOptions()...)
+	cfg.InitializeMetrics(srv)
+	reflection.Register(srv)
+
+	return &Server{cfg: cfg, srv: srv}
+}
+
+func (s *Server) GRPCServer() *grpc.Server {
+	return s.srv
+}
+
+func (s *Server) Run() error {
+	g := &run.Group{}
+
+	g.Add(func() error {
+		listen, err := net.Listen("tcp", s.cfg.addr)
+		if err != nil {
+			return err
+		}
+		xlog.Infof("Start gRPC server at %s", s.cfg.addr)
+		return s.srv.Serve(listen)
+	}, func(err error) {
+		xlog.Infof("gRPC server at %s interrupted", s.cfg.addr)
+		s.srv.GracefulStop()
+	})
+
+	if s.cfg.MetricsOptions.BindPort > 0 {
+		g.Add(func() error {
+			mux := s.initMetricsHandler()
+			addr := fmt.Sprintf("%s:%d", s.cfg.MetricsOptions.BindAddress, s.cfg.MetricsOptions.BindPort)
+			s.metricsSrv = &http.Server{
+				Addr:    addr,
+				Handler: mux,
+			}
+			xlog.Infof("Start to listening the incoming metrcis requests at http address: %s", addr)
+			return s.metricsSrv.ListenAndServe()
+		}, func(err error) {
+			addr := fmt.Sprintf("%s:%d", s.cfg.MetricsOptions.BindAddress, s.cfg.MetricsOptions.BindPort)
+			xlog.Infof("HTTP server at %s interrupted", addr)
+			// The context is used to inform the server it has 10 seconds to finish
+			// the request it is currently handling
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
+			if err = s.metricsSrv.Shutdown(ctx); err != nil {
+				xlog.Warnf("failed to shutdown server at %s, %s", addr, err)
+			}
+		})
+	}
+
+	g.Add(run.SignalHandler(context.Background(), syscall.SIGINT, syscall.SIGTERM))
+
+	if err := g.Run(); err != nil {
+		if errors.Is(err, &run.SignalError{}) {
+			return nil
+		}
+		xlog.Fatal(err.Error())
+	}
+	return nil
+}
+
+func (s *Server) initMetricsHandler() *http.ServeMux {
+	mux := http.NewServeMux()
+	// Create HTTP handler for Prometheus metrics.
+	mux.Handle(s.cfg.MetricsOptions.Path, promhttp.Handler())
+	return mux
+}
