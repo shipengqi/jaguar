@@ -65,7 +65,7 @@ func removeFile(f *file, cfg *config.Config) {
 		return
 	}
 	modified := bytes.Replace(b, lic, []byte{}, 1)
-	if err = os.WriteFile(f.path, modified, f.mode); err != nil {
+	if err = os.WriteFile(f.path, modified, f.mode); err != nil { //nolint:gosec // path is constructed internally, no user input
 		slog.Debug("write file", "path", f.path, "err", err)
 		return
 	}
