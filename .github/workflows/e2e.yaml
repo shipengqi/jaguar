@@ -26,32 +26,8 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: stable
-<<<<<<< HEAD
           cache: true
 
-=======
-        id: go
-      # Look for a CLI that's made for this PR
-      - name: Fetch built CLI
-        id: cli-cache
-        uses: actions/cache@v5
-        with:
-          path: ./_output/linux/amd64/bin/jaguar
-          # The cache key a combination of the current PR number and the commit SHA
-          key: jaguar-${{ github.event.pull_request.number }}-${{ github.sha }}
-      - name: Fetch cached go modules
-        uses: actions/cache@v5
-        if: steps.cli-cache.outputs.cache-hit != 'true'
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-      - name: Check out the code
-        uses: actions/checkout@v6
-        if: steps.cli-cache.outputs.cache-hit != 'true'
-      # If no binaries were built for this PR, build it now.
->>>>>>> 6600dc5574c01b92e9469dfcfb11094176b199ac
       - name: Build CLI
         run: make build
 
@@ -73,18 +49,10 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: stable
-<<<<<<< HEAD
           cache: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
-=======
-      - name: Check out the code
-        uses: actions/checkout@v6
-      - name: Fetch built CLI
-        id: cli-cache
-        uses: actions/cache@v5
->>>>>>> 6600dc5574c01b92e9469dfcfb11094176b199ac
         with:
           node-version: lts/*
 
