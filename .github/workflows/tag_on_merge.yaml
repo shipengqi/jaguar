@@ -1,0 +1,37 @@
+name: Tag on Version Bump Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  tag:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'chore/version-bump-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.PAT }}
+
+      - name: Git Config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Extract version from branch name
+        run: |
+          VERSION=$(echo "${{ github.event.pull_request.head.ref }}" | sed 's/chore\/version-bump-//')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create and Push Tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          git tag -f "${{ env.VERSION }}" HEAD
+          git push origin "${{ env.VERSION }}" --force
