@@ -57,7 +57,7 @@ jobs:
           node-version: lts/*
 
       - name: Download jaguar binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: jaguar-bin
           path: _output/linux/amd64/bin
