@@ -23,4 +23,3 @@ jobs:
           distribution: goreleaser
           version: latest
           args: release --verbose --clean
-

@@ -1,6 +1,8 @@
 package options
 
-import "github.com/spf13/pflag"
+import (
+	"github.com/spf13/pflag"
+)
 
 type Options struct {
 	HeaderOptions *HeaderOptions `json:"header"   mapstructure:"header"`

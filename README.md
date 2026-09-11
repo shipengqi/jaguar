@@ -3,7 +3,6 @@
 A unified AI-assisted scaffold for generating production-ready project skeletons across multiple languages and frameworks.
 
 [![e2e test](https://github.com/shipengqi/jaguar/actions/workflows/e2e.yaml/badge.svg)](https://github.com/shipengqi/jaguar/actions/workflows/e2e.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/shipengqi/jaguar)](https://goreportcard.com/report/github.com/shipengqi/jaguar)
 [![release](https://img.shields.io/github/release/shipengqi/jaguar.svg)](https://github.com/shipengqi/jaguar/releases)
 [![license](https://img.shields.io/github/license/shipengqi/jaguar)](https://github.com/shipengqi/jaguar/blob/main/LICENSE)
 
@@ -18,7 +17,10 @@ Jaguar has evolved from a Go-only project scaffold into a general-purpose scaffo
 | `go-api` | Go REST API server (Gin) with SQLite/MySQL store |
 | `go-cli` | Go CLI application (Cobra) |
 | `go-grpc` | Go gRPC service |
-| `go-embed` | Go REST API server with embedded React/Vue/Angular frontend |
+| `go-embed` | Go REST API server with embedded React/Vue/Angular frontend (via `go:embed`) |
+| `frontend-react` | Standalone React SPA (Vite + React Router + TanStack Query + Zustand) |
+| `frontend-vue` | Standalone Vue 3 SPA (Vite + Vue Router + Pinia + TanStack Query) |
+| `frontend-angular` | Standalone Angular SPA (Vite + Angular Router + NgRx Signals) |
 | `nodejs` | Node.js application |
 | `python` | Python application |
 
@@ -69,10 +71,11 @@ $ jaguar new <project-name> -t go-api -m github.com/yourorg/yourproject -o ./out
 
 | Flag | Description | Default |
 |---|---|---|
-| `-t, --type` | Project type (`go-api`, `go-cli`, `go-grpc`, `go-embed`, `nodejs`, `python`) | interactive |
-| `-m, --module` | Go module name | interactive |
+| `-t, --type` | Project type (`go-api`, `go-cli`, `go-grpc`, `go-embed`, `frontend-react`, `frontend-vue`, `frontend-angular`, `nodejs`, `python`) | interactive |
+| `-m, --module` | Go module name (Go projects only) | interactive |
 | `-o, --output` | Output directory | current directory |
 | `--frontend-framework` | Frontend framework for `go-embed` (`react`, `vue`, `angular`) | interactive |
+| `--use-github-actions` | Generate GitHub Actions workflows | interactive |
 
 ### Add license headers
 
@@ -95,4 +98,3 @@ Automatically generate error code constants from iota-typed enums:
 ```
 $ jaguar tool codegen --types int ./<directory>
 ```
-

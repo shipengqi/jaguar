@@ -16,7 +16,5 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/labeler@v5
-        with:
-          repo-token: ${{ secrets.PAT }}
+      - uses: actions/checkout@v7
+      - uses: actions/labeler@v7
