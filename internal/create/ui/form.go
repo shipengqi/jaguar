@@ -27,6 +27,9 @@ const (
 	FormFrontendTitle       = "Select the frontend framework\n"
 	FormFrontendDescription = "The frontend framework to embed into your binary.\n"
 
+	FormFrontendTypeTitle       = "Select the frontend framework\n"
+	FormFrontendTypeDescription = "The standalone frontend framework to scaffold.\n"
+
 	FormGoModuleTitle       = "What's your Go module name?\n"
 	FormGoModuleDescription = "Option can be any name of your Go module (e.g., `github.com/user/project`).\n"
 
@@ -83,6 +86,7 @@ func LanguageSelect(lang *string) *huh.Select[string] {
 			huh.NewOption("Go", "go"),
 			huh.NewOption("Node.js", "nodejs"),
 			huh.NewOption("Python", "python"),
+			huh.NewOption("Frontend", "frontend"),
 		).
 		Value(lang)
 }
@@ -143,6 +147,18 @@ func FrontendFrameworkSelect(frontend *string) *huh.Select[string] {
 			huh.NewOption("Angular", "angular"),
 		).
 		Value(frontend)
+}
+
+func FrontendTypeSelect(projectType *string) *huh.Select[string] {
+	return huh.NewSelect[string]().
+		Title(FormFrontendTypeTitle).
+		Description(FormFrontendTypeDescription).
+		Options(
+			huh.NewOption("React  — Next.js + shadcn/ui + Zustand + TanStack Query", "frontend-react"),
+			huh.NewOption("Vue    — Vite + shadcn-vue + Pinia + TanStack Query", "frontend-vue"),
+			huh.NewOption("Angular — Vite + spartan/ui + NgRx Signals + Transloco", "frontend-angular"),
+		).
+		Value(projectType)
 }
 
 func GoModuleInput(module *string) *huh.Input {

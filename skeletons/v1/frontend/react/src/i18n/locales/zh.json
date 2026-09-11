@@ -1,0 +1,14 @@
+{
+  "common": { "submit": "提交", "cancel": "取消", "loading": "加载中...", "error": "出错了" },
+  "auth": {
+    "login": {
+      "title": "登录", "email": "邮箱", "password": "密码",
+      "submit": "登录", "submitting": "登录中...",
+      "emailPlaceholder": "请输入邮箱", "passwordPlaceholder": "请输入密码",
+      "emailError": "请输入有效邮箱", "passwordError": "密码至少8位",
+      "invalidCredentials": "邮箱或密码错误"
+    }
+  },
+  "dashboard": { "welcome": "欢迎回来，{{name}}！", "title": "仪表盘" },
+  "theme": { "light": "浅色", "dark": "深色", "system": "跟随系统", "toggle": "切换主题" }
+}

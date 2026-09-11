@@ -79,7 +79,24 @@ func (s *stages) copyProjectFiles(data *TemplateData) error {
 
 	case ProjectTypeGoEmbed:
 		src := fmt.Sprintf("%s/go-embed/%s", ver, s.cfg.Framework)
-		return fsutil.CopyAndCompleteFiles(s.skeleton.GoEmbed, src, dst, data)
+		if err := fsutil.CopyAndCompleteFiles(s.skeleton.GoEmbed, src, dst, data); err != nil {
+			return err
+		}
+		webDst := filepath.Join(dst, "web")
+		fwSrc := fmt.Sprintf("%s/frontend/%s", ver, s.cfg.FrontendFramework)
+		return fsutil.CopyAndCompleteFiles(s.skeleton.Frontend, fwSrc, webDst, data)
+
+	case ProjectTypeFrontendReact:
+		src := fmt.Sprintf("%s/frontend/react", ver)
+		return fsutil.CopyAndCompleteFiles(s.skeleton.Frontend, src, dst, data)
+
+	case ProjectTypeFrontendVue:
+		src := fmt.Sprintf("%s/frontend/vue", ver)
+		return fsutil.CopyAndCompleteFiles(s.skeleton.Frontend, src, dst, data)
+
+	case ProjectTypeFrontendAngular:
+		src := fmt.Sprintf("%s/frontend/angular", ver)
+		return fsutil.CopyAndCompleteFiles(s.skeleton.Frontend, src, dst, data)
 
 	case ProjectTypeGoCLI:
 		src := fmt.Sprintf("%s/go-cli", ver)
@@ -108,6 +125,8 @@ func (s *stages) copyProjectToolchain(data *TemplateData) error {
 		return s.copyGoToolchain(data)
 	case LanguageNodeJS, LanguagePython:
 		return s.copyNonGoToolchain(data)
+	case LanguageFrontend:
+		return s.copyFrontendToolchain(data)
 	}
 	return nil
 }
@@ -244,6 +263,31 @@ func (s *stages) copyGoToolchain(data *TemplateData) error {
 	return fsutil.CopyAndCompleteFiles(pf,
 		fmt.Sprintf("%s/projectfiles/go/pkg", ver),
 		pkgdir, data)
+}
+
+func (s *stages) copyFrontendToolchain(data *TemplateData) error {
+	if !s.cfg.UseGithubActions {
+		return nil
+	}
+	ver := s.cfg.SkeletonVersion
+	pf := s.skeleton.ProjectFiles
+
+	actionsdir := s.outputPath(".github")
+	slog.Debug("generating github files", "dst", actionsdir)
+	if err := fsutil.CopyAndCompleteFiles(pf,
+		fmt.Sprintf("%s/projectfiles/.github", ver),
+		actionsdir, data); err != nil {
+		return err
+	}
+
+	// remove Go-specific workflows
+	for _, f := range []string{"lint.yaml", "release.yaml"} {
+		_ = os.Remove(s.outputPath(".github", "workflows", f))
+	}
+
+	// add nodejs CI workflow (npm-based frontend projects share it)
+	src := fmt.Sprintf("%s/projectfiles/nodejs/.github", ver)
+	return fsutil.CopyAndCompleteFiles(pf, src, actionsdir, data)
 }
 
 func showSummary(cfg *Config) {

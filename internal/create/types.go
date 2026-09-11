@@ -18,9 +18,14 @@ const (
 	FrontendVue     = "vue"
 	FrontendAngular = "angular"
 
-	LanguageGo     = "go"
-	LanguageNodeJS = "nodejs"
-	LanguagePython = "python"
+	ProjectTypeFrontendReact   = "frontend-react"
+	ProjectTypeFrontendVue     = "frontend-vue"
+	ProjectTypeFrontendAngular = "frontend-angular"
+
+	LanguageGo       = "go"
+	LanguageNodeJS   = "nodejs"
+	LanguagePython   = "python"
+	LanguageFrontend = "frontend"
 
 	SkeletonVersion1 = "v1"
 )
@@ -51,4 +56,5 @@ type BuildData struct {
 type FrontendData struct {
 	Enabled   bool
 	Framework string
+	Embedded  bool
 }

@@ -80,6 +80,12 @@ func runTypeSelection(cfg *Config) error {
 		}
 	case LanguagePython:
 		cfg.ProjectType = ProjectTypePython
+	case LanguageFrontend:
+		if cfg.ProjectType == "" || !isFrontendType(cfg.ProjectType) {
+			if err := huh.NewForm(huh.NewGroup(ui.FrontendTypeSelect(&cfg.ProjectType))).Run(); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -101,6 +107,8 @@ func runFrameworkSelection(cfg *Config) error {
 		}
 	case ProjectTypePython:
 		cfg.Framework = FrameworkFastAPI
+	case ProjectTypeFrontendReact, ProjectTypeFrontendVue, ProjectTypeFrontendAngular:
+		cfg.Framework = ""
 	}
 	return nil
 }
@@ -129,6 +137,10 @@ func runToolchainSelection(cfg *Config) error {
 		if !cfg.Changed(FlagUseGithubActions) {
 			groups = append(groups, huh.NewGroup(ui.GithubActionsConfirm(&cfg.UseGithubActions)))
 		}
+	case LanguageFrontend:
+		if !cfg.Changed(FlagUseGithubActions) {
+			groups = append(groups, huh.NewGroup(ui.GithubActionsConfirm(&cfg.UseGithubActions)))
+		}
 	}
 	if len(groups) == 0 {
 		return nil
@@ -139,7 +151,8 @@ func runToolchainSelection(cfg *Config) error {
 func isKnownType(t string) bool {
 	switch t {
 	case ProjectTypeGoAPI, ProjectTypeGoEmbed, ProjectTypeGoCLI, ProjectTypeGoGRPC,
-		ProjectTypeNodeJS, ProjectTypePython:
+		ProjectTypeNodeJS, ProjectTypePython,
+		ProjectTypeFrontendReact, ProjectTypeFrontendVue, ProjectTypeFrontendAngular:
 		return true
 	}
 	return false
@@ -161,6 +174,16 @@ func languageForType(t string) string {
 		return LanguageNodeJS
 	case ProjectTypePython:
 		return LanguagePython
+	case ProjectTypeFrontendReact, ProjectTypeFrontendVue, ProjectTypeFrontendAngular:
+		return LanguageFrontend
 	}
 	return ""
+}
+
+func isFrontendType(t string) bool {
+	switch t {
+	case ProjectTypeFrontendReact, ProjectTypeFrontendVue, ProjectTypeFrontendAngular:
+		return true
+	}
+	return false
 }

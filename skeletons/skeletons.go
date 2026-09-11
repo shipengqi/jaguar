@@ -21,12 +21,15 @@ var (
 	//go:embed all:v1/python
 	V1Python embed.FS
 
+	//go:embed all:v1/frontend
+	V1Frontend embed.FS
+
 	//go:embed all:v1/projectfiles
 	V1ProjectFiles embed.FS
 )
 
 type Skeleton struct {
-	GoAPI, GoEmbed, GoCLI, GoGRPC, NodeJS, Python, ProjectFiles embed.FS
+	GoAPI, GoEmbed, GoCLI, GoGRPC, NodeJS, Python, Frontend, ProjectFiles embed.FS
 }
 
 type Skeletons struct {
@@ -42,6 +45,7 @@ func New() *Skeletons {
 			GoGRPC:       V1GoGRPC,
 			NodeJS:       V1NodeJS,
 			Python:       V1Python,
+			Frontend:     V1Frontend,
 			ProjectFiles: V1ProjectFiles,
 		},
 	}

@@ -1,0 +1,60 @@
+{
+  "name": "{{.App.NormalizedName}}-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .ts,.html --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write src",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@angular/common": "^18.0.0",
+    "@angular/compiler": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/platform-browser": "^18.0.0",
+    "@angular/platform-browser-dynamic": "^18.0.0",
+    "@angular/router": "^18.0.0",
+    "@ngrx/signals": "^18.0.0",
+    "@jsverse/transloco": "^7.4.0",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.6.0",
+    "zod": "^3.23.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^1.6.0",
+    "vite": "^5.3.0",
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.0",
+    "@typescript-eslint/parser": "^7.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.0",
+    "vitest": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "jsdom": "^24.1.0",
+    "@testing-library/angular": "^17.0.0",
+    "@testing-library/jest-dom": "^6.4.0",
+    "@playwright/test": "^1.45.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.0"
+  },
+  "lint-staged": {
+    "*.ts": ["eslint --fix", "prettier --write"],
+    "*.{json,md,css,html}": "prettier --write"
+  }
+}

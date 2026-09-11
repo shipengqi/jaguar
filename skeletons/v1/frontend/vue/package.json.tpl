@@ -1,0 +1,62 @@
+{
+  "name": "{{.App.NormalizedName}}-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .ts,.vue --fix",
+    "type-check": "vue-tsc --noEmit",
+    "format": "prettier --write src",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "pinia": "^2.1.0",
+    "@pinia/plugin-persistedstate": "^3.2.0",
+    "@tanstack/vue-query": "^5.40.0",
+    "vue-router": "^4.3.0",
+    "vue-i18n": "^9.13.0",
+    "@vueuse/core": "^10.11.0",
+    "zod": "^3.23.0",
+    "vee-validate": "^4.13.0",
+    "@vee-validate/zod": "^4.13.0",
+    "axios": "^1.7.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.3.0",
+    "lucide-vue-next": "^0.395.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.3.0",
+    "vue-tsc": "^2.0.0",
+    "typescript": "^5.5.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.26.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.0",
+    "@typescript-eslint/parser": "^7.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.0",
+    "vitest": "^1.6.0",
+    "@vue/test-utils": "^2.4.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "jsdom": "^24.1.0",
+    "@playwright/test": "^1.45.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.0"
+  },
+  "lint-staged": {
+    "*.{ts,vue}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,css}": "prettier --write"
+  }
+}

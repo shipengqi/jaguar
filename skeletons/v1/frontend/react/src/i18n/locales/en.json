@@ -1,0 +1,14 @@
+{
+  "common": { "submit": "Submit", "cancel": "Cancel", "loading": "Loading...", "error": "Something went wrong" },
+  "auth": {
+    "login": {
+      "title": "Login", "email": "Email", "password": "Password",
+      "submit": "Login", "submitting": "Logging in...",
+      "emailPlaceholder": "Enter your email", "passwordPlaceholder": "Enter your password",
+      "emailError": "Please enter a valid email", "passwordError": "Password must be at least 8 characters",
+      "invalidCredentials": "Invalid email or password"
+    }
+  },
+  "dashboard": { "welcome": "Welcome back, {{name}}!", "title": "Dashboard" },
+  "theme": { "light": "Light", "dark": "Dark", "system": "System", "toggle": "Toggle theme" }
+}

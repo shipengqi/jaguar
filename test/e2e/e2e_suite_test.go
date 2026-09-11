@@ -25,6 +25,7 @@ var _ = Describe("Sorted Tests", func() {
 	Describe("New API project", NewAPITest)
 	Describe("New CLI project", NewCLITest)
 	Describe("New gRPC project", NewGRPCTest)
+	Describe("New Frontend project", NewFrontendTest)
 	Describe("Compile and Run", CompileAndRunTest)
 })
 

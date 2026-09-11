@@ -25,6 +25,12 @@ func TestNew(t *testing.T) {
 	if skeletons.V1.Python != V1Python {
 		t.Errorf("expected field to be %v, but got %v", V1Python, skeletons.V1.Python)
 	}
+	if skeletons.V1.Python != V1Python {
+		t.Errorf("expected field to be %v, but got %v", V1Python, skeletons.V1.Python)
+	}
+	if skeletons.V1.Frontend != V1Frontend {
+		t.Errorf("expected field to be %v, but got %v", V1Frontend, skeletons.V1.Frontend)
+	}
 	if skeletons.V1.ProjectFiles != V1ProjectFiles {
 		t.Errorf("expected field to be %v, but got %v", V1ProjectFiles, skeletons.V1.ProjectFiles)
 	}

@@ -98,6 +98,7 @@ func (c *Config) ExportTemplateData() *TemplateData {
 		Frontend: FrontendData{
 			Enabled:   c.FrontendFramework != "",
 			Framework: c.FrontendFramework,
+			Embedded:  c.ProjectType == ProjectTypeGoEmbed,
 		},
 	}
 }

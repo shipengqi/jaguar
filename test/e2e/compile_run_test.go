@@ -207,7 +207,7 @@ secure:
 		})
 
 		It("builds the frontend", func() {
-			webDir := filepath.Join(projectDir, "web", "react")
+			webDir := filepath.Join(projectDir, "web")
 
 			npmInstall := exec.Command("npm", "install")
 			npmInstall.Dir = webDir
@@ -274,6 +274,118 @@ secure:
 			Expect(err).NotTo(HaveOccurred())
 			defer resp.Body.Close()
 			Expect(resp.StatusCode).To(Equal(http.StatusOK))
+		})
+	})
+
+	Describe("go-embed/gin+vue scaffold", Ordered, func() {
+		const (
+			projectName = "testembed-vue"
+			moduleName  = "github.com/e2etest/testembedvue"
+		)
+
+		var (
+			workDir    string
+			projectDir string
+		)
+
+		BeforeAll(func() {
+			var err error
+			workDir, err = os.MkdirTemp("", "jaguar-e2e-*")
+			Expect(err).NotTo(HaveOccurred())
+			projectDir = filepath.Join(workDir, projectName)
+		})
+
+		AfterAll(func() {
+			_ = os.RemoveAll(workDir)
+		})
+
+		It("generates the project with vue frontend", func() {
+			cmd := exec.Command(CliOpts.Cli,
+				"new", projectName,
+				"-t", "go-embed",
+				"-m", moduleName,
+				"-o", workDir,
+				"--frontend-framework", "vue",
+				"--use-golangci-lint=false",
+				"--use-goreleaser=false",
+				"--use-gsemver=false",
+				"--use-github-actions=false",
+			)
+			cmd.Dir = workDir
+			cmd.Stdout = GinkgoWriter
+			cmd.Stderr = GinkgoWriter
+			Expect(cmd.Run()).To(Succeed())
+			Expect(projectDir).To(BeADirectory())
+		})
+
+		It("has the vue frontend files under web/", func() {
+			webDir := filepath.Join(projectDir, "web")
+			Expect(webDir).To(BeADirectory())
+			Expect(filepath.Join(webDir, "package.json")).To(BeAnExistingFile())
+			Expect(filepath.Join(webDir, "vite.config.ts")).To(BeAnExistingFile())
+			Expect(filepath.Join(webDir, "src", "main.ts")).To(BeAnExistingFile())
+			Expect(filepath.Join(webDir, "src", "App.vue")).To(BeAnExistingFile())
+		})
+
+		It("compiles the Go project", func() {
+			Expect(goCmd(projectDir, "mod", "tidy").Run()).To(Succeed())
+			Expect(goCmd(projectDir, "build", "./...").Run()).To(Succeed())
+		})
+	})
+
+	Describe("go-embed/gin+angular scaffold", Ordered, func() {
+		const (
+			projectName = "testembed-angular"
+			moduleName  = "github.com/e2etest/testembedangular"
+		)
+
+		var (
+			workDir    string
+			projectDir string
+		)
+
+		BeforeAll(func() {
+			var err error
+			workDir, err = os.MkdirTemp("", "jaguar-e2e-*")
+			Expect(err).NotTo(HaveOccurred())
+			projectDir = filepath.Join(workDir, projectName)
+		})
+
+		AfterAll(func() {
+			_ = os.RemoveAll(workDir)
+		})
+
+		It("generates the project with angular frontend", func() {
+			cmd := exec.Command(CliOpts.Cli,
+				"new", projectName,
+				"-t", "go-embed",
+				"-m", moduleName,
+				"-o", workDir,
+				"--frontend-framework", "angular",
+				"--use-golangci-lint=false",
+				"--use-goreleaser=false",
+				"--use-gsemver=false",
+				"--use-github-actions=false",
+			)
+			cmd.Dir = workDir
+			cmd.Stdout = GinkgoWriter
+			cmd.Stderr = GinkgoWriter
+			Expect(cmd.Run()).To(Succeed())
+			Expect(projectDir).To(BeADirectory())
+		})
+
+		It("has the angular frontend files under web/", func() {
+			webDir := filepath.Join(projectDir, "web")
+			Expect(webDir).To(BeADirectory())
+			Expect(filepath.Join(webDir, "package.json")).To(BeAnExistingFile())
+			Expect(filepath.Join(webDir, "vite.config.ts")).To(BeAnExistingFile())
+			Expect(filepath.Join(webDir, "src", "main.ts")).To(BeAnExistingFile())
+			Expect(filepath.Join(webDir, "src", "app", "app.config.ts")).To(BeAnExistingFile())
+		})
+
+		It("compiles the Go project", func() {
+			Expect(goCmd(projectDir, "mod", "tidy").Run()).To(Succeed())
+			Expect(goCmd(projectDir, "build", "./...").Run()).To(Succeed())
 		})
 	})
 }
