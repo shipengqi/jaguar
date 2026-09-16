@@ -46,7 +46,7 @@ jobs:
           echo "NEW_VERSION=${MAJOR}.${MINOR}.${PATCH}" >> $GITHUB_ENV
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.PAT }}
           commit-message: "chore: bump version to v${{ env.NEW_VERSION }}"
