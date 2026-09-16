@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useTheme } from '@/hooks/useTheme'
 import { useTranslation } from 'react-i18next'
 import { Sun, Moon, Monitor } from 'lucide-react'
@@ -8,7 +9,7 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
   const { t } = useTranslation()
 
-  const options: { value: Theme; label: string; icon: React.ReactNode }[] = [
+  const options: { value: Theme; label: string; icon: ReactNode }[] = [
     { value: 'light', label: t('theme.light'), icon: <Sun className="mr-2 h-4 w-4" /> },
     { value: 'dark', label: t('theme.dark'), icon: <Moon className="mr-2 h-4 w-4" /> },
     { value: 'system', label: t('theme.system'), icon: <Monitor className="mr-2 h-4 w-4" /> },
