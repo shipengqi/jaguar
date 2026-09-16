@@ -133,6 +133,7 @@ func NodeFrameworkSelect(framework *string) *huh.Select[string] {
 		Options(
 			huh.NewOption("Koa", "koa"),
 			huh.NewOption("NestJS", "nestjs"),
+			huh.NewOption("Next.js", "nextjs"),
 		).
 		Value(framework)
 }

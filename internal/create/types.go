@@ -12,6 +12,7 @@ const (
 	FrameworkFiber   = "fiber"
 	FrameworkKoa     = "koa"
 	FrameworkNestJS  = "nestjs"
+	FrameworkNextJS  = "nextjs"
 	FrameworkFastAPI = "fastapi"
 
 	FrontendReact   = "react"

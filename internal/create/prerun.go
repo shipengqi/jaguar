@@ -102,7 +102,7 @@ func runFrameworkSelection(cfg *Config) error {
 	case ProjectTypeGoCLI, ProjectTypeGoGRPC:
 		cfg.Framework = ""
 	case ProjectTypeNodeJS:
-		if cfg.Framework == "" || (cfg.Framework != FrameworkKoa && cfg.Framework != FrameworkNestJS) {
+		if cfg.Framework == "" || (cfg.Framework != FrameworkKoa && cfg.Framework != FrameworkNestJS && cfg.Framework != FrameworkNextJS) {
 			return huh.NewForm(huh.NewGroup(ui.NodeFrameworkSelect(&cfg.Framework))).Run()
 		}
 	case ProjectTypePython:
