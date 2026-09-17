@@ -45,6 +45,10 @@ jobs:
           esac
           echo "NEW_VERSION=${MAJOR}.${MINOR}.${PATCH}" >> $GITHUB_ENV
 
+      - name: Write VERSION file
+        run: |
+          echo "v${NEW_VERSION}" > VERSION
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
