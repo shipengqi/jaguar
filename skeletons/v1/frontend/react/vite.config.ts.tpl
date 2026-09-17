@@ -9,7 +9,7 @@ export default defineConfig({
   },
   {{- if .Frontend.Embedded}}
   build: {
-    outDir: '../staticfs/web',
+    outDir: '../internal/staticfs/web',
     emptyOutDir: true,
   },
   server: {
